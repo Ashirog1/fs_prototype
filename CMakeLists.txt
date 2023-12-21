@@ -3,4 +3,4 @@ project(fs_prototype)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(fs_prototype main.cpp src/nth_puzzle.cpp src/focal_search.cpp)
+add_executable(fs_prototype main.cpp src/game_board.cpp src/focal_search.cpp src/utils.cpp src/utils.h)
