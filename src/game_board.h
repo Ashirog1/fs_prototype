@@ -19,7 +19,7 @@ private:
     int h, w;
 
     /*
-     * helper func
+     * helper heuristics
      */
     int encode(int r, int c);
 
@@ -28,6 +28,8 @@ private:
     std::pair<int, int> decode(int idx);
 
 public:
+    GameBoard();
+
     GameBoard(int n, state init);
 
     explicit GameBoard(const std::vector<std::vector<int>> &init_state);
@@ -35,6 +37,9 @@ public:
     friend std::vector<GameBoard> GetNeighbour(GameBoard &gameBoard);
 
     bool operator<(const GameBoard &oth) const;
+
+    template<typename heuristic>
+    friend double GetHeuristic(GameBoard &gameBoard);
 };
 
 #endif //FS_PROTOTYPE_GAME_BOARD_H

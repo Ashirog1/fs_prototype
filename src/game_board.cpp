@@ -74,5 +74,14 @@ bool GameBoard::operator<(const GameBoard &oth) const {
     return current < oth.current;
 }
 
+GameBoard::GameBoard() {
+
+}
+
+template<typename heuristic>
+double GetHeuristic(GameBoard &gameBoard) {
+   return heuristic(gameBoard);
+}
+
 
 
