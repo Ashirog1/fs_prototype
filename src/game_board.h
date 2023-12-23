@@ -15,7 +15,6 @@ class GameBoard {
 private:
     using state = std::vector<int>;
 
-    std::vector<int> current;
     int h, w;
 
     /*
@@ -28,6 +27,7 @@ private:
     std::pair<int, int> decode(int idx);
 
 public:
+    std::vector<int> current;
     GameBoard();
 
     GameBoard(int n, state init);
@@ -38,8 +38,10 @@ public:
 
     bool operator<(const GameBoard &oth) const;
 
-    template<typename heuristic>
-    friend double GetHeuristic(GameBoard &gameBoard);
+    template<class T>
+    inline double GetHeuristic(T heuristic) {
+        return heuristic(this->w, this->current);
+    }
 };
 
 #endif //FS_PROTOTYPE_GAME_BOARD_H

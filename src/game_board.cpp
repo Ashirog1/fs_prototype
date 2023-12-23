@@ -78,10 +78,8 @@ GameBoard::GameBoard() {
 
 }
 
-template<typename heuristic>
-double GetHeuristic(GameBoard &gameBoard) {
-   return heuristic(gameBoard);
-}
+
+
 
 
 

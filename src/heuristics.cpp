@@ -5,7 +5,7 @@
 #include <complex>
 #include "heuristics.h"
 
-int HammingDistance(int size, std::vector<int> board) {
+double HammingDistance(int size, std::vector<int> board) {
     int hammingDistance = 0;
     for (int i = 0; i < size * size; ++i) {
         if (board[i] != i + 1 and board[i] != 0) {
@@ -29,7 +29,7 @@ double CartesianDistance(int size, std::vector<int> board) {
     return cartesianDistance;
 }
 
-int ManhattanDistance(int size, std::vector<int> board) {
+double ManhattanDistance(int size, std::vector<int> board) {
     int manhattanDistance = 0;
     for (int i = 0; i < size; ++i) {
         if (board[i] == 0) continue;
