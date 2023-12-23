@@ -40,7 +40,7 @@ public:
 
     template<class T>
     inline double GetHeuristic(T heuristic) {
-        return heuristic(this->w, this->current);
+        return heuristic(w, current);
     }
 };
 

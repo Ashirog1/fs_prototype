@@ -54,18 +54,18 @@ std::vector<GameBoard> GetNeighbour(GameBoard &gameBoard) {
     /// try to move
     auto next_state = gameBoard;
     std::vector<GameBoard> adj = {};
-    for (int dx: {-1, 1}) {
-        for (int dy: {-1, 1}) {
-            int nx = cx + dx, ny = cy + dy;
-            if (not gameBoard.inside(nx, ny)) continue;
+    std::vector<int> dx = {1, -1, 0, 0};
+    std::vector<int> dy = {0, 0, 1, -1};
+    for (int t = 0; t < 4; ++t) {
+        int nx = cx + dx[t], ny = cy + dy[t];
+        if (not gameBoard.inside(nx, ny)) continue;
 
-            int next_encode = gameBoard.encode(nx, ny);
-            std::swap(next_state.current[next_encode], next_state.current[base_index]);
+        int next_encode = gameBoard.encode(nx, ny);
+        std::swap(next_state.current[next_encode], next_state.current[base_index]);
 
-            adj.emplace_back(next_state);
+        adj.emplace_back(next_state);
 
-            std::swap(next_state.current[next_encode], next_state.current[base_index]);
-        }
+        std::swap(next_state.current[next_encode], next_state.current[base_index]);
     }
     return adj;
 }
