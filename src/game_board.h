@@ -26,8 +26,9 @@ private:
 
     std::pair<int, int> decode(int idx);
 
-public:
     std::vector<int> current;
+
+public:
     GameBoard();
 
     GameBoard(int n, state init);

@@ -45,6 +45,27 @@ public:
         }
         return static_cast<int>(-1);
     }
+
+    template<class T>
+    inline int FocalSearch(std::vector<std::vector<int>>&v, T heuristic) {
+        GameBoard start(v);
+        open.push({0, start.GetHeuristic(heuristic), start});
+        visited[start] = 0;
+
+
+        while (not open.empty()) {
+            auto [f, g, board] = open.top(); open.pop();
+            if (visited[board] != f) continue;
+            if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(f);
+            for (GameBoard&next_board: GetNeighbour(board)) {
+                if (visited.find(next_board) == visited.end() or visited[next_board] > f + 1) {
+                    visited[next_board] = f + 1;
+                    open.push({f + 1, next_board.GetHeuristic(heuristic), next_board});
+                }
+            }
+        }
+        return static_cast<int>(-1);
+    }
 };
 
 
