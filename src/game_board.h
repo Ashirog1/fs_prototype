@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 class GameBoard {
     /*
@@ -43,6 +44,10 @@ public:
     inline double GetHeuristic(T heuristic) {
         return heuristic(w, current);
     }
+
+    friend std::ostream& operator<<(std::ostream& os, const GameBoard &gameBoard);
 };
+
+
 
 #endif //FS_PROTOTYPE_GAME_BOARD_H
