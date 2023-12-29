@@ -18,3 +18,7 @@ Node::Node(double _f, double _g, const GameBoard&_board) {
 bool Node::operator<(const Node &oth) const {
     return f + g > oth.f + oth.g;
 }
+
+bool CompareG::operator()(const Node &a, const Node &b) {
+    return a.g > b.g;
+}
