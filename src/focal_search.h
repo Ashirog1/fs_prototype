@@ -102,6 +102,52 @@ public:
         return static_cast<int>(-1);
     }
 
+    template<class T>
+    inline int FocalSearchWithLowerBound(std::vector<std::vector<int>> &v, T heuristic, T focal_heuristic, double epsilon = (double) 1.5,double lowerBound=1.2) {
+        visited.clear();
+        std::cout << "Open size " << open.size() << '\n';
+        std::priority_queue<Node, std::vector<Node>, CompareG> focal;
+        GameBoard start(v);
+        open.push({0, start.GetHeuristic(heuristic), start});
+        visited[start] = 0;
+        double best_h_score = 0;
+
+        while (not open.empty()) {
+            {
+                /// update focal
+                auto [f, g, board] = open.top();
+                double h_min = f + g;
+                best_h_score = std::max(best_h_score, h_min);
+                while (not open.empty()) {
+                    auto [f_, g_, board_] = open.top();
+                    double cur_h = f_ + g_;
+                    //skip until lowerbound 
+                    if(cur_h<lowerBound*h_min) continue
+                    if (cur_h > epsilon * h_min) break;
+                    open.pop();
+
+                    focal.push({f_, board_.GetHeuristic(focal_heuristic), board_});
+                }
+            }
+//            assert(focal.size() > 0);
+            if (focal.empty()) break;
+            auto [f, g, board] = focal.top();
+            focal.pop();
+//            std::cout << f << ' ' << g << ' ' << board << '\n';
+
+            if (visited[board] != f) continue;
+            if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(f);
+            for (GameBoard &next_board: GetNeighbour(board)) {
+                if (visited.find(next_board) == visited.end() or visited[next_board] > f + 1) {
+                    visited[next_board] = f + 1;
+                    open.push({f + 1, next_board.GetHeuristic(heuristic), next_board});
+//                    std::cout << "neighbour " << next_board << '\n';
+                }
+            }
+        }
+        return static_cast<int>(-1);
+    }
+   
 
     template<class T>
     inline int RandomWeightedFocal(std::vector<std::vector<int>> &v, T heuristic, T focal_heuristic, std::vector<double> epsilons = {1.2, 1.3}) {
