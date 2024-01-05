@@ -130,9 +130,18 @@ public:
                 }
             }
 //            assert(focal.size() > 0);
-            if (focal.empty()) break;
-            auto [f, g, board] = focal.top();
-            focal.pop();
+            auto [f,g,board]
+            //if focal empty pop from open set
+            if (focal.empty()) 
+            {
+                [f,g,board]=open.top()
+                open.pop()
+            }
+            else
+            {
+              [f, g, board] = focal.top();
+               focal.pop();
+            };
 //            std::cout << f << ' ' << g << ' ' << board << '\n';
 
             if (visited[board] != f) continue;
