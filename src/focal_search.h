@@ -105,7 +105,6 @@ public:
     template<class T>
     inline int FocalSearchWithLowerBound(std::vector<std::vector<int>> &v, T heuristic, T focal_heuristic, double epsilon = (double) 1.5,double lowerBound=1.2) {
         visited.clear();
-        std::cout << "Open size " << open.size() << '\n';
         std::priority_queue<Node, std::vector<Node>, CompareG> focal;
         GameBoard start(v);
         open.push({0, start.GetHeuristic(heuristic), start});
@@ -122,7 +121,8 @@ public:
                     auto [f_, g_, board_] = open.top();
                     double cur_h = f_ + g_;
                     //skip until lowerbound 
-                    if(cur_h<lowerBound*h_min) continue
+                    if(cur_h<lowerBound*h_min)
+                        continue;
                     if (cur_h > epsilon * h_min) break;
                     open.pop();
 
