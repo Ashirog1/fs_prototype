@@ -12,6 +12,7 @@
 #include <queue>
 #include <utility>
 #include <cassert>
+#include <set>
 
 class Node {
 public:
@@ -30,9 +31,16 @@ struct CompareG {
     bool operator()(const Node &a, const Node &b);
 };
 
+struct CompareH{
+    bool operator()(const Node &a, const Node &b);
+};
+
 class focal_search {
     std::map<GameBoard, int> visited;
-    std::priority_queue<Node> open;
+    //std::priority_queue<Node> open;
+    std::set<Node> open;
+    std::map<GameBoard, std::pair<int, int>> link_open;
+
 public:
     focal_search();
 
@@ -57,49 +65,107 @@ public:
         }
         return static_cast<int>(-1);
     }
-
     template<class T>
     inline int FocalSearch(std::vector<std::vector<int>> &v, T heuristic, T focal_heuristic, double epsilon = (double) 1.5) {
         visited.clear();
-        std::cout << "Open size " << open.size() << '\n';
-        std::priority_queue<Node, std::vector<Node>, CompareG> focal;
+      //  std::cout << "Open size " << open.size() << '\n';
+        std::priority_queue<Node, std::vector<Node>, CompareH> focal;
         GameBoard start(v);
-        open.push({0, start.GetHeuristic(heuristic), start});
+        open.insert({0, start.GetHeuristic(heuristic), start});
+        focal.push({0, start.GetHeuristic(focal_heuristic)}, start);
+        link_open[start] = std::make_pair<0, start.GetHeuristic(heuristic)>
         visited[start] = 0;
-        double best_h_score = 0;
+    
 
-        while (not open.empty()) {
-            {
-                /// update focal
-                auto [f, g, board] = open.top();
-                double h_min = f + g;
-                best_h_score = std::max(best_h_score, h_min);
-                while (not open.empty()) {
-                    auto [f_, g_, board_] = open.top();
-                    double cur_h = f_ + g_;
-                    if (cur_h > epsilon * h_min) break;
-                    open.pop();
-
-                    focal.push({f_, board_.GetHeuristic(focal_heuristic), board_});
-                }
-            }
-//            assert(focal.size() > 0);
-            if (focal.empty()) break;
-            auto [f, g, board] = focal.top();
-            focal.pop();
-//            std::cout << f << ' ' << g << ' ' << board << '\n';
-
+        while(! focal.empty()){
+            std::set<Node>::iterator fmin = open.begin();
+            open.erase(fmin);
+            double f_min = *fmin.f + *fmin.g;
+            auto [g, h, board] = focal.top();
             if (visited[board] != f) continue;
             if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(f);
+            focal.pop();
+            h_open = link_open[board].second;
+            open.erase({g, h_open, board});
+
+
+            if(h==0)
+                return static_cast<int> g;
+
             for (GameBoard &next_board: GetNeighbour(board)) {
-                if (visited.find(next_board) == visited.end() or visited[next_board] > f + 1) {
-                    visited[next_board] = f + 1;
-                    open.push({f + 1, next_board.GetHeuristic(heuristic), next_board});
-//                    std::cout << "neighbour " << next_board << '\n';
+                if (visited.find(next_board) == visited.end() or visited[next_board] > g + 1) {
+                    visited[next_board] = g + 1;
+                   // int f = next_board.GetHeuristic(heuristic);
+                    
+                    if(link_open.find(next_board)!=visited.end())
+                    {
+                        open.erase(link_open[next_board].first,link_open[next_board].second,next_board)
+                        
+                    }
+
+                    open.insert({g + 1, next_board.GetHeuristic(heuristic), next_board});
+                    link_open[next_board]=std::make_pair<g+1, next_board.GetHeuristic(heuristic)>
+                    
+                    if((g+1)+next_board.GetHeuristic(heuristic)<epsilon*f_min)
+                    {
+                        focal.push({g + 1, next_board.GetHeuristic(focal_heuristic), next_board});
+                    }
                 }
             }
-        }
+
+            fmin = open.begin();
+            double f_head = *fmin.f + *fmin.g;
+
+            if(open.size() &&  f_min<f_head)
+            {
+                for (std::set<Node>::iterator it = open.begin(); it != open.end(); ++it) {
+                          if(*it.g+*it.f>=epsilon*f_head)
+                              break;
+                          if(*it.g+*it.f>=epsilon*f_min)
+                          {
+                              focal.push({*it.g, *it.board.GetHeuristic(focal_search), *it.board});
+                          }
+                }
+            }
+            
+            }
         return static_cast<int>(-1);
+        //         open.push({0, start.GetHeuristic(heuristic), start});
+        //         visited[start] = 0;
+        //         double best_h_score = 0;
+
+        //         while (not open.empty()) {
+        //             {
+        //                 /// update focal
+        //                 auto [f, g, board] = open.top();
+        //                 double h_min = f + g;
+        //                 best_h_score = std::max(best_h_score, h_min);
+        //                 while (not open.empty()) {
+        //                     auto [f_, g_, board_] = open.top();
+        //                     double cur_h = f_ + g_;
+        //                     if (cur_h > epsilon * h_min) break;
+        //                     open.pop();
+
+        //                     focal.push({f_, board_.GetHeuristic(focal_heuristic), board_});
+        //                 }
+        //             }
+        // //            assert(focal.size() > 0);
+        //             if (focal.empty()) break;
+        //             auto [f, g, board] = focal.top();
+        //             focal.pop();
+        // //            std::cout << f << ' ' << g << ' ' << board << '\n';
+
+        //             if (visited[board] != f) continue;
+        //             if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(f);
+        //             for (GameBoard &next_board: GetNeighbour(board)) {
+        //                 if (visited.find(next_board) == visited.end() or visited[next_board] > f + 1) {
+        //                     visited[next_board] = f + 1;
+        //                     open.push({f + 1, next_board.GetHeuristic(heuristic), next_board});
+        // //                    std::cout << "neighbour " << next_board << '\n';
+        //                 }
+        //             }
+        //         }
+        //         return static_cast<int>(-1);
     }
 
     template<class T>
