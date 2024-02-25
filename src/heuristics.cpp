@@ -5,7 +5,7 @@
 #include <complex>
 #include "heuristics.h"
 
-double HammingDistance(int size, const std::vector<int>&board) {
+double HammingDistance(int size, const std::vector<int> &board) {
     int hammingDistance = 0;
     for (int i = 0; i < size * size; ++i) {
         if (board[i] != i + 1 and board[i] != 0) {
@@ -14,7 +14,8 @@ double HammingDistance(int size, const std::vector<int>&board) {
     }
     return hammingDistance;
 }
-double CartesianDistance(int size, const std::vector<int>&board) {
+
+double CartesianDistance(int size, const std::vector<int> &board) {
     double cartesianDistance = 0.0;
     for (int i = 0; i < size * size; ++i) {
         if (board[i] == 0) continue;
@@ -29,7 +30,7 @@ double CartesianDistance(int size, const std::vector<int>&board) {
     return cartesianDistance;
 }
 
-double ManhattanDistance(int size, const std::vector<int>&board) {
+double ManhattanDistance(int size, const std::vector<int> &board) {
     int manhattanDistance = 0;
     for (int i = 0; i < size; ++i) {
         if (board[i] == 0) continue;
@@ -42,4 +43,12 @@ double ManhattanDistance(int size, const std::vector<int>&board) {
         }
     }
     return manhattanDistance;
+}
+
+double open_funct(double g, double h) {
+    return g+h;
+}
+
+double focal_funct(double g, double h) {
+    return h;
 }

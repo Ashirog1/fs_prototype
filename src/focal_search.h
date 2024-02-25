@@ -48,9 +48,11 @@ class focal_search {
 public:
     focal_search();
 
-    template<class T, class Q>
-    inline int FocalSearch(std::vector<std::vector<int>> &v, T heuristic, double epsilon = (double) 1.5, Q open_value,
-                           Q focal_value) {
+    template<class T, class open_funct, class focal_funct>
+    inline int
+    FocalSearch(std::vector<std::vector<int>> &v, open_funct open_value, focal_funct focal_value, T heuristic,
+                double epsilon = (double) 1.5
+    ) {
         visited.clear();
         std::priority_queue<Node, std::vector<Node>, CompareH> focal;
         GameBoard start(v);
@@ -61,14 +63,16 @@ public:
                     focal_value(0, start.GetHeuristic(heuristic)), start});
 
         //map link_open to find state and value in open set when pop state from focal
-        link_open[start] = Node(open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
-                                focal_value(0, start.GetHeuristic(heuristic)), start);
+        /// TODO:
+        Node tmp = Node(open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
+                        focal_value(0, start.GetHeuristic(heuristic)), start);
+        link_open.emplace(start, tmp);
         visited[start] = 0;
 
         while (!focal.empty()) {
-            std::set<Node>::iterator fmin = open.begin();
-            //  open.erase(fmin);
-            double f_min = *fmin.f;
+            assert(!open.empty());
+
+            double f_min = open.begin()->f;
             auto [f, g, h, hFocal, board] = focal.top();
             if (visited[board] != g) continue;
             if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(g);
@@ -77,22 +81,23 @@ public:
 
 
             if (hFocal == 0)
-                return static_cast<int> g;
+                return static_cast<int>(g);
 
             for (GameBoard &next_board: GetNeighbour(board)) {
                 if (visited.find(next_board) == visited.end() or visited[next_board] > g + 1) {
                     visited[next_board] = g + 1;
                     // int f = next_board.GetHeuristic(heuristic);
                     int h_new = next_board.GetHeuristic(heuristic);
-                    if (link_open.find(next_board) != visited.end()) {
-                        Node old_open = link_open[next_board];
-                        open.erase(old_open);
+                    if (link_open.find(next_board) != link_open.end()) {
+                        auto old_open = link_open.find(next_board);
+                        open.erase(old_open->second);
                     }
 
                     open.insert(Node(open_value(g + 1, h_new), g + 1, h_new, focal_value(g + 1, h_new), next_board));
                     //open.insert({g + 1, next_board.GetHeuristic(heuristic), next_board});
-                    link_open[next_board] = Node(open_value(g + 1, h_new), g + 1, h_new, focal_value(g + 1, h_new),
-                                                 next_board);
+                    link_open.emplace(next_board,
+                                      Node(open_value(g + 1, h_new), g + 1, h_new, focal_value(g + 1, h_new),
+                                           next_board));
 
                     if (open_value(g + 1, h_new) < epsilon * f_min) {
                         focal.push(Node(open_value(g + 1, h_new), g + 1, h_new, focal_value(g + 1, h_new), next_board));
@@ -100,15 +105,18 @@ public:
                 }
             }
 
-            fmin = open.begin();
-            double f_head = *fmin.g + *fmin.h;
+            auto fmin = open.begin();
+            double f_head = fmin->g + fmin->h;
 
-            if (open.size() && f_min < f_head) {
-                for (std::set<Node>::iterator it = open.begin(); it != open.end(); ++it) {
-                    if (*it.g + *it.h >= epsilon * f_head)
+            if (!open.empty() && f_min < f_head) {
+                for (const auto &it: open) {
+                    auto board = it.board;
+                    if (it.g + it.h >= epsilon * f_head)
                         break;
-                    if (*it.g + *it.h >= epsilon * f_min) {
-                        focal.push({*it.g, *it.board.GetHeuristic(focal_search), *it.board});
+                    if (it.g + it.h >= epsilon * f_min) {
+                        double new_f = it.g + it.h;
+                        focal.push({new_f, it.g, board.GetHeuristic(heuristic),
+                                    focal_value(it.g, board.GetHeuristic(heuristic)), it.board});
                     }
                 }
             }
