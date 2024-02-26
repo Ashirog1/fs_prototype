@@ -116,21 +116,25 @@ public:
             if (hFocal == 0)
                 return static_cast<int>(g);
 
+
             for (GameBoard &next_board: GetNeighbour(board)) {
                 if (visited.find(next_board) == visited.end() or visited[next_board] > g + 1) {
                     visited[next_board] = g + 1;
                     int h_new = next_board.GetHeuristic(heuristic);
+                    /*
+                     * delete old_value of new state in open
+                     */
                     if (link_open.find(next_board) != link_open.end()) {
                         auto old_open = link_open.find(next_board);
                         open.erase(old_open->second);
                     }
-
+                    /*
+                     * insert new node into open
+                     */
                     open.insert(Node(open_value(g + 1, h_new), g + 1, h_new, focal_value(g + 1, h_new), next_board));
-                    //open.insert({g + 1, next_board.GetHeuristic(heuristic), next_board});
                     link_open.emplace(next_board,
                                       Node(open_value(g + 1, h_new), g + 1, h_new, focal_value(g + 1, h_new),
                                            next_board));
-
                     if (open_value(g + 1, h_new) < epsilon * f_min) {
                         focal.push(Node(open_value(g + 1, h_new), g + 1, h_new, focal_value(g + 1, h_new), next_board));
                     }
@@ -141,6 +145,9 @@ public:
             double f_head = fmin->g + fmin->h;
 
             if (!open.empty() && f_min < f_head) {
+                /*
+                 * update focal: insert new node from open to focal with f <= epsilon * fmin
+                 */
                 for (const auto &it: open) {
                     auto board = it.board;
                     if (it.g + it.h >= epsilon * f_head)
