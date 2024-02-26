@@ -5,9 +5,8 @@
 #ifndef FS_PROTOTYPE_FOCAL_SEARCH_H
 #define FS_PROTOTYPE_FOCAL_SEARCH_H
 
-#include "game_board.h"
-#include "heuristics.h"
-#include "utils.h"
+#include "../problem/game_board.h"
+#include "../heuristics.h"
 #include <map>
 #include <queue>
 #include <utility>
@@ -39,22 +38,56 @@ struct CompareH {
     bool operator()(const Node &a, const Node &b);
 };
 
-class focal_search {
+class BasicAStar {
     std::map<GameBoard, int> visited;
     //std::priority_queue<Node> open;
     std::set<Node> open;
     std::map<GameBoard, Node> link_open;
-
 public:
-    focal_search();
+    template<class T>
+    inline int AStarSearch(std::vector<std::vector<int>> &v, T heuristic) {
+        GameBoard start(v);
+        open.insert({start.GetHeuristic(heuristic), 0, start.GetHeuristic(heuristic), 0, start});
+        visited[start] = 0;
+        while (not open.empty()) {
+            auto fmin = open.begin();
+            auto [f, g, h, fFocal, board] = *fmin;
+            open.erase(fmin);
+            if (visited[board] != f) continue;
+            if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(f);
+            for (GameBoard &next_board: GetNeighbour(board)) {
+                if (visited.find(next_board) == visited.end() or visited[next_board] > f + 1) {
+                    visited[next_board] = g + 1;
+                    double h_new = next_board.GetHeuristic(heuristic);
+                    open.insert({g + 1 + h_new, g + 1, static_cast<double>(h_new), 0, next_board});
+                }
+            }
+        }
+        return static_cast<int>(-1);
+    }
+};
+
+/*
+ * BasicFocalSearch (a* epsilon) algorithm
+ */
+class BasicFocalSearch {
+
+protected:
+//std::priority_queue<Node> open;
+std::set<Node> open;
+// @brief visited:
+std::map<GameBoard, int> visited;
+    std::priority_queue<Node, std::vector<Node>, CompareH> focal;
+    std::map<GameBoard, Node> link_open;
+public:
+    BasicFocalSearch();
 
     template<class T, class open_funct, class focal_funct>
-    inline int
-    FocalSearch(std::vector<std::vector<int>> &v, open_funct open_value, focal_funct focal_value, T heuristic,
-                double epsilon = (double) 1.5
-    ) {
+    inline int FocalSearch
+            (std::vector<std::vector<int>> &v, open_funct open_value, focal_funct focal_value, T heuristic,
+             double epsilon = (double) 1.5
+            ) {
         visited.clear();
-        std::priority_queue<Node, std::vector<Node>, CompareH> focal;
         GameBoard start(v);
 
         open.insert({open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
@@ -86,7 +119,6 @@ public:
             for (GameBoard &next_board: GetNeighbour(board)) {
                 if (visited.find(next_board) == visited.end() or visited[next_board] > g + 1) {
                     visited[next_board] = g + 1;
-                    // int f = next_board.GetHeuristic(heuristic);
                     int h_new = next_board.GetHeuristic(heuristic);
                     if (link_open.find(next_board) != link_open.end()) {
                         auto old_open = link_open.find(next_board);

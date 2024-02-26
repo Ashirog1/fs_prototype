@@ -46,7 +46,7 @@ double ManhattanDistance(int size, const std::vector<int> &board) {
 }
 
 double open_funct(double g, double h) {
-    return g+h;
+    return g;
 }
 
 double focal_funct(double g, double h) {

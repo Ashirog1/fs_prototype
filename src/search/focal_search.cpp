@@ -4,9 +4,11 @@
 
 #include "focal_search.h"
 
-focal_search::focal_search() {
+BasicFocalSearch::BasicFocalSearch() {
     visited.clear();
     open.clear();
+    link_open.clear();
+    while (!focal.empty()) focal.pop();
 }
 
 bool Node::operator<(const Node &oth) const {
