@@ -96,7 +96,6 @@ public:
                     focal_value(0, start.GetHeuristic(heuristic)), start});
 
         //map link_open to find state and value in open set when pop state from focal
-        /// TODO:
         Node tmp = Node(open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
                         focal_value(0, start.GetHeuristic(heuristic)), start);
         link_open.emplace(start, tmp);
@@ -150,9 +149,9 @@ public:
                  */
                 for (const auto &it: open) {
                     auto board = it.board;
-                    if (it.g + it.h >= epsilon * f_head)
+                    if (it.g + it.h > epsilon * f_head)
                         break;
-                    if (it.g + it.h >= epsilon * f_min) {
+                    if (it.g + it.h <= epsilon * f_min) {
                         double new_f = it.g + it.h;
                         focal.push({new_f, it.g, board.GetHeuristic(heuristic),
                                     focal_value(it.g, board.GetHeuristic(heuristic)), it.board});

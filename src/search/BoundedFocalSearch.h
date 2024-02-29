@@ -19,7 +19,7 @@ public:
     template<class T, class open_funct, class focal_funct>
     inline int FocalSearch
             (std::vector<std::vector<int>> &v, open_funct open_value, focal_funct focal_value, T heuristic,
-             double lower_epsilon = (double) 1.5, double upper_epsilon = (double)2.0
+             double lower_epsilon = (double) 1.5, double upper_epsilon = (double) 2.0
             ) {
         visited.clear();
         GameBoard start(v);
@@ -39,16 +39,18 @@ public:
             assert(!open.empty());
 
             double f_min = open.begin()->f;
-            auto [f, g, h, hFocal, board] = focal.top();
+            Node top_node = *open.begin();
+            if (not focal.empty()) {
+                top_node = focal.top();
+                focal.pop();
+            }
+            auto [f, g, h, hFocal, board] = top_node;
             if (visited[board] != g) continue;
             if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(g);
-            focal.pop();
             open.erase(Node(f, g, h, hFocal, board));
-
 
             if (hFocal == 0)
                 return static_cast<int>(g);
-
             for (GameBoard &next_board: GetNeighbour(board)) {
                 if (visited.find(next_board) == visited.end() or visited[next_board] > g + 1) {
                     visited[next_board] = g + 1;
@@ -59,12 +61,12 @@ public:
                     }
 
                     open.insert(Node(open_value(g + 1, h_new), g + 1, h_new, focal_value(g + 1, h_new), next_board));
-                    //open.insert({g + 1, next_board.GetHeuristic(heuristic), next_board});
                     link_open.emplace(next_board,
                                       Node(open_value(g + 1, h_new), g + 1, h_new, focal_value(g + 1, h_new),
                                            next_board));
 
-                    if (open_value(g + 1, h_new) < epsilon * f_min) {
+                    if (lower_epsilon * f_min  < open_value(g + 1, h_new) and
+                        open_value(g + 1, h_new) < upper_epsilon * f_min) {
                         focal.push(Node(open_value(g + 1, h_new), g + 1, h_new, focal_value(g + 1, h_new), next_board));
                     }
                 }
@@ -74,11 +76,12 @@ public:
             double f_head = fmin->g + fmin->h;
 
             if (!open.empty() && f_min < f_head) {
+                /// TODO: find lower iterator faster by using lower_bound
                 for (const auto &it: open) {
                     auto board = it.board;
-                    if (it.g + it.h >= epsilon * f_head)
+                    if (it.g + it.h > upper_epsilon * f_head)
                         break;
-                    if (it.g + it.h >= epsilon * f_min) {
+                    if (it.g + it.h >= lower_epsilon * f_min) {
                         double new_f = it.g + it.h;
                         focal.push({new_f, it.g, board.GetHeuristic(heuristic),
                                     focal_value(it.g, board.GetHeuristic(heuristic)), it.board});
