@@ -135,7 +135,7 @@ public:
                     /*
                      * insert new node into open
                      */
-                    open.insert(Node(open_value(g + 1, h_new), g + 1, h_new, focal_value(g + 1, h_new), next_board));
+                    open.insert(nodeValue(g + 1, next_board));
                     link_open.emplace(next_board,
                                       nodeValue(g + 1, next_board));
                     if (open_value(g + 1, h_new) < epsilon * f_min) {
