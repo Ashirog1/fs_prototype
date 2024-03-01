@@ -87,21 +87,26 @@ public:
             (std::vector<std::vector<int>> &v, open_funct open_value, focal_funct focal_value, T heuristic,
              double epsilon = (double) 1.5
             ) {
+        /*
+         * given g and gameboard, return current state
+         * maybe this function take h as parameter as well?
+         */
+        const auto nodeValue = [&](double g, GameBoard &board) {
+            double h = board.GetHeuristic(heuristic);
+            return Node(open_value(g, h), g, h, focal_value(g, h), board);
+        };
+
         visited.clear();
         GameBoard start(v);
 
-        open.insert({open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
-                     focal_value(0, start.GetHeuristic(heuristic)), start});
-        focal.push({open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
-                    focal_value(0, start.GetHeuristic(heuristic)), start});
+        open.insert(nodeValue(0, start));
 
         //map link_open to find state and value in open set when pop state from focal
-        Node tmp = Node(open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
-                        focal_value(0, start.GetHeuristic(heuristic)), start);
+        Node tmp = nodeValue(0, start);
         link_open.emplace(start, tmp);
         visited[start] = 0;
 
-        while (!focal.empty()) {
+        while (!open.empty()) {
             assert(!open.empty());
 
             double f_min = open.begin()->f;
@@ -132,10 +137,9 @@ public:
                      */
                     open.insert(Node(open_value(g + 1, h_new), g + 1, h_new, focal_value(g + 1, h_new), next_board));
                     link_open.emplace(next_board,
-                                      Node(open_value(g + 1, h_new), g + 1, h_new, focal_value(g + 1, h_new),
-                                           next_board));
+                                      nodeValue(g + 1, next_board));
                     if (open_value(g + 1, h_new) < epsilon * f_min) {
-                        focal.push(Node(open_value(g + 1, h_new), g + 1, h_new, focal_value(g + 1, h_new), next_board));
+                        focal.push(nodeValue(g + 1, next_board));
                     }
                 }
             }
@@ -152,9 +156,7 @@ public:
                     if (it.g + it.h > epsilon * f_head)
                         break;
                     if (it.g + it.h <= epsilon * f_min) {
-                        double new_f = it.g + it.h;
-                        focal.push({new_f, it.g, board.GetHeuristic(heuristic),
-                                    focal_value(it.g, board.GetHeuristic(heuristic)), it.board});
+                        focal.push(nodeValue(it.g, board));
                     }
                 }
             }
