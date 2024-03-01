@@ -24,10 +24,11 @@ Node::Node(double _f, double _g, double _h, double _hFocal, const GameBoard &_bo
 }
 
 bool CompareG::operator()(const Node &a, const Node &b) {
-    return a.g > b.g;
+    return a.f > b.f;
 }
 
 bool CompareH::operator()(const Node &a, const Node &b) {
+    return a.hFocal > b.hFocal;
     return false;
 }
 

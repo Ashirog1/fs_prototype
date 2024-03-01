@@ -74,9 +74,9 @@ class BasicFocalSearch {
 
 protected:
 //std::priority_queue<Node> open;
-std::set<Node> open;
+    std::set<Node> open;
 // @brief visited:
-std::map<GameBoard, int> visited;
+    std::map<GameBoard, int> visited;
     std::priority_queue<Node, std::vector<Node>, CompareH> focal;
     std::map<GameBoard, Node> link_open;
 public:

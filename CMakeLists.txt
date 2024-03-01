@@ -3,4 +3,4 @@ project(fs_prototype)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(fs_prototype main.cpp src/problem/game_board.cpp src/search/focal_search.cpp src/heuristics.h src/heuristics.cpp src/search/BoundedFocalSearch.h src/search/BoundedFocalSearch.cpp)
+add_executable(fs_prototype main.cpp src/problem/game_board.cpp src/search/focal_search.cpp src/heuristics.h src/heuristics.cpp src/search/BoundedFocalSearch.h src/search/BoundedFocalSearch.cpp src/search/RWFocalSearch.h src/search/RWFocalSearch.cpp src/search/utils.h src/search/utils.cpp)

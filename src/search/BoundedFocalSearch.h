@@ -11,7 +11,6 @@
 /*
  * Bounded Focal Search
  * focal will maintain Node have f in range [lower_epsilon * fmin, upper_epsilon * fmin]
- * didn't work
  */
 // TODO: figure out how to find fmin?
 class BoundedFocalSearch : public BasicFocalSearch {
@@ -26,8 +25,6 @@ public:
 
         open.insert({open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
                      focal_value(0, start.GetHeuristic(heuristic)), start});
-        focal.push({open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
-                    focal_value(0, start.GetHeuristic(heuristic)), start});
 
         //map link_open to find state and value in open set when pop state from focal
         Node tmp = Node(open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),

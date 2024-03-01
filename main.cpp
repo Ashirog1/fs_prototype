@@ -1,6 +1,7 @@
 #include "src/problem/game_board.h"
 #include "src/heuristics.h"
 #include "src/search/focal_search.h"
+#include "src/search/BoundedFocalSearch.h"
 #include <iostream>
 #include <vector>
 
@@ -15,10 +16,9 @@ namespace global_testing {
 //            std::cout << neigh.GetHeuristic(HammingDistance) << '\n';
 //        }
 //        return ;
-        BasicFocalSearch fs;
+        BoundedFocalSearch fs;
         std::cout << gb.GetHeuristic(HammingDistance) << '\n';
 //        std::cout << "AStarSearch\n" << fs.AStarSearch(v, HammingDistance) << '\n';
-        fs = BasicFocalSearch();
         std::cout << "BasicFocalSearch\n" << fs.FocalSearch(v, open_funct, focal_funct, ManhattanDistance);
     }
 };
