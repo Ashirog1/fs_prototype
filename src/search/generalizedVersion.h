@@ -2,9 +2,6 @@
 // Created by only_u on 2/26/24.
 //
 
-#ifndef FS_PROTOTYPE_BOUNDEDFOCALSEARCH_H
-#define FS_PROTOTYPE_BOUNDEDFOCALSEARCH_H
-
 #include <vector>
 #include "focal_search.h"
 #include "utils.h"
@@ -16,15 +13,25 @@
 class generalizedVersion : public BasicFocalSearch
 {
 public:
-    std::set<Node,CompareH> focalSet;
+    std::set<Node> focalSet;
 
     template <class T, class open_funct, class focal_funct>
     inline int FocalSearch(std::vector<std::vector<int>> &v, open_funct open_value, focal_funct focal_value, T heuristic,
                            double epsilon = (double)1.5, double pickRate = (double)0.6)
     {
-        const auto nodeValue = [&](double g, GameBoard &board) {
+        const auto nodeValue = [&](double g, GameBoard &board)
+        {
             double h = board.GetHeuristic(heuristic);
             return Node(open_value(g, h), g, h, focal_value(g, h), board);
+        };
+
+        const auto assignValue =[&](double &f, double &g, double &h,double &hFocal,GameBoard &board,Node node )
+        {
+           f=node.f;
+           g=node.g;
+           h=node.h;
+           hFocal=node.hFocal;
+           board=node.board;
         };
         visited.clear();
         GameBoard start(v);
@@ -35,77 +42,136 @@ public:
         // map link_open to find state and value in open set when pop state from focal
         Node tmp = Node(open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
                         focal_value(0, start.GetHeuristic(heuristic)), start);
+
+        focalSet.insert(nodeValue(0, start));
         link_open.emplace(start, tmp);
         visited[start] = 0;
-        mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+        int dem=0;
 
         while (1)
         {
             assert(!open.empty());
-            double pick = generate_random_number(0, 1);
-            //Pop from focal
-            auto [f,g,h,hFocal,board];
-            if (pick <= pickRate && !focal.empty())
+            int pick = generate_random_number(0, 100);
+            // Pop from focal
+            double f,g,h,hFocal;
+            GameBoard board;
+         //   auto [f, g, h, hFocal, board];
+            double f_min=open.begin()->f;
+          //  std::cout<<pick<<'\n';
+            
+            if (pick <= pickRate*100 && !focalSet.empty())
             {
-                double f_min = open.begin()->f;
-                [f, g, h, hFocal, board] = focal.top();
+                assignValue(f,g,h,hFocal,board,*focalSet.begin());
                 if (visited[board] != g)
                     continue;
                 if (board.GetHeuristic(heuristic) == 0)
                     return static_cast<int>(g);
-                focal.pop();
+                focalSet.erase(focalSet.begin());
                 open.erase(Node(f, g, h, hFocal, board));
 
                 if (hFocal == 0)
                     return static_cast<int>(g);
-
             }
 
-            //Pop from open
+            // Pop from open
             else
             {
-                [f, g, h, hFocal, board] = open.top();
+                assignValue(f,g,h,hFocal,board,*open.begin());
+              //  { f, g, h, hFocal, board } = *open.begin();
                 if (visited[board] != g)
                     continue;
                 if (board.GetHeuristic(heuristic) == 0)
                     return static_cast<int>(g);
-                open.pop();
+                open.erase(open.begin());
                 focalSet.erase(Node(f, g, h, hFocal, board));
-                
-                if(hFocal==0)
+
+                if (hFocal == 0)
                     return static_cast<int>(g);
             }
-                for (GameBoard &next_board : GetNeighbour(board))
+            std::cout<<"dem"<<dem<<' ';
+            std::cout<<board.GetHeuristic(heuristic)<<'\n';
+            dem++;
+            
+            for (GameBoard &next_board : GetNeighbour(board))
+            {
+                std::cout<<'\n';
+                if (visited.find(next_board) == visited.end() or visited[next_board] > g + 1)
                 {
-                    if (visited.find(next_board) == visited.end() or visited[next_board] > g + 1)
+                   // next_board.printState();
+                    visited[next_board] = g + 1;
+                    int h_new = next_board.GetHeuristic(heuristic);
+                    /*
+                     * delete old_value of new state in open
+                     */
+                    if (link_open.find(next_board) != link_open.end())
                     {
-                        visited[next_board] = g + 1;
-                        int h_new = next_board.GetHeuristic(heuristic);
-                        /*
-                         * delete old_value of new state in open
-                         */
-                        if (link_open.find(next_board) != link_open.end())
-                        {
-                            auto old_open = link_open.find(next_board);
-                            open.erase(old_open->second);
-                        }
-                        /*
-                         * insert new node into open
-                         */
-                        open.insert(nodeValue(g + 1, next_board));
-                        link_open.emplace(next_board,
-                                          nodeValue(g + 1, next_board));
-                        if (open_value(g + 1, h_new) < epsilon * f_min)
-                        {
-                            focal.push(nodeValue(g + 1, next_board));
-                        }
+                        auto old_open = link_open.find(next_board);
+                        open.erase(old_open->second);
+                        std::cout<<"delete"<<'\n';
+                    }
+                    /*
+                     * insert new node into open
+                     */
+
+                    open.insert(nodeValue(g + 1, next_board));
+                     for(auto v:open)
+            {
+                v.board.printState();
+                std::cout<<'\n';
+            }
+                    std::cout<<" "<<'\n'<<'\n';
+                
+                    //std::cout<<"open size "<<open.size()<<'\n';
+
+                    link_open.emplace(next_board,
+                                      nodeValue(g + 1, next_board));
+                    if (open_value(g + 1, h_new) < epsilon * f_min)
+                    {
+                        focalSet.insert(nodeValue(g + 1, next_board));
                     }
                 }
-                
-        return static_cast<int>(-1);
-
             }
+            // for(auto v:open)
+            // {
+            //     v.board.printState();
+            //     std::cout<<'\n';
+            // }
+            // std::cout<<"\n";
+            auto f_head = open.begin()->f;
+            //std::cout<<"f_head"<<'\n';
+           // double f_head = fmin->g + fmin->h;
+            std::cout<<open.size()<<" "<<focalSet.size()<<'\n';
+            if (!open.empty() && f_min < f_head)
+            {
+                /*
+                 * update focal: insert new node from open to focal with f <= epsilon * fmin
+                 */
+                
+                for(auto it=open.lower_bound(Node(f_min*epsilon,(double)0,(double)0,(double)0,board));it!=open.end();++it)
+                {
+                    //Node node=*it;
+                    auto board = it->board;
+                    if (it->f > epsilon * f_head)
+                        break;
+                    if (it->f >= epsilon * f_min)
+                    {
+                        focalSet.insert(nodeValue(it->g, board));
+                    }
+                }
+
+                //  for (const auto &it: open) {
+                //     auto board = it.board;
+                //     if (it.g + it.h > epsilon * f_head)
+                //         break;
+                //     if (it.g + it.h >= epsilon * f_min) {
+                //         focal.push(nodeValue(it.g, board));
+                //     }
+                // }
+            }
+
+            return static_cast<int>(-1);
+        }
     }
 };
 
-#endif // FS_PROTOTYPE_BOUNDEDFOCALSEARCH_H
+//#endif // FS_PROTOTYPE_BOUNDEDFOCALSEARCH_H
