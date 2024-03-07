@@ -81,7 +81,6 @@ protected:
     std::map<GameBoard, Node> link_open;
 public:
     BasicFocalSearch();
-
     template<class T, class open_funct, class focal_funct>
     inline int FocalSearch
             (std::vector<std::vector<int>> &v, open_funct open_value, focal_funct focal_value, T heuristic,
@@ -110,13 +109,15 @@ public:
             assert(!open.empty());
 
             double f_min = open.begin()->f;
-            auto [f, g, h, hFocal, board] = focal.top();
+            Node tmp = *open.begin();
+            if (not focal.empty()) {
+                tmp = focal.top();
+                focal.pop();
+            }
+            auto [f, g, h, hFocal, board] = tmp;
             if (visited[board] != g) continue;
             if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(g);
-            focal.pop();
             open.erase(Node(f, g, h, hFocal, board));
-
-
             if (hFocal == 0)
                 return static_cast<int>(g);
 
