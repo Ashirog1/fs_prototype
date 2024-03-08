@@ -4,6 +4,7 @@
 #include "src/search/BoundedFocalSearch.h"
 #include "src/search/RWFocalSearch.h"
 #include "src/search/PotentialFocalSearch.h"
+#include "src/search/generalizedVersion.h"
 #include <iostream>
 #include <vector>
 
@@ -18,10 +19,11 @@ namespace global_testing {
 //            std::cout << neigh.GetHeuristic(HammingDistance) << '\n';
 //        }
 //        return ;
-        PotentialFocalSearch fs;
+        //BasicFocalSearch fs;
+        generalizedVersion fs;
         std::cout << gb.GetHeuristic(ManhattanDistance) << '\n';
 //        std::cout << "AStarSearch\n" << fs.AStarSearch(v, HammingDistance) << '\n';
-        std::cout << "BasicFocalSearch\n" << fs.PotentialSearch(v, open_funct, focal_funct, ManhattanDistance);
+        std::cout << "BasicFocalSearch\n" << fs.FocalSearch(v, open_funct, focal_funct, ManhattanDistance);
 
     }
 };

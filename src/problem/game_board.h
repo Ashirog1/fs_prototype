@@ -40,10 +40,24 @@ public:
 
     bool operator<(const GameBoard &oth) const;
 
+    bool operator == (const GameBoard &oth) const{
+        for(int i=0;i<current.size();i++){
+            if(current[i]!=oth.current[i]){
+                return true;
+            }
+        }
+    return false;
+    };
+
+
     template<class T>
     inline double GetHeuristic(T heuristic) {
         return heuristic(w, current);
-    }
+    };
+
+    void printState(){
+        for(auto v:current) std::cout<<v<<" ";
+    };
 
     friend std::ostream& operator<<(std::ostream& os, const GameBoard &gameBoard);
 };

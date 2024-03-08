@@ -71,7 +71,13 @@ std::vector<GameBoard> GetNeighbour(GameBoard &gameBoard) {
 }
 
 bool GameBoard::operator<(const GameBoard &oth) const {
-    return current < oth.current;
+    for(int i=0;i<current.size();i++){
+            if(current[i]!=oth.current[i]){
+                return true;
+            }
+        }
+    return false;
+        
 }
 
 GameBoard::GameBoard() {

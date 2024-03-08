@@ -81,6 +81,7 @@ protected:
     std::map<GameBoard, Node> link_open;
 public:
     BasicFocalSearch();
+
     template<class T, class open_funct, class focal_funct>
     inline int FocalSearch
             (std::vector<std::vector<int>> &v, open_funct open_value, focal_funct focal_value, T heuristic,
@@ -99,6 +100,7 @@ public:
         GameBoard start(v);
 
         open.insert(nodeValue(0, start));
+        focal.push(nodeValue(0,start));
 
         //map link_open to find state and value in open set when pop state from focal
         Node tmp = nodeValue(0, start);
@@ -107,17 +109,19 @@ public:
 
         while (!open.empty()) {
             assert(!open.empty());
+           // std::cout<<-2<<'\n';
 
             double f_min = open.begin()->f;
-            Node tmp = *open.begin();
-            if (not focal.empty()) {
-                tmp = focal.top();
-                focal.pop();
-            }
-            auto [f, g, h, hFocal, board] = tmp;
+
+            auto [f, g, h, hFocal, board] = focal.top();
+
             if (visited[board] != g) continue;
+
             if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(g);
+            focal.pop();
             open.erase(Node(f, g, h, hFocal, board));
+
+
             if (hFocal == 0)
                 return static_cast<int>(g);
 
@@ -145,6 +149,8 @@ public:
                 }
             }
 
+
+
             auto fmin = open.begin();
             double f_head = fmin->g + fmin->h;
 
@@ -152,6 +158,7 @@ public:
                 /*
                  * update focal: insert new node from open to focal with f <= epsilon * fmin
                  */
+    
                 for (const auto &it: open) {
                     auto board = it.board;
                     if (it.g + it.h > epsilon * f_head)

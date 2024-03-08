@@ -58,6 +58,8 @@ public:
          //   auto [f, g, h, hFocal, board];
             double f_min=open.begin()->f;
           //  std::cout<<pick<<'\n';
+                  std::cout<<"abc"<<' '<<pick<<" "<<'\n';
+
             
             if (pick <= pickRate*100 && !focalSet.empty())
             {
@@ -66,8 +68,10 @@ public:
                     continue;
                 if (board.GetHeuristic(heuristic) == 0)
                     return static_cast<int>(g);
+             //   std::cout<<"lol"<<"\n";
                 focalSet.erase(focalSet.begin());
                 open.erase(Node(f, g, h, hFocal, board));
+             //   std::cout<<"lol"<<"\n";
 
                 if (hFocal == 0)
                     return static_cast<int>(g);
@@ -84,17 +88,16 @@ public:
                     return static_cast<int>(g);
                 open.erase(open.begin());
                 focalSet.erase(Node(f, g, h, hFocal, board));
+             //   std::cout<<"lol"<<"\n";
 
                 if (hFocal == 0)
                     return static_cast<int>(g);
             }
-            std::cout<<"dem"<<dem<<' ';
-            std::cout<<board.GetHeuristic(heuristic)<<'\n';
+
             dem++;
             
             for (GameBoard &next_board : GetNeighbour(board))
             {
-                std::cout<<'\n';
                 if (visited.find(next_board) == visited.end() or visited[next_board] > g + 1)
                 {
                    // next_board.printState();
@@ -107,19 +110,45 @@ public:
                     {
                         auto old_open = link_open.find(next_board);
                         open.erase(old_open->second);
-                        std::cout<<"delete"<<'\n';
                     }
                     /*
                      * insert new node into open
                      */
 
-                    open.insert(nodeValue(g + 1, next_board));
-                     for(auto v:open)
-            {
-                v.board.printState();
-                std::cout<<'\n';
-            }
-                    std::cout<<" "<<'\n'<<'\n';
+                    auto check=open.insert(nodeValue(g + 1, next_board));
+                    // if(check.second)
+                    // {
+                    //     std::cout<<"ok insert"<<'\n';
+                    // }
+                    // else
+                    // {
+                    //     std::cout<<"current board ";
+                    //     next_board.printState();
+                    //     std::cout<<"\n";
+                    //     Node a=nodeValue(g+1,next_board);
+                    //     auto ite=*open.find(a);
+                    //     a.board.printState();
+                    //   //  std::cout<<'\n';
+                    //   //  std::cout<<a.f<<" "<<a.g<<" "<<a.h<<" "<<a.hFocal<<" "<<'\n';
+
+                        
+                    //     //if(ite!=open.end()) std::cout<<"found"<<'\n';
+                    //     //else std::cout<<"not found"<<'\n';
+                    //     std::cout<<ite.f<<" "<<ite.g<<" "<<ite.h<<" "<<ite.hFocal<<" "<<'\n';
+                    //     ite.board.printState();
+                    //     // for(auto v:open)
+                    //     // {
+                    //     //     v.board.printState();
+                    //     //     std::cout<<"\n";
+                    //     // }
+                    //     // std::cout<<"false insert"<<'\n';
+                    // }
+            //          for(auto v:open)
+            // {
+            //     v.board.printState();
+            //     std::cout<<'\n';
+            // }
+                 //   std::cout<<" "<<'\n'<<'\n';
                 
                     //std::cout<<"open size "<<open.size()<<'\n';
 
@@ -167,10 +196,11 @@ public:
                 //         focal.push(nodeValue(it.g, board));
                 //     }
                 // }
-            }
 
-            return static_cast<int>(-1);
+            }
         }
+        return static_cast<int>(-1);
+
     }
 };
 

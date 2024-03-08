@@ -1,0 +1,3 @@
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\fs_prototype.dir/objects.a
+C:\msys64\ucrt64\bin\ar.exe qc CMakeFiles\fs_prototype.dir/objects.a @CMakeFiles\fs_prototype.dir\objects1.rsp
+C:\msys64\ucrt64\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\fs_prototype.dir/objects.a -Wl,--no-whole-archive -o fs_prototype.exe -Wl,--out-implib,libfs_prototype.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\fs_prototype.dir\linkLibs.rsp

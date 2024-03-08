@@ -1,0 +1,80 @@
+[
+{
+  "directory": "D:/Hiep/code/fs_prototype/Build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -o CMakeFiles\\fs_prototype.dir\\main.cpp.obj -c D:\\Hiep\\code\\fs_prototype\\main.cpp",
+  "file": "D:/Hiep/code/fs_prototype/main.cpp",
+  "output": "CMakeFiles/fs_prototype.dir/main.cpp.obj"
+},
+{
+  "directory": "D:/Hiep/code/fs_prototype/Build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -o CMakeFiles\\fs_prototype.dir\\src\\problem\\game_board.cpp.obj -c D:\\Hiep\\code\\fs_prototype\\src\\problem\\game_board.cpp",
+  "file": "D:/Hiep/code/fs_prototype/src/problem/game_board.cpp",
+  "output": "CMakeFiles/fs_prototype.dir/src/problem/game_board.cpp.obj"
+},
+{
+  "directory": "D:/Hiep/code/fs_prototype/Build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -o CMakeFiles\\fs_prototype.dir\\src\\search\\focal_search.cpp.obj -c D:\\Hiep\\code\\fs_prototype\\src\\search\\focal_search.cpp",
+  "file": "D:/Hiep/code/fs_prototype/src/search/focal_search.cpp",
+  "output": "CMakeFiles/fs_prototype.dir/src/search/focal_search.cpp.obj"
+},
+{
+  "directory": "D:/Hiep/code/fs_prototype/Build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -o CMakeFiles\\fs_prototype.dir\\src\\heuristics.cpp.obj -c D:\\Hiep\\code\\fs_prototype\\src\\heuristics.cpp",
+  "file": "D:/Hiep/code/fs_prototype/src/heuristics.cpp",
+  "output": "CMakeFiles/fs_prototype.dir/src/heuristics.cpp.obj"
+},
+{
+  "directory": "D:/Hiep/code/fs_prototype/Build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -o CMakeFiles\\fs_prototype.dir\\src\\search\\BoundedFocalSearch.cpp.obj -c D:\\Hiep\\code\\fs_prototype\\src\\search\\BoundedFocalSearch.cpp",
+  "file": "D:/Hiep/code/fs_prototype/src/search/BoundedFocalSearch.cpp",
+  "output": "CMakeFiles/fs_prototype.dir/src/search/BoundedFocalSearch.cpp.obj"
+},
+{
+  "directory": "D:/Hiep/code/fs_prototype/Build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -o CMakeFiles\\fs_prototype.dir\\src\\search\\RWFocalSearch.cpp.obj -c D:\\Hiep\\code\\fs_prototype\\src\\search\\RWFocalSearch.cpp",
+  "file": "D:/Hiep/code/fs_prototype/src/search/RWFocalSearch.cpp",
+  "output": "CMakeFiles/fs_prototype.dir/src/search/RWFocalSearch.cpp.obj"
+},
+{
+  "directory": "D:/Hiep/code/fs_prototype/Build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -o CMakeFiles\\fs_prototype.dir\\src\\search\\utils.cpp.obj -c D:\\Hiep\\code\\fs_prototype\\src\\search\\utils.cpp",
+  "file": "D:/Hiep/code/fs_prototype/src/search/utils.cpp",
+  "output": "CMakeFiles/fs_prototype.dir/src/search/utils.cpp.obj"
+},
+{
+  "directory": "D:/Hiep/code/fs_prototype/Build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -o CMakeFiles\\fs_prototype.dir\\src\\search\\PotentialFocalSearch.cpp.obj -c D:\\Hiep\\code\\fs_prototype\\src\\search\\PotentialFocalSearch.cpp",
+  "file": "D:/Hiep/code/fs_prototype/src/search/PotentialFocalSearch.cpp",
+  "output": "CMakeFiles/fs_prototype.dir/src/search/PotentialFocalSearch.cpp.obj"
+},
+{
+  "directory": "D:/Hiep/code/fs_prototype/Build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/hello_test.dir/includes_CXX.rsp -g -o CMakeFiles\\hello_test.dir\\src\\tests\\hello_test.cc.obj -c D:\\Hiep\\code\\fs_prototype\\src\\tests\\hello_test.cc",
+  "file": "D:/Hiep/code/fs_prototype/src/tests/hello_test.cc",
+  "output": "CMakeFiles/hello_test.dir/src/tests/hello_test.cc.obj"
+},
+{
+  "directory": "D:/Hiep/code/fs_prototype/Build/_deps/googletest-build/googlemock",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/gmock.dir/includes_CXX.rsp -g -std=c++17 -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles\\gmock.dir\\src\\gmock-all.cc.obj -c D:\\Hiep\\code\\fs_prototype\\Build\\_deps\\googletest-src\\googlemock\\src\\gmock-all.cc",
+  "file": "D:/Hiep/code/fs_prototype/Build/_deps/googletest-src/googlemock/src/gmock-all.cc",
+  "output": "_deps/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.obj"
+},
+{
+  "directory": "D:/Hiep/code/fs_prototype/Build/_deps/googletest-build/googlemock",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/gmock_main.dir/includes_CXX.rsp -g -std=c++17 -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles\\gmock_main.dir\\src\\gmock_main.cc.obj -c D:\\Hiep\\code\\fs_prototype\\Build\\_deps\\googletest-src\\googlemock\\src\\gmock_main.cc",
+  "file": "D:/Hiep/code/fs_prototype/Build/_deps/googletest-src/googlemock/src/gmock_main.cc",
+  "output": "_deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.obj"
+},
+{
+  "directory": "D:/Hiep/code/fs_prototype/Build/_deps/googletest-build/googletest",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/gtest.dir/includes_CXX.rsp -g -std=c++17 -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles\\gtest.dir\\src\\gtest-all.cc.obj -c D:\\Hiep\\code\\fs_prototype\\Build\\_deps\\googletest-src\\googletest\\src\\gtest-all.cc",
+  "file": "D:/Hiep/code/fs_prototype/Build/_deps/googletest-src/googletest/src/gtest-all.cc",
+  "output": "_deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.obj"
+},
+{
+  "directory": "D:/Hiep/code/fs_prototype/Build/_deps/googletest-build/googletest",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/gtest_main.dir/includes_CXX.rsp -g -std=c++17 -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles\\gtest_main.dir\\src\\gtest_main.cc.obj -c D:\\Hiep\\code\\fs_prototype\\Build\\_deps\\googletest-src\\googletest\\src\\gtest_main.cc",
+  "file": "D:/Hiep/code/fs_prototype/Build/_deps/googletest-src/googletest/src/gtest_main.cc",
+  "output": "_deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj"
+}
+]
