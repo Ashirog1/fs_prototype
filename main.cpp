@@ -19,8 +19,8 @@ namespace global_testing {
 //            std::cout << neigh.GetHeuristic(HammingDistance) << '\n';
 //        }
 //        return ;
-        //BasicFocalSearch fs;
-        generalizedVersion fs;
+        BasicFocalSearch fs;
+        //generalizedVersion fs;
         std::cout << gb.GetHeuristic(ManhattanDistance) << '\n';
 //        std::cout << "AStarSearch\n" << fs.AStarSearch(v, HammingDistance) << '\n';
         std::cout << "BasicFocalSearch\n" << fs.FocalSearch(v, open_funct, focal_funct, ManhattanDistance);

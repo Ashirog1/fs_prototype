@@ -12,6 +12,7 @@
 #include <utility>
 #include <cassert>
 #include <set>
+#include<algorithm>
 
 class Node {
 public:
@@ -96,16 +97,22 @@ public:
             return Node(open_value(g, h), g, h, focal_value(g, h), board);
         };
 
-        visited.clear();
-        GameBoard start(v);
+        bool foundDestination = false;
+        double minDistance=(double)INT_MAX;
 
-        open.insert(nodeValue(0, start));
-        focal.push(nodeValue(0,start));
+        visited.clear();
+        GameBoard startState(v);
+
+        Node startNode=nodeValue(0,startState);
+
+        open.insert(startNode);
+        focal.push(startNode);
 
         //map link_open to find state and value in open set when pop state from focal
-        Node tmp = nodeValue(0, start);
-        link_open.emplace(start, tmp);
-        visited[start] = 0;
+
+        //Node tmp = nodeValue(0, start);
+        link_open.emplace(startState, startNode);
+        visited[startState] = 0;
 
         while (!open.empty()) {
             assert(!open.empty());
@@ -122,14 +129,19 @@ public:
             open.erase(Node(f, g, h, hFocal, board));
 
 
-            if (hFocal == 0)
-                return static_cast<int>(g);
+            // if (hFocal == 0)
+            //     return static_cast<int>(g);
 
 
             for (GameBoard &next_board: GetNeighbour(board)) {
                 if (visited.find(next_board) == visited.end() or visited[next_board] > g + 1) {
                     visited[next_board] = g + 1;
                     int h_new = next_board.GetHeuristic(heuristic);
+                    if(h_new==0){
+                        foundDestination=true;
+                        minDistance=std::min(minDistance,g+1);
+                        //return static_cast<int> g+1;
+                    }
                     /*
                      * delete old_value of new state in open
                      */
@@ -140,33 +152,48 @@ public:
                     /*
                      * insert new node into open
                      */
-                    open.insert(nodeValue(g + 1, next_board));
+                    Node nextNode=nodeValue(g+1,next_board);
+                    open.insert(nextNode);
                     link_open.emplace(next_board,
-                                      nodeValue(g + 1, next_board));
-                    if (open_value(g + 1, h_new) < epsilon * f_min) {
-                        focal.push(nodeValue(g + 1, next_board));
+                                      nextNode);
+                    if (open_value(g + 1, h_new) <= epsilon * f_min) {
+                        focal.push(nextNode);
                     }
                 }
             }
 
-
+            if(foundDestination){
+                return static_cast<int> (minDistance);
+            }
 
             auto fmin = open.begin();
-            double f_head = fmin->g + fmin->h;
+            double f_head = fmin->f;
 
             if (!open.empty() && f_min < f_head) {
                 /*
                  * update focal: insert new node from open to focal with f <= epsilon * fmin
                  */
-    
-                for (const auto &it: open) {
+                Node middleNode=Node(f_min*epsilon,(double)-1,(double)-1,(double)-1,board);
+                for(auto state=open.lower_bound(middleNode);state!=open.end();++state)
+                {
+                    //Node node=*it;
+                    auto board = state->board;
+                    if (state->f > epsilon * f_head)
+                        break;
+                    if (state->f >= epsilon * f_min)
+                    {
+                        Node focalNode=nodeValue(state->g,board);
+                        focal.push(focalNode);
+                    }
+                }
+                /*for (const auto &it: open) {
                     auto board = it.board;
                     if (it.g + it.h > epsilon * f_head)
                         break;
                     if (it.g + it.h <= epsilon * f_min) {
                         focal.push(nodeValue(it.g, board));
                     }
-                }
+                }*/
             }
 
         }

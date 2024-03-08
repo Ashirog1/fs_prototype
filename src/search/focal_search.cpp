@@ -12,8 +12,10 @@ BasicFocalSearch::BasicFocalSearch() {
 }
 
 bool Node::operator<(const Node &oth) const {
-    if(f+g!=oth.f+oth.g)
-    return f + g > oth.f + oth.g;
+    if(f!=oth.f)
+    return f < oth.f ;
+    if(g!=oth.g)
+    return g<oth.g;
     return board<oth.board;
 }
 

@@ -57,18 +57,32 @@ public:
             GameBoard board;
          //   auto [f, g, h, hFocal, board];
             double f_min=open.begin()->f;
+           // std::cout<<"ok1"<<'\n';
           //  std::cout<<pick<<'\n';
-                  std::cout<<"abc"<<' '<<pick<<" "<<'\n';
+             //     std::cout<<"abc"<<' '<<pick<<" "<<'\n';
+           //  std::cout<<"oke1"<<'\n';
+            //dem++;
+          //  std::cout<<dem<<'\n';
+                     // std::cout<<"ok1"<<'\n';
 
-            
             if (pick <= pickRate*100 && !focalSet.empty())
             {
-                assignValue(f,g,h,hFocal,board,*focalSet.begin());
-                if (visited[board] != g)
-                    continue;
+                Node a=*focalSet.begin();
+                a.board.printState();
+                dem++;
+                std::cout<<'\n'<<dem<<" "<<a.board.GetHeuristic(heuristic)<<'\n';
+               // a.printState();
+               // std::cout<<'\n';
+                //focalSet.begin()->board.printState();
+                assignValue(f,g,h,hFocal,board,a);
+              //  if (visited[a.board] != g)
+                //    continue;
+           //     board.printState();
+                //std::cout<<'\n'<<g<<"\n";
                 if (board.GetHeuristic(heuristic) == 0)
                     return static_cast<int>(g);
              //   std::cout<<"lol"<<"\n";
+
                 focalSet.erase(focalSet.begin());
                 open.erase(Node(f, g, h, hFocal, board));
              //   std::cout<<"lol"<<"\n";
@@ -76,16 +90,26 @@ public:
                 if (hFocal == 0)
                     return static_cast<int>(g);
             }
-
             // Pop from open
             else
             {
-                assignValue(f,g,h,hFocal,board,*open.begin());
+                Node a=*open.begin();
+                a.board.printState();
+                                dem++;
+                std::cout<<'\n'<<dem<<" "<<a.board.GetHeuristic(heuristic)<<'\n';
+
+                //a.printState();
+              //  std::cout<<'\n';
+                assignValue(f,g,h,hFocal,board,a);
               //  { f, g, h, hFocal, board } = *open.begin();
-                if (visited[board] != g)
-                    continue;
+               // if (visited[a.board] != g)
+                 //   continue;
+           //     board.printState();
+              //  std::cout<<'\n'<<g<<"\n";
+
                 if (board.GetHeuristic(heuristic) == 0)
                     return static_cast<int>(g);
+             //   std::cout<<"ok1"<<'\n';
                 open.erase(open.begin());
                 focalSet.erase(Node(f, g, h, hFocal, board));
              //   std::cout<<"lol"<<"\n";
@@ -93,11 +117,16 @@ public:
                 if (hFocal == 0)
                     return static_cast<int>(g);
             }
-
-            dem++;
+             // std::cout<<f<<" "<<g<<" "<<h<<" "<<" "<<hFocal<<'\n';
             
+          //  board.printState();
+           // std::cout<<"ok1"<<'\n';
+
+          //  dem++;
+          //  std::cout<<dem<<'\n';
             for (GameBoard &next_board : GetNeighbour(board))
             {
+               // std::cout<<g<<'\n';
                 if (visited.find(next_board) == visited.end() or visited[next_board] > g + 1)
                 {
                    // next_board.printState();
@@ -169,13 +198,12 @@ public:
             auto f_head = open.begin()->f;
             //std::cout<<"f_head"<<'\n';
            // double f_head = fmin->g + fmin->h;
-            std::cout<<open.size()<<" "<<focalSet.size()<<'\n';
+     //       std::cout<<open.size()<<" "<<focalSet.size()<<'\n';
             if (!open.empty() && f_min < f_head)
             {
                 /*
                  * update focal: insert new node from open to focal with f <= epsilon * fmin
                  */
-                
                 for(auto it=open.lower_bound(Node(f_min*epsilon,(double)0,(double)0,(double)0,board));it!=open.end();++it)
                 {
                     //Node node=*it;
@@ -198,8 +226,9 @@ public:
                 // }
 
             }
+         // std::cout<<"ok"<<'\n';
         }
-        return static_cast<int>(-1);
+                    return static_cast<int>(-1);
 
     }
 };
