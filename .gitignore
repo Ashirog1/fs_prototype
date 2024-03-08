@@ -30,7 +30,8 @@
 
 Build/*
 build/*
-cmake-build/*
+cmake-build*
+CMakeCache*
 
 
 # Executables
