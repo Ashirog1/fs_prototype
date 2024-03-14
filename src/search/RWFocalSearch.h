@@ -14,7 +14,7 @@ public:
     template<class T, class open_funct, class focal_funct>
     inline int FocalSearch
             (std::vector <std::vector<int>> &v, open_funct open_value, focal_funct focal_value, T heuristic,
-            std::vector<double> epsilons
+            std::vector<double> epsilons = {1, (double)1.2, (double)1.5}
             ) {
         /*
          * focals[i] maintain fmin in range [epsilons[i] * fmin, epsilons[i + 1] * fmin]

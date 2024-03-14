@@ -3,6 +3,7 @@
 //
 
 #include <gtest/gtest.h>
+#include "../search/focal_search.h"
 
 // Demonstrate some basic assertions.
 TEST(HelloTest, BasicAssertions

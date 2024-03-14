@@ -6,7 +6,7 @@
 #define FS_PROTOTYPE_FOCAL_SEARCH_H
 
 #include "../problem/game_board.h"
-#include "../heuristics.h"
+#include "../problem/heuristics.h"
 #include <climits>
 #include <map>
 #include <queue>
