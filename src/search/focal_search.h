@@ -7,6 +7,7 @@
 
 #include "../problem/game_board.h"
 #include "../heuristics.h"
+#include <climits>
 #include <map>
 #include <queue>
 #include <utility>
@@ -54,10 +55,10 @@ public:
             auto fmin = open.begin();
             auto [f, g, h, fFocal, board] = *fmin;
             open.erase(fmin);
-            if (visited[board] != f) continue;
+            if (visited[board] != g) continue;
             if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(f);
             for (GameBoard &next_board: GetNeighbour(board)) {
-                if (visited.find(next_board) == visited.end() or visited[next_board] > f + 1) {
+                if (visited.find(next_board) == visited.end() or visited[next_board] > g + 1) {
                     visited[next_board] = g + 1;
                     double h_new = next_board.GetHeuristic(heuristic);
                     open.insert({g + 1 + h_new, g + 1, static_cast<double>(h_new), 0, next_board});
@@ -98,12 +99,12 @@ public:
         };
 
         bool foundDestination = false;
-        double minDistance=(double)INT_MAX;
+        double minDistance = (double) INT_MAX;
 
         visited.clear();
         GameBoard startState(v);
 
-        Node startNode=nodeValue(0,startState);
+        Node startNode = nodeValue(0, startState);
 
         open.insert(startNode);
         focal.push(startNode);
@@ -116,7 +117,7 @@ public:
 
         while (!open.empty()) {
             assert(!open.empty());
-           // std::cout<<-2<<'\n';
+            // std::cout<<-2<<'\n';
 
             double f_min = open.begin()->f;
 
@@ -137,9 +138,9 @@ public:
                 if (visited.find(next_board) == visited.end() or visited[next_board] > g + 1) {
                     visited[next_board] = g + 1;
                     int h_new = next_board.GetHeuristic(heuristic);
-                    if(h_new==0){
-                        foundDestination=true;
-                        minDistance=std::min(minDistance,g+1);
+                    if (h_new == 0) {
+                        foundDestination = true;
+                        minDistance = std::min(minDistance, g + 1);
                         //return static_cast<int> g+1;
                     }
                     /*
@@ -152,7 +153,7 @@ public:
                     /*
                      * insert new node into open
                      */
-                    Node nextNode=nodeValue(g+1,next_board);
+                    Node nextNode = nodeValue(g + 1, next_board);
                     open.insert(nextNode);
                     link_open.emplace(next_board,
                                       nextNode);
@@ -162,7 +163,7 @@ public:
                 }
             }
 
-            if(foundDestination){
+            if (foundDestination) {
                 return static_cast<int> (minDistance);
             }
 
@@ -173,16 +174,14 @@ public:
                 /*
                  * update focal: insert new node from open to focal with f <= epsilon * fmin
                  */
-                Node middleNode=Node(f_min*epsilon,(double)-1,(double)-1,(double)-1,board);
-                for(auto state=open.lower_bound(middleNode);state!=open.end();++state)
-                {
+                Node middleNode = Node(f_min * epsilon, (double) -1, (double) -1, (double) -1, board);
+                for (auto state = open.lower_bound(middleNode); state != open.end(); ++state) {
                     //Node node=*it;
                     auto board = state->board;
                     if (state->f > epsilon * f_head)
                         break;
-                    if (state->f >= epsilon * f_min)
-                    {
-                        Node focalNode=nodeValue(state->g,board);
+                    if (state->f >= epsilon * f_min) {
+                        Node focalNode = nodeValue(state->g, board);
                         focal.push(focalNode);
                     }
                 }

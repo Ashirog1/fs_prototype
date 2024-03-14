@@ -12,11 +12,11 @@ BasicFocalSearch::BasicFocalSearch() {
 }
 
 bool Node::operator<(const Node &oth) const {
-    if(f!=oth.f)
-    return f < oth.f ;
-    if(g!=oth.g)
-    return g<oth.g;
-    return board<oth.board;
+    if (f != oth.f)
+        return f < oth.f;
+    if (g != oth.g)
+        return g < oth.g;
+    return board < oth.board;
 }
 
 Node::Node(double _f, double _g, double _h, double _hFocal, const GameBoard &_board) {
