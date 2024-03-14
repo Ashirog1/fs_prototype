@@ -47,11 +47,11 @@ class BasicAStar {
     std::map<GameBoard, Node> link_open;
 public:
     template<class T>
-    inline int AStarSearch(std::vector<std::vector<int>> &v, T heuristic) {
-        GameBoard start(v);
+    inline int AStarSearch(GameBoard start, T heuristic, int &num_expansion) {
         open.insert({start.GetHeuristic(heuristic), 0, start.GetHeuristic(heuristic), 0, start});
         visited[start] = 0;
         while (not open.empty()) {
+            num_expansion = visited.size();
             auto fmin = open.begin();
             auto [f, g, h, fFocal, board] = *fmin;
             open.erase(fmin);
@@ -86,7 +86,8 @@ public:
 
     template<class T, class open_funct, class focal_funct>
     inline int FocalSearch
-            (std::vector<std::vector<int>> &v, open_funct open_value, focal_funct focal_value, T heuristic,
+            (GameBoard&start, open_funct open_value, focal_funct focal_value, T heuristic,
+             int &num_expansion,
              double epsilon = (double) 1.5
             ) {
         /*
@@ -102,31 +103,30 @@ public:
         double minDistance = (double) INT_MAX;
 
         visited.clear();
-        GameBoard startState(v);
+
+        GameBoard startState = start;
 
         Node startNode = nodeValue(0, startState);
 
         open.insert(startNode);
         focal.push(startNode);
 
-        //map link_open to find state and value in open set when pop state from focal
-
-        //Node tmp = nodeValue(0, start);
         link_open.emplace(startState, startNode);
         visited[startState] = 0;
 
         while (!open.empty()) {
             assert(!open.empty());
-            // std::cout<<-2<<'\n';
-
+            num_expansion = visited.size();
+//            std::cout << open.size() << '\n';
             double f_min = open.begin()->f;
 
             auto [f, g, h, hFocal, board] = focal.top();
 
+            focal.pop();
+
             if (visited[board] != g) continue;
 
             if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(g);
-            focal.pop();
             open.erase(Node(f, g, h, hFocal, board));
 
 

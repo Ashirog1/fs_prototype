@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <numeric>
 #include <cassert>
+#include <random>
 
 GameBoard::GameBoard(int n, state init) {
     h = n;
@@ -96,6 +97,33 @@ std::ostream &operator<<(std::ostream &os, const GameBoard &gameBoard) {
 }
 
 
+int random_in_range(int min, int max) {
+    assert(min <= max);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(min, max);
+    return dist(gen);
+}
+
+
+GameBoard generator(int n, int n_move) {
+    assert(n >= 2);
+    /// generate init state
+    std::vector<int> state(n * n);
+    std::iota(state.begin(), state.end(), 1);
+    state.back() = 0;
+    /*
+     * start with init state
+     * with each move, random wap with neighbour
+     */
+    GameBoard gb(n, state);
+    for (int i = 0; i < n_move; ++i) {
+        auto neighbours = GetNeighbour(gb);
+        int idx = random_in_range(0, (int)neighbours.size() - 1);
+        gb = neighbours[idx];
+    }
+    return gb;
+}
 
 
 

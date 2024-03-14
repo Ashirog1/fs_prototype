@@ -17,11 +17,10 @@ class BoundedFocalSearch : public BasicFocalSearch {
 public:
     template<class T, class open_funct, class focal_funct>
     inline int FocalSearch
-            (std::vector<std::vector<int>> &v, open_funct open_value, focal_funct focal_value, T heuristic,
+            (GameBoard&start, open_funct open_value, focal_funct focal_value, T heuristic,
              double lower_epsilon = (double) 1.5, double upper_epsilon = (double) 2.0
             ) {
         visited.clear();
-        GameBoard start(v);
 
         open.insert({open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
                      focal_value(0, start.GetHeuristic(heuristic)), start});

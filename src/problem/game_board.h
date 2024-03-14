@@ -60,7 +60,11 @@ public:
     };
 
     friend std::ostream& operator<<(std::ostream& os, const GameBoard &gameBoard);
+
 };
+
+int random_in_range(int min, int max);
+GameBoard generator(int n, int n_move);
 
 
 

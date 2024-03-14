@@ -19,11 +19,10 @@ class PotentialFocalSearch : public BasicFocalSearch {
 public:
     template<class T, class open_funct, class focal_funct>
     inline int PotentialSearch
-            (std::vector<std::vector<int>> &v, open_funct open_value, focal_funct focal_value, T heuristic,
+            (GameBoard&start, open_funct open_value, focal_funct focal_value, T heuristic, int&num_expansion,
              double epsilon = 1.5
             ) {
         visited.clear();
-        GameBoard start(v);
         std::vector<Node> focal;;
         open.insert({open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
                      focal_value(0, start.GetHeuristic(heuristic)), start});
@@ -35,7 +34,7 @@ public:
 
         while (!open.empty()) {
             assert(!open.empty());
-
+            num_expansion = visited.size();
             double f_min = open.begin()->f;
             Node top_node = *open.begin();
             if (not focal.empty()) {
