@@ -13,6 +13,8 @@ double CartesianDistance(int size, const std::vector<int> &board);
 
 double ManhattanDistance(int size, const std::vector<int> &board);
 
+double LinearConflictDistance(int size, const std::vector<int> &board);
+
 double open_funct(double g, double h);
 
 double focal_funct(double g, double h);
