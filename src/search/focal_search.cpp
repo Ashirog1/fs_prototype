@@ -16,6 +16,8 @@ bool Node::operator<(const Node &oth) const {
         return f < oth.f;
     if (g != oth.g)
         return g < oth.g;
+    if (hFocal != oth.hFocal)
+        return hFocal < oth.hFocal;
     return board < oth.board;
 }
 

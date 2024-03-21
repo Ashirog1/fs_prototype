@@ -22,6 +22,10 @@ public:
             (GameBoard&start, open_funct open_value, focal_funct focal_value, T heuristic, int&num_expansion,
              double epsilon = 1.5
             ) {
+        const auto nodeValue = [&](double g, GameBoard &board) {
+            double h = board.GetHeuristic(heuristic);
+            return Node(open_value(g, h), g, h, focal_value(g, h), board);
+        };
         visited.clear();
         std::vector<Node> focal;;
         open.insert({open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
@@ -81,14 +85,15 @@ public:
                 /*
                  * update focal: insert new node from open to focal with f <= epsilon * fmin
                  */
-                for (const auto &it: open) {
-                    auto board = it.board;
-                    if (it.g + it.h > epsilon * f_head)
+                Node middleNode = Node(f_min * epsilon, (double) -1, (double) -1, (double) -1, board);
+                for (auto state = open.lower_bound(middleNode); state != open.end(); ++state) {
+                    //Node node=*it;
+                    auto board = state->board;
+                    if (state->f > epsilon * f_head)
                         break;
-                    if (it.g + it.h <= epsilon * f_min) {
-                        double new_f = it.g + it.h;
-                        focal.push_back({new_f, it.g, board.GetHeuristic(heuristic),
-                                         focal_value(it.g, board.GetHeuristic(heuristic)), it.board});
+                    if (state->f >= epsilon * f_min) {
+                        Node focalNode = nodeValue(state->g, board);
+                        focal.push_back(focalNode);
                     }
                 }
             }
@@ -112,7 +117,6 @@ public:
                 }
                 return (double) (epsilon * f_head - a.g) / a.h < (double) (epsilon * f_head - b.g) / b.h;
             });
-
         }
         return static_cast<int>(-1);
     }

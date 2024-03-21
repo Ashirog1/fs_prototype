@@ -61,6 +61,9 @@ public:
                 if (visited.find(next_board) == visited.end() or visited[next_board] > g + 1) {
                     visited[next_board] = g + 1;
                     double h_new = next_board.GetHeuristic(heuristic);
+                    if (h_new == 0) {
+                        return g + 1;
+                    }
                     open.insert({g + 1 + h_new, g + 1, static_cast<double>(h_new), 0, next_board});
                 }
             }
@@ -86,7 +89,7 @@ public:
 
     template<class T, class open_funct, class focal_funct>
     inline int FocalSearch
-            (GameBoard&start, open_funct open_value, focal_funct focal_value, T heuristic,
+            (GameBoard &start, open_funct open_value, focal_funct focal_value, T heuristic,
              int &num_expansion,
              double epsilon = (double) 1.5
             ) {
@@ -141,7 +144,7 @@ public:
                     if (h_new == 0) {
                         foundDestination = true;
                         minDistance = std::min(minDistance, g + 1);
-                        //return static_cast<int> g+1;
+                        return static_cast<int> (g + 1);
                     }
                     /*
                      * delete old_value of new state in open
@@ -172,7 +175,23 @@ public:
 
             if (!open.empty() && f_min < f_head) {
                 /*
-                 * update focal: insert new node from open to focal with f <= epsilon * fmin
+                 * only first extraction will run this block
+                 * update focal with node have f <= fmin * epsilon
+                 */
+                if (focal.empty()) {
+                    for (auto state = open.begin(); state != open.end(); ++state) {
+                        auto board = state->board;
+                        if (state->f > epsilon * f_min)
+                            break;
+                        else {
+                            Node focalNode = nodeValue(state->g, board);
+                            focal.push(focalNode);
+                        }
+                    }
+                }
+
+                /*
+                 * update focal: insert new node from open to focal with epsilon * fmin <= f <= epsilon * f_head
                  */
                 Node middleNode = Node(f_min * epsilon, (double) -1, (double) -1, (double) -1, board);
                 for (auto state = open.lower_bound(middleNode); state != open.end(); ++state) {
@@ -185,16 +204,7 @@ public:
                         focal.push(focalNode);
                     }
                 }
-                /*for (const auto &it: open) {
-                    auto board = it.board;
-                    if (it.g + it.h > epsilon * f_head)
-                        break;
-                    if (it.g + it.h <= epsilon * f_min) {
-                        focal.push(nodeValue(it.g, board));
-                    }
-                }*/
             }
-
         }
         return static_cast<int>(-1);
     }

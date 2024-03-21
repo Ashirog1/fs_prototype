@@ -14,7 +14,7 @@ public:
     template<class T, class open_funct, class focal_funct>
     inline int FocalSearch
             (GameBoard&start, open_funct open_value, focal_funct focal_value, T heuristic, int&num_expansion,
-            std::vector<double> epsilons = {1, (double)1.2, (double)1.5}
+            std::vector<double> epsilons = {1, (double)1.5, (double)2, (double)3, (double)4.5}
             ) {
         /*
          * focals[i] maintain fmin in range [epsilons[i] * fmin, epsilons[i + 1] * fmin]
@@ -51,6 +51,7 @@ public:
                 int tmp = generate_random_number(0, (int)seeds.size() - 1);
                 assert(not focals[tmp].empty());
                 top_node = focals[tmp].top();
+//                std::cout << tmp << '\n';
 
                 focals[tmp].pop();
             }
@@ -65,6 +66,10 @@ public:
                 if (visited.find(next_board) == visited.end() or visited[next_board] > g + 1) {
                     visited[next_board] = g + 1;
                     int h_new = next_board.GetHeuristic(heuristic);
+
+                    if (h_new == 0) {
+                        return static_cast<int>(g + 1);
+                    }
                     if (link_open.find(next_board) != link_open.end()) {
                         auto old_open = link_open.find(next_board);
                         open.erase(old_open->second);
@@ -77,7 +82,7 @@ public:
 
                     for (int i = 0; i + 1 < epsilons.size(); ++i) {
                         if (epsilons[i] * f_min <= g + 1 + h_new and g + 1 + h_new <= epsilons[i + 1] * f_min)
-                        focal.push(Node(open_value(g + 1, h_new), g + 1, h_new, focal_value(g + 1, h_new), next_board));
+                        focals[i].push(Node(open_value(g + 1, h_new), g + 1, h_new, focal_value(g + 1, h_new), next_board));
                     }
                 }
             }
