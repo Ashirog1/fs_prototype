@@ -28,7 +28,7 @@ namespace benchmark {
          */
         for (int i = 0; i <= 20; ++i) {
             /// 3 puzzle 10 swap
-            GameBoard gb = generator(4, 50);
+            GameBoard gb = generator(4, 10);
             std::cout << gb << '\n';
 
             {
@@ -52,18 +52,18 @@ namespace benchmark {
                 BoundedFocalSearch fs;
 //                std::cout << "BoundedFocalSearch\n" << fs.FocalSearch(v, open_funct, focal_funct, ManhattanDistance);
             }
-            {
-                int num_expansion = 0;
-                PotentialFocalSearch fs;
-                std::cout << "PotentialFocalSearch\n" << fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion) << '\n';
-                std::cout << "PotentialFocalSearch with num_expansion is " << num_expansion << '\n';
-            }
-            {
-                int num_expansion = 0;
-                RWFocalSearch fs;
-                std::cout << "RWFocalSearch\n" << fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion) << '\n';
-                std::cout << "RWFocalSearch with num_expansion is " << num_expansion << '\n';
-            }
+//            {
+//                int num_expansion = 0;
+//                PotentialFocalSearch fs;
+//                std::cout << "PotentialFocalSearch\n" << fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion) << '\n';
+//                std::cout << "PotentialFocalSearch with num_expansion is " << num_expansion << '\n';
+//            }
+//            {
+//                int num_expansion = 0;
+//                RWFocalSearch fs;
+//                std::cout << "RWFocalSearch\n" << fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion) << '\n';
+//                std::cout << "RWFocalSearch with num_expansion is " << num_expansion << '\n';
+//            }
         }
     }
 };

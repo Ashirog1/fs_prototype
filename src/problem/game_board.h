@@ -8,8 +8,9 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include "Problem.h"
 
-class GameBoard {
+class GameBoard  {
     /*
      * GameBoard problem
      */
