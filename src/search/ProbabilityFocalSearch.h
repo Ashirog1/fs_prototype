@@ -12,6 +12,7 @@
 
 struct cmp{
     bool operator() (const Node &a,const Node&b) const{
+        if(a.hFocal!=b.hFocal)
         return a.hFocal<b.hFocal;
     }
 };
@@ -23,7 +24,7 @@ public:
 
     template <class T, class open_funct, class focal_funct>
     inline int ProbabilitySearch(GameBoard &start, open_funct open_value, focal_funct focal_value, T heuristic,int &num_expansion,
-                           double epsilon = (double)1.1, double pickRate = (double)1.0)
+                           double epsilon = (double)1.1, double pickRate = (double)0.6)
     {
         const auto nodeValue = [&](double g, GameBoard &board)
         {
@@ -53,7 +54,7 @@ public:
         link_open.emplace(start, tmp);
         visited[start] = 0;
         int dem=0;
-      //  std::cout<<"ok"<<'\n';
+
         while (1)
         {
             assert(!open.empty());
@@ -62,25 +63,18 @@ public:
 
             double f,g,h,hFocal;
             GameBoard board;
-         //   auto [f, g, h, hFocal, board];
             double f_min=open.begin()->f;
 
             //Pop from focal
             if (pick <= pickRate*100 && !focalSet.empty())
             {
                 Node a=*focalSet.begin();
-               // a.board.printState();
-              ///  dem++;
-             //   std::cout<<'\n'<<dem<<" "<<a.board.GetHeuristic(heuristic)<<'\n';
-             // 
                 assignValue(f,g,h,hFocal,board,a);
                 if (board.GetHeuristic(heuristic) == 0)
                     return static_cast<int>(g);
-             //   std::cout<<"lol"<<"\n";
 
                 focalSet.erase(focalSet.begin());
                 open.erase(Node(f, g, h, hFocal, board));
-             //   std::cout<<"lol"<<"\n";
 
                 if (hFocal == 0)
                     return static_cast<int>(g);
@@ -88,37 +82,23 @@ public:
             // Pop from open
             else
             {
+                std::cout<<focalSet.size()<<'\n';
                 Node a=*open.begin();
-                //a.board.printState();
-                //dem++;
-                //std::cout<<'\n'<<dem<<" "<<a.board.GetHeuristic(heuristic)<<'\n';
-
-                //a.printState();
-              //  std::cout<<'\n';
                 assignValue(f,g,h,hFocal,board,a);
-              //  { f, g, h, hFocal, board } = *open.begin();
-               // if (visited[a.board] != g)
-                 //   continue;
-           //     board.printState();
-              //  std::cout<<'\n'<<g<<"\n";
 
                 if (board.GetHeuristic(heuristic) == 0)
                     return static_cast<int>(g);
-             //   std::cout<<"ok1"<<'\n';
+             
                 open.erase(open.begin());
                 focalSet.erase(Node(f, g, h, hFocal, board));
-             //   std::cout<<"lol"<<"\n";
+             
 
                 if (hFocal == 0)
                     return static_cast<int>(g);
             }
-             // std::cout<<f<<" "<<g<<" "<<h<<" "<<" "<<hFocal<<'\n';
-            
-          //  board.printState();
-           // std::cout<<"ok1"<<'\n';
 
-          //  dem++;
-          //  std::cout<<dem<<'\n';
+
+             
             for (GameBoard &next_board : GetNeighbour(board))
             {
                // std::cout<<g<<'\n';
@@ -140,41 +120,6 @@ public:
                      */
 
                     auto check=open.insert(nodeValue(g + 1, next_board));
-                    // if(check.second)
-                    // {
-                    //     std::cout<<"ok insert"<<'\n';
-                    // }
-                    // else
-                    // {
-                    //     std::cout<<"current board ";
-                    //     next_board.printState();
-                    //     std::cout<<"\n";
-                    //     Node a=nodeValue(g+1,next_board);
-                    //     auto ite=*open.find(a);
-                    //     a.board.printState();
-                    //   //  std::cout<<'\n';
-                    //   //  std::cout<<a.f<<" "<<a.g<<" "<<a.h<<" "<<a.hFocal<<" "<<'\n';
-
-                        
-                    //     //if(ite!=open.end()) std::cout<<"found"<<'\n';
-                    //     //else std::cout<<"not found"<<'\n';
-                    //     std::cout<<ite.f<<" "<<ite.g<<" "<<ite.h<<" "<<ite.hFocal<<" "<<'\n';
-                    //     ite.board.printState();
-                    //     // for(auto v:open)
-                    //     // {
-                    //     //     v.board.printState();
-                    //     //     std::cout<<"\n";
-                    //     // }
-                    //     // std::cout<<"false insert"<<'\n';
-                    // }
-            //          for(auto v:open)
-            // {
-            //     v.board.printState();
-            //     std::cout<<'\n';
-            // }
-                 //   std::cout<<" "<<'\n'<<'\n';
-                
-                    //std::cout<<"open size "<<open.size()<<'\n';
 
                     link_open.emplace(next_board,
                                       nodeValue(g + 1, next_board));
@@ -184,16 +129,21 @@ public:
                     }
                 }
             }
-            // for(auto v:open)
-            // {
-            //     v.board.printState();
-            //     std::cout<<'\n';
-            // }
-            // std::cout<<"\n";
+
             auto f_head = open.begin()->f;
-            //std::cout<<"f_head"<<'\n';
-           // double f_head = fmin->g + fmin->h;
-     //       std::cout<<open.size()<<" "<<focalSet.size()<<'\n';
+
+              if (focal.empty()) {
+                    for (auto state = open.begin(); state != open.end(); ++state) {
+                        auto board = state->board;
+                        if (state->f > epsilon * f_min)
+                            break;
+                        else {
+                            Node focalNode = nodeValue(state->g, board);
+                            focalSet.insert(focalNode);
+                        }
+                    }
+                }
+            
             if (!open.empty() && f_min < f_head)
             {
                 /*
@@ -211,17 +161,8 @@ public:
                     }
                 }
 
-                //  for (const auto &it: open) {
-                //     auto board = it.board;
-                //     if (it.g + it.h > epsilon * f_head)
-                //         break;
-                //     if (it.g + it.h >= epsilon * f_min) {
-                //         focal.push(nodeValue(it.g, board));
-                //     }
-                // }
-
             }
-         // std::cout<<"ok"<<'\n';
+         
         }
                     return static_cast<int>(-1);
 

@@ -91,7 +91,7 @@ public:
     inline int FocalSearch
             (GameBoard &start, open_funct open_value, focal_funct focal_value, T heuristic,
              int &num_expansion,
-             double epsilon = (double) 1.0
+             double epsilon = (double) 1.1
             ) {
         /*
          * given g and gameboard, return current state
@@ -173,22 +173,23 @@ public:
             auto fmin = open.begin();
             double f_head = fmin->f;
 
-            if (!open.empty() && f_min < f_head) {
+            
+                    // for (auto state = open.begin(); state != open.end(); ++state) {
+                    //     auto board = state->board;
+                    //     if (state->f > epsilon * f_min)
+                    //         break;
+                    //     else {
+                    //         Node focalNode = nodeValue(state->g, board);
+                    //         focal.push(focalNode);
+                    //     }
+                    // }
+
+            if (!open.empty() && f_min < f_head) {  
                 /*
                  * only first extraction will run this block
                  * update focal with node have f <= fmin * epsilon
                  */
-                if (focal.empty()) {
-                    for (auto state = open.begin(); state != open.end(); ++state) {
-                        auto board = state->board;
-                        if (state->f > epsilon * f_min)
-                            break;
-                        else {
-                            Node focalNode = nodeValue(state->g, board);
-                            focal.push(focalNode);
-                        }
-                    }
-                }
+                
 
                 /*
                  * update focal: insert new node from open to focal with epsilon * fmin <= f <= epsilon * f_head

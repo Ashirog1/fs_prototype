@@ -30,11 +30,24 @@ Node::Node(double _f, double _g, double _h, double _hFocal, const GameBoard &_bo
 }
 
 bool CompareG::operator()(const Node &a, const Node &b) {
+    if(a.f!=b.f)
     return a.f > b.f;
+   // if(a.g!=b.g)
+    return a.g>b.g;
+    // if(a.h!=b.h)
+    // return a.h>b.h;
+    // if(a.hFocal!=b.hFocal)
+    // return a.hFocal>b.hFocal;
 }
 
 bool CompareH::operator()(const Node &a, const Node &b) {
+    if(a.hFocal!=b.hFocal)
     return a.hFocal > b.hFocal;
-    return false;
+  //  if(a.g!=b.g)
+    return a.g>b.g;
+    // if(a.h!=b.h)
+    // return a.h>b.h;
+    // if(a.hFocal!=b.hFocal)
+    // return a.hFocal>b.hFocal;
 }
 

@@ -4,7 +4,7 @@
 #include "src/search/BoundedFocalSearch.h"
 #include "src/search/RWFocalSearch.h"
 #include "src/search/PotentialFocalSearch.h"
-#include "src/search/generalizedVersion.h"
+#include "src/search/ProbabilityFocalSearch.h"
 #include <iostream>
 #include <vector>
 
@@ -26,9 +26,9 @@ namespace benchmark {
          * about benchmark expansion node
          * how about compare visited???
          */
-        for (int i = 0; i <= 20; ++i) {
+        for (int i = 0; i <= 100; ++i) {
             /// 3 puzzle 10 swap
-            GameBoard gb = generator(4, 10);
+            GameBoard gb = generator(4, 100);
             std::cout << gb << '\n';
 
             {
@@ -48,10 +48,10 @@ namespace benchmark {
 
                 std::cout << "BasicFocalSearch with num_expansion is " << num_expansion << '\n';
             }
-            {
-                BoundedFocalSearch fs;
-//                std::cout << "BoundedFocalSearch\n" << fs.FocalSearch(v, open_funct, focal_funct, ManhattanDistance);
-            }
+//             {
+//                 BoundedFocalSearch fs;
+// //                std::cout << "BoundedFocalSearch\n" << fs.FocalSearch(v, open_funct, focal_funct, ManhattanDistance);
+//             }
 //            {
 //                int num_expansion = 0;
 //                PotentialFocalSearch fs;
@@ -64,6 +64,14 @@ namespace benchmark {
 //                std::cout << "RWFocalSearch\n" << fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion) << '\n';
 //                std::cout << "RWFocalSearch with num_expansion is " << num_expansion << '\n';
 //            }
+            {
+                ProbabilityFocalSearch fs;
+                int num_expansion = 0;
+
+                std::cout << "ProbabilityFocalSearch\n" << fs.ProbabilitySearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion) << '\n';
+
+                std::cout << "ProbabilityFocalSearch with num_expansion is " << num_expansion << '\n';
+            }
         }
     }
 };
