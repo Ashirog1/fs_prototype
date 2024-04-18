@@ -13,7 +13,10 @@
 struct cmp{
     bool operator() (const Node &a,const Node&b) const{
         if(a.hFocal!=b.hFocal)
-        return a.hFocal<b.hFocal;
+         return a.hFocal < b.hFocal;
+    if(a.g!=b.g)
+    return a.g<b.g;
+    return a.h<b.h;
     }
 };
 
@@ -24,7 +27,7 @@ public:
 
     template <class T, class open_funct, class focal_funct>
     inline int ProbabilitySearch(GameBoard &start, open_funct open_value, focal_funct focal_value, T heuristic,int &num_expansion,
-                           double epsilon = (double)1.1, double pickRate = (double)0.6)
+                           double epsilon = (double)1.0, double pickRate = (double)1.0)
     {
         const auto nodeValue = [&](double g, GameBoard &board)
         {
@@ -42,6 +45,8 @@ public:
         };
         visited.clear();
         GameBoard startState=start;
+        bool foundDestination = false;
+        double minDistance = (double) INT_MAX;
 
         open.insert({open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
                      focal_value(0, start.GetHeuristic(heuristic)), start});
@@ -64,7 +69,7 @@ public:
             double f,g,h,hFocal;
             GameBoard board;
             double f_min=open.begin()->f;
-
+            //std::cout<<f_min<<'\n';
             //Pop from focal
             if (pick <= pickRate*100 && !focalSet.empty())
             {
@@ -82,7 +87,7 @@ public:
             // Pop from open
             else
             {
-                std::cout<<focalSet.size()<<'\n';
+                //std::cout<<focalSet.size()<<'\n';
                 Node a=*open.begin();
                 assignValue(f,g,h,hFocal,board,a);
 
@@ -97,7 +102,9 @@ public:
                     return static_cast<int>(g);
             }
 
-
+            // board.printState();
+             //std::cout<<'\n';
+             //std::cout<<num_expansion<<'\n';
              
             for (GameBoard &next_board : GetNeighbour(board))
             {
@@ -110,6 +117,11 @@ public:
                     /*
                      * delete old_value of new state in open
                      */
+                    if (h_new == 0) {
+                        foundDestination = true;
+                        minDistance = std::min(minDistance, g + 1);
+                        return static_cast<int> (g + 1);
+                    }
                     if (link_open.find(next_board) != link_open.end())
                     {
                         auto old_open = link_open.find(next_board);
@@ -129,20 +141,11 @@ public:
                     }
                 }
             }
+            if (foundDestination) {
+                return static_cast<int> (minDistance);
+            }
 
             auto f_head = open.begin()->f;
-
-              if (focal.empty()) {
-                    for (auto state = open.begin(); state != open.end(); ++state) {
-                        auto board = state->board;
-                        if (state->f > epsilon * f_min)
-                            break;
-                        else {
-                            Node focalNode = nodeValue(state->g, board);
-                            focalSet.insert(focalNode);
-                        }
-                    }
-                }
             
             if (!open.empty() && f_min < f_head)
             {

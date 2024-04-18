@@ -26,27 +26,33 @@ namespace benchmark {
          * about benchmark expansion node
          * how about compare visited???
          */
-        for (int i = 0; i <= 100; ++i) {
+        for (int i = 0; i <= 1; ++i) {
             /// 3 puzzle 10 swap
-            GameBoard gb = generator(4, 100);
+            GameBoard gb = generator(4, 10);
             std::cout << gb << '\n';
+            //int a=0,b=0;
 
             {
                 int num_expansion = 0;
 
                 BasicAStar fs;
 
+                //fs.AStarSearch(gb, ManhattanDistance, num_expansion);
+
                 std::cout << "AStarSearch\n" << fs.AStarSearch(gb, ManhattanDistance, num_expansion) << '\n';
 
                 std::cout << "AStarSearch with num_expansion is " << num_expansion << '\n';
+                //a=num_expansion;
             }
             {
                 BasicFocalSearch fs;
                 int num_expansion = 0;
+              //  fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
 
                 std::cout << "BasicFocalSearch\n" << fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion) << '\n';
 
                 std::cout << "BasicFocalSearch with num_expansion is " << num_expansion << '\n';
+                //a=num_expansion;
             }
 //             {
 //                 BoundedFocalSearch fs;
@@ -71,7 +77,14 @@ namespace benchmark {
                 std::cout << "ProbabilityFocalSearch\n" << fs.ProbabilitySearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion) << '\n';
 
                 std::cout << "ProbabilityFocalSearch with num_expansion is " << num_expansion << '\n';
+
+             //   b=num_expansion;
             }
+            // if(a<b)
+            // {
+            //     std::cout<<gb<<'\n';
+            //     std::cout<<a<<" "<<b<<'\n';
+            // }
         }
     }
 };

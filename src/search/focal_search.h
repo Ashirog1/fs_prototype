@@ -91,7 +91,7 @@ public:
     inline int FocalSearch
             (GameBoard &start, open_funct open_value, focal_funct focal_value, T heuristic,
              int &num_expansion,
-             double epsilon = (double) 1.1
+             double epsilon = (double) 1.0
             ) {
         /*
          * given g and gameboard, return current state
@@ -132,6 +132,9 @@ public:
             if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(g);
             open.erase(Node(f, g, h, hFocal, board));
 
+          //  board.printState();
+          //  std::cout<<'\n';
+          //  std::cout<<num_expansion<<'\n';
 
             // if (hFocal == 0)
             //     return static_cast<int>(g);
