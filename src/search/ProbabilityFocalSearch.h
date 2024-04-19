@@ -27,7 +27,7 @@ public:
 
     template <class T, class open_funct, class focal_funct>
     inline int ProbabilitySearch(GameBoard &start, open_funct open_value, focal_funct focal_value, T heuristic,int &num_expansion,
-                           double epsilon = (double)1.0, double pickRate = (double)1.0)
+                           double epsilon = (double)1.1, double pickRate = (double)0.6)
     {
         const auto nodeValue = [&](double g, GameBoard &board)
         {

@@ -19,4 +19,6 @@ double open_funct(double g, double h);
 
 double focal_funct(double g, double h);
 
+double distance_to_go_funct(double g,double h, double weight,double initial);
+
 #endif //FS_PROTOTYPE_HEURISTICS_H

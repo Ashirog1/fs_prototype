@@ -5,6 +5,7 @@
 #include <complex>
 #include <iostream>
 #include "heuristics.h"
+#include <algorithm>
 
 double HammingDistance(int size, const std::vector<int> &board) {
     int hammingDistance = 0;
@@ -98,3 +99,8 @@ double open_funct(double g, double h) {
 double focal_funct(double g, double h) {
     return h;
 }
+
+double distance_to_go_funct(double g,double h, double weight,double initial){
+    return g+std::max((double)1,weight*h/initial);
+}
+

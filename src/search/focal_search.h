@@ -91,7 +91,7 @@ public:
     inline int FocalSearch
             (GameBoard &start, open_funct open_value, focal_funct focal_value, T heuristic,
              int &num_expansion,
-             double epsilon = (double) 1.0
+             double epsilon = (double) 1.1
             ) {
         /*
          * given g and gameboard, return current state

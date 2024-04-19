@@ -91,7 +91,7 @@ std::ostream &operator<<(std::ostream &os, const GameBoard &gameBoard) {
         for (int j = 0; j < gameBoard.w; ++j) {
             os << gameBoard.current[i * gameBoard.w + j] << ' ';
         }
-        os << '\n';
+      //  os << '\n';
     }
     return os;
 }
