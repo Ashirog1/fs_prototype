@@ -24,13 +24,13 @@ private:
     std::vector<int> visited;
     std::vector<int> check_visited;
     std::set<int> unvisited;
-    std::vector<std::vector<int>> dis_matrix;
+    std::vector<std::vector<double>> dis_matrix;
     /*
      * helper heuristics
      */
 
 public:
-    TspBoard(int n, std::vector<std::vector<int>> distance){
+    TspBoard(int n, std::vector<std::vector<double>> distance){
         visited.clear();
         check_visited.resize(n,0);
         dis_matrix=distance;
@@ -41,7 +41,11 @@ public:
 
     friend std::vector<TspBoard> GetNeighbour(TspBoard &tspBoard){
         std::vector<TspBoard> adj;
-         for(int i=0;i<tspBoard.n;i++){
+        if(tspBoard.visited.size()==tspBoard.n){
+            TspBoard newBoard=tspBoard;
+            newBoard.visited.push_back(newBoard.visited[0]);
+        }
+        for(int i=0;i<tspBoard.n;i++){
             if(tspBoard.check_visited[i]==0){
                 TspBoard newBoard=tspBoard;
                 newBoard.visited.push_back(i);
