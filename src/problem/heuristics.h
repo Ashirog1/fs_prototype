@@ -6,6 +6,7 @@
 #define FS_PROTOTYPE_HEURISTICS_H
 
 #include <vector>
+#include <set>
 
 double HammingDistance(int size, const std::vector<int> &board);
 
@@ -15,10 +16,13 @@ double ManhattanDistance(int size, const std::vector<int> &board);
 
 double LinearConflictDistance(int size, const std::vector<int> &board);
 
+double MST(int size,const std::vector<int> visited, const std::set<int> unvisited, const std::vector<std::vector<int>> dis );
+
 double open_funct(double g, double h);
 
 double focal_funct(double g, double h);
 
 double distance_to_go_funct(double g,double h, double weight,double initial);
+
 
 #endif //FS_PROTOTYPE_HEURISTICS_H
