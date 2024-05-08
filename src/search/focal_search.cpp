@@ -4,14 +4,15 @@
 
 #include "focal_search.h"
 
-BasicFocalSearch::BasicFocalSearch() {
-    visited.clear();
-    open.clear();
-    link_open.clear();
-    while (!focal.empty()) focal.pop();
-}
+// BasicFocalSearch::BasicFocalSearch() {
+//     visited.clear();
+//     open.clear();
+//     link_open.clear();
+//     while (!focal.empty()) focal.pop();
+// }
 
-bool Node::operator<(const Node &oth) const {
+template<class G>
+bool Node<G>::operator<(const Node<G> &oth) const {
     if (f != oth.f)
         return f < oth.f;
     if (g != oth.g)
@@ -21,7 +22,8 @@ bool Node::operator<(const Node &oth) const {
     return board < oth.board;
 }
 
-Node::Node(double _f, double _g, double _h, double _hFocal, const GameBoard &_board) {
+template<class G>
+Node<G>::Node(double _f, double _g, double _h, double _hFocal, const G &_board) {
     f = _f;
     g = _g;
     h = _h;
@@ -29,7 +31,8 @@ Node::Node(double _f, double _g, double _h, double _hFocal, const GameBoard &_bo
     hFocal = _hFocal;
 }
 
-bool CompareG::operator()(const Node &a, const Node &b) {
+template<class G>
+bool CompareG<G>::operator()(const Node<G> &a, const Node<G> &b) {
     if(a.f!=b.f)
     return a.f > b.f;
     if(a.g!=b.g)
@@ -41,7 +44,8 @@ bool CompareG::operator()(const Node &a, const Node &b) {
     // return a.hFocal>b.hFocal;
 }
 
-bool CompareH::operator()(const Node &a, const Node &b) {
+template<class G>
+bool CompareH<G>::operator()(const Node<G> &a, const Node<G> &b) {
     if(a.hFocal!=b.hFocal)
     return a.hFocal > b.hFocal;
     if(a.g!=b.g)

@@ -2,8 +2,8 @@
 // Created by only_u on 12/21/23.
 //
 
-#ifndef FS_PROTOTYPE_GAME_BOARD_H
-#define FS_PROTOTYPE_GAME_BOARD_H
+//#ifndef FS_PROTOTYPE_GAME_BOARD_H
+//#define FS_PROTOTYPE_GAME_BOARD_H
 
 #include <vector>
 #include <algorithm>
@@ -11,7 +11,7 @@
 #include <set>
 #include <map>
 #include "Problem.h"
-#include "game_board.h"
+//#include "game_board.h"
 
 class TspBoard {
     /*
@@ -30,15 +30,17 @@ private:
      */
 
 public:
+    TspBoard();
     TspBoard(int n, std::vector<std::vector<double>> distance){
         visited.clear();
         check_visited.resize(n,0);
         dis_matrix=distance;
         for(int i=0;i<n;i++) unvisited.insert(i);
     };
+    
+    bool operator<(const TspBoard &oth) const;
 
-
-
+    
     friend std::vector<TspBoard> GetNeighbour(TspBoard &tspBoard){
         std::vector<TspBoard> adj;
         if(tspBoard.visited.size()==tspBoard.n){
@@ -56,6 +58,16 @@ public:
             
          }
          return adj;
+    }
+
+    friend double cost_move(TspBoard &tspBoard1,TspBoard &tspBoard2){
+       if(tspBoard1.visited.size()==0) return 0;
+       return tspBoard1.dis_matrix[tspBoard1.visited[tspBoard1.visited.size()-1]][tspBoard2.visited[tspBoard2.visited.size()-1]];
+
+    }
+
+    double getDistanceToGo(){
+        return n-visited.size();
     }
         
 
@@ -83,4 +95,4 @@ public:
 
 
 
-#endif //FS_PROTOTYPE_GAME_BOARD_H
+//#endif //FS_PROTOTYPE_GAME_BOARD_H
