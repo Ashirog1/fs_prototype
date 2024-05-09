@@ -22,9 +22,23 @@ public:
     double hFocal;
     G board;
 
-    Node(double _f, double _g, double _h, double _hFocal, const G &_board);
+    Node(double _f, double _g, double _h, double _hFocal, G _board){
+         f = _f;
+         g = _g;
+         h = _h;
+         board = _board;
+         hFocal = _hFocal;
+    };
 
-    bool operator<(const Node &oth) const;
+    bool operator < (const Node<G> &oth) const{
+        if (f != oth.f)
+        return f < oth.f;
+        if (g != oth.g)
+        return g < oth.g;
+        if (hFocal != oth.hFocal)
+        return hFocal < oth.hFocal;
+        return board < oth.board;
+    };
 };
 
 /// focal comparator
@@ -33,14 +47,26 @@ public:
 //For open list
 template<class G>
 struct CompareG {
-    bool operator()(const Node<G> &a, const Node<G> &b);
+    bool operator()(const Node<G> &a, const Node<G> &b){
+         if(a.f!=b.f)
+         return a.f > b.f;
+         if(a.g!=b.g)
+         return a.g>b.g;
+         return a.h>b.h;
+    }
 };
 
 
 //For focal list
 template<class G>
 struct CompareH {
-    bool operator()(const Node<G> &a, const Node<G> &b);
+    bool operator()(const Node<G> &a, const Node<G> &b){
+         if(a.hFocal!=b.hFocal)
+         return a.hFocal > b.hFocal;
+         if(a.g!=b.g)
+         return a.g>b.g;
+         return a.h>b.h;
+    };
 };
 
 template<class G>
@@ -48,7 +74,7 @@ class BasicAStar {
     std::map<G, int> visited;
     //std::priority_queue<Node> open;
     std::set<Node<G>> open;
-    std::map<G, Node<G>> link_open;
+  //  std::map<G, Node<G>> link_open;
 public:
     template<class T>
     inline int AStarSearch(G start, T heuristic, int &num_expansion) {
@@ -68,7 +94,7 @@ public:
                     if (h_new == 0) {
                         return g + 1;
                     }
-                    open.insert(Node<G>(g + 1 + h_new, g + 1, static_cast<double>(h_new), 0, next_board));
+                    open.insert({g + 1 + h_new, g + 1, static_cast<double>(h_new), 0, next_board});
                 }
             }
         }

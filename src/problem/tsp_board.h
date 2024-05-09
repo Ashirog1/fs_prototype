@@ -30,7 +30,9 @@ private:
      */
 
 public:
-    TspBoard();
+    TspBoard(){
+        
+    };
     TspBoard(int n, std::vector<std::vector<double>> distance){
         visited.clear();
         check_visited.resize(n,0);
@@ -38,8 +40,6 @@ public:
         for(int i=0;i<n;i++) unvisited.insert(i);
     };
     
-    bool operator<(const TspBoard &oth) const;
-
     
     friend std::vector<TspBoard> GetNeighbour(TspBoard &tspBoard){
         std::vector<TspBoard> adj;
@@ -78,6 +78,16 @@ public:
 
     void printState(){
         for(auto v:visited) std::cout<<v<<" ";
+    };
+    
+    bool operator < (const TspBoard &oth) const {
+    if(visited.size()!=oth.visited.size()) return true;
+    for (int i = 0; i < visited.size(); i++) {
+        if (visited[i] != oth.visited[i]) {
+            return visited[i] < oth.visited[i];
+        }
+    }
+    return false;
     };
 
     bool operator == (const TspBoard &oth) const{

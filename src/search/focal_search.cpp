@@ -11,49 +11,42 @@
 //     while (!focal.empty()) focal.pop();
 // }
 
-template<class G>
-bool Node<G>::operator<(const Node<G> &oth) const {
-    if (f != oth.f)
-        return f < oth.f;
-    if (g != oth.g)
-        return g < oth.g;
-    if (hFocal != oth.hFocal)
-        return hFocal < oth.hFocal;
-    return board < oth.board;
-}
+// template<class G>
+// bool Node<G>::operator<(const Node<G> &oth) const {
+//     if (f != oth.f)
+//         return f < oth.f;
+//     if (g != oth.g)
+//         return g < oth.g;
+//     if (hFocal != oth.hFocal)
+//         return hFocal < oth.hFocal;
+//     return board < oth.board;
+// }
 
-template<class G>
-Node<G>::Node(double _f, double _g, double _h, double _hFocal, const G &_board) {
-    f = _f;
-    g = _g;
-    h = _h;
-    board = _board;
-    hFocal = _hFocal;
-}
 
-template<class G>
-bool CompareG<G>::operator()(const Node<G> &a, const Node<G> &b) {
-    if(a.f!=b.f)
-    return a.f > b.f;
-    if(a.g!=b.g)
-    return a.g>b.g;
-    return a.h>b.h;
-    // if(a.h!=b.h)
-    // return a.h>b.h;
-    // if(a.hFocal!=b.hFocal)
-    // return a.hFocal>b.hFocal;
-}
 
-template<class G>
-bool CompareH<G>::operator()(const Node<G> &a, const Node<G> &b) {
-    if(a.hFocal!=b.hFocal)
-    return a.hFocal > b.hFocal;
-    if(a.g!=b.g)
-    return a.g>b.g;
-    return a.h>b.h;
-    // if(a.h!=b.h)
-    // return a.h>b.h;
-    // if(a.hFocal!=b.hFocal)
-    // return a.hFocal>b.hFocal;
-}
+// template<class G>
+// bool CompareG<G>::operator()(const Node<G> &a, const Node<G> &b) {
+//     if(a.f!=b.f)
+//     return a.f > b.f;
+//     if(a.g!=b.g)
+//     return a.g>b.g;
+//     return a.h>b.h;
+//     // if(a.h!=b.h)
+//     // return a.h>b.h;
+//     // if(a.hFocal!=b.hFocal)
+//     // return a.hFocal>b.hFocal;
+// }
+
+// template<class G>
+// bool CompareH<G>::operator()(const Node<G> &a, const Node<G> &b) {
+//     if(a.hFocal!=b.hFocal)
+//     return a.hFocal > b.hFocal;
+//     if(a.g!=b.g)
+//     return a.g>b.g;
+//     return a.h>b.h;
+//     // if(a.h!=b.h)
+//     // return a.h>b.h;
+//     // if(a.hFocal!=b.hFocal)
+//     // return a.hFocal>b.hFocal;
+// }
 

@@ -12,7 +12,7 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_executable(fs_prototype main.cpp src/problem/tsp_board.h src/problem/tsp_board.cpp src/problem/game_board.cpp src/search/focal_search.cpp src/problem/heuristics.h src/problem/heuristics.cpp )
+add_executable(fs_prototype main.cpp src/problem/tsp_board.h src/problem/tsp_board.cpp src/problem/game_board.cpp src/search/focal_search.h src/search/focal_search.cpp src/problem/heuristics.h src/problem/heuristics.cpp )
 
 enable_testing()
 
