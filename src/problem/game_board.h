@@ -50,6 +50,15 @@ public:
     return false;
     };
 
+    friend double cost_move(GameBoard &tspBoard1,GameBoard &tspBoard2){
+       return 1;
+
+    }
+
+    double getDistanceToGo(){
+        return 0;
+    }
+
 
     template<class T>
     inline double GetHeuristic(T heuristic) {

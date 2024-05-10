@@ -48,8 +48,8 @@ namespace benchmark {
 
         for (int i = 0; i <= 0; ++i) {
             /// 3 puzzle 10 swap
-           // GameBoard gb = generator(4, 50);
-               TspBoard tsp(3,{{0.0,2.0,3.0},{2.0,0.0,1.0},{3.0,1.0,0.0}});
+            GameBoard gb = generator(4, 50);
+             //  TspBoard tsp(3,{{0.0,2.0,3.0},{2.0,0.0,1.0},{3.0,1.0,0.0}});
           //  result.clear();
            // expansion.clear();
              //std::cout << i << '\n';
@@ -60,11 +60,11 @@ namespace benchmark {
                 //  }
                  int num_expansion = 0;
 
-                 BasicAStar<TspBoard> fs;
+                 BasicAStar<GameBoard> fs;
 
                  // fs.AStarSearch(gb, ManhattanDistance, num_expansion);
 
-                 int res = fs.AStarSearch(tsp, MST, num_expansion);
+                 int res = fs.AStarSearch(gb, ManhattanDistance, num_expansion);
 
                  std::cout << "AStarSearch\n" << res << '\n';
 
@@ -78,10 +78,10 @@ namespace benchmark {
                 //     version.push_back("FocalSearch");
                 // }
                 
-                BasicFocalSearch<TspBoard> fs;
+                BasicFocalSearch<GameBoard> fs;
                 int num_expansion = 0;
               //  fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
-                int res = fs.FocalSearch(tsp, open_funct, focal_funct, MST, num_expansion);
+                int res = fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
 
                 std::cout << "BasicFocalSearch\n" << res << '\n';
 
@@ -112,9 +112,9 @@ namespace benchmark {
                     
                 // }
                 
-                ProbabilityFocalSearch<TspBoard> fs;
+                ProbabilityFocalSearch<GameBoard> fs;
                 int num_expansion = 0;
-                int res = fs.ProbabilitySearch(tsp, open_funct, focal_funct, MST, num_expansion);
+                int res = fs.ProbabilitySearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
 
                  std::cout << "ProbabilityFocalSearch\n" << res << '\n';
 
