@@ -115,6 +115,7 @@ double MST(int size,const std::vector<int> visited, const std::set<int> unvisite
     prim.push(std::make_pair(0,*remain.begin()));
 
     while(prim.size()){
+       // std::cout<<"check"<<'\n';
         if(remain.empty()) break;
         auto top=prim.top();
         prim.pop();

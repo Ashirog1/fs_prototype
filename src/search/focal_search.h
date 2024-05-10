@@ -71,32 +71,43 @@ struct CompareH {
 
 template<class G>
 class BasicAStar {
-    std::map<G, int> visited;
+    std::map<G, double> visited;
     //std::priority_queue<Node> open;
     std::set<Node<G>> open;
   //  std::map<G, Node<G>> link_open;
 public:
-    template<class T>
+     template<class T>
     inline int AStarSearch(G start, T heuristic, int &num_expansion) {
         open.insert({start.GetHeuristic(heuristic), (double)0, start.GetHeuristic(heuristic), (double)0, start});
+       // std::cout<<start.GetHeuristic(heuristic)<<'\n';
         visited[start] = 0;
-        while (not open.empty()) {
+        while ( open.size()) {
             num_expansion = visited.size();
             auto fmin = open.begin();
-            auto [f, g, h, fFocal, board] = *fmin;
+            auto [f, g, h, hFocal, board] = *fmin;
+           // std::cout<<"state"<<'\n';
+           // board.printState();
+           // std::cout<<'\n';
+           // std::cout<<visited[board]<<" "<<g<<" "<<h<<'\n';
             open.erase(fmin);
+
             if (visited[board] != g) continue;
             if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(f);
+
             for (G &next_board: GetNeighbour(board)) {
-                if (visited.find(next_board) == visited.end() or visited[next_board] > g + 1) {
-                    visited[next_board] = g + 1;
+                if (visited.find(next_board) == visited.end() || visited[next_board] > g+cost_move(board,next_board)) {
+                    G a=next_board;
+                    visited[next_board] = g + cost_move(board,next_board);
+                    //visited[next_board]=1;
+                    std::cout<<visited[next_board]<<" "<<g+cost_move(board,next_board)<<'\n';
                     double h_new = next_board.GetHeuristic(heuristic);
-                    if (h_new == 0) {
-                        return g + 1;
-                    }
-                    open.insert({g + 1 + h_new, g + 1, static_cast<double>(h_new), 0, next_board});
+                    // if (h_new == 0) {
+                    //     return g + cost;
+                    // }
+                    open.insert({g + cost_move(board,next_board) + h_new, g + cost_move(board,next_board), static_cast<double>(h_new), 0, next_board});
                 }
             }
+
         }
         return static_cast<int>(-1);
     }

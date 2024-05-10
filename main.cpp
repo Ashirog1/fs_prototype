@@ -46,13 +46,13 @@ namespace benchmark {
 
         bool checkLog = true;
 
-        for (int i = 0; i <= 1; ++i) {
+        for (int i = 0; i <= 0; ++i) {
             /// 3 puzzle 10 swap
            // GameBoard gb = generator(4, 50);
                TspBoard tsp(3,{{0.0,2.0,3.0},{2.0,0.0,1.0},{3.0,1.0,0.0}});
           //  result.clear();
            // expansion.clear();
-             std::cout << i << '\n';
+             //std::cout << i << '\n';
              {
                 //  if (checkLog)
                 //  {

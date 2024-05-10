@@ -33,7 +33,8 @@ public:
     TspBoard(){
         
     };
-    TspBoard(int n, std::vector<std::vector<double>> distance){
+    TspBoard(int _n, std::vector<std::vector<double>> distance){
+        n=_n;
         visited.clear();
         check_visited.resize(n,0);
         dis_matrix=distance;
@@ -46,8 +47,13 @@ public:
         if(tspBoard.visited.size()==tspBoard.n){
             TspBoard newBoard=tspBoard;
             newBoard.visited.push_back(newBoard.visited[0]);
+            adj.push_back(newBoard);
         }
         for(int i=0;i<tspBoard.n;i++){
+            if(tspBoard.visited.size()==2){
+                if(tspBoard.visited[0]==1 && tspBoard.visited[1]==2) std::cout<<"LOL"<<"\n";
+
+            }
             if(tspBoard.check_visited[i]==0){
                 TspBoard newBoard=tspBoard;
                 newBoard.visited.push_back(i);
@@ -57,6 +63,11 @@ public:
             }
             
          }
+        // std::cout<<"neighbour"<<'\n';
+        //  for(auto v:adj){
+        //     v.printState();
+        //     std::cout<<'\n';
+        //  }
          return adj;
     }
 
@@ -84,21 +95,21 @@ public:
     if(visited.size()!=oth.visited.size()) return true;
     for (int i = 0; i < visited.size(); i++) {
         if (visited[i] != oth.visited[i]) {
-            return visited[i] < oth.visited[i];
+            return true;
         }
     }
     return false;
     };
 
     bool operator == (const TspBoard &oth) const{
-        if(n!=oth.n) return true;
-        if(visited.size()!=oth.visited.size()) return true;
+        if(n!=oth.n) return false;
+        if(visited.size()!=oth.visited.size()) return false;
         for(int i=0;i<visited.size();i++){
             if(visited[i]!=oth.visited[i]){
-                return true;
+                return false;
             }
         }
-    return false;
+    return true;
     };
 
 };
