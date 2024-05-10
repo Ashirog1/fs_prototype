@@ -139,7 +139,7 @@ double open_funct(double g, double h) {
     return g + h;
 }
 
-double focal_funct(double g, double h) {
+double focal_funct(double g, double h,double dis_to_go,double C,double w) {
     return h;
 }
 

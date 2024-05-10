@@ -50,10 +50,6 @@ public:
             adj.push_back(newBoard);
         }
         for(int i=0;i<tspBoard.n;i++){
-            if(tspBoard.visited.size()==2){
-                if(tspBoard.visited[0]==1 && tspBoard.visited[1]==2) std::cout<<"LOL"<<"\n";
-
-            }
             if(tspBoard.check_visited[i]==0){
                 TspBoard newBoard=tspBoard;
                 newBoard.visited.push_back(i);
@@ -92,24 +88,14 @@ public:
     };
     
     bool operator < (const TspBoard &oth) const {
-    if(visited.size()!=oth.visited.size()) return true;
+    if(visited.size()!=oth.visited.size()) return visited.size()<oth.visited.size();
     for (int i = 0; i < visited.size(); i++) {
-        if (visited[i] != oth.visited[i]) {
+        if (visited[i] < oth.visited[i]) {
             return true;
         }
+        else if(visited[i]>oth.visited[i]) return false; 
     }
     return false;
-    };
-
-    bool operator == (const TspBoard &oth) const{
-        if(n!=oth.n) return false;
-        if(visited.size()!=oth.visited.size()) return false;
-        for(int i=0;i<visited.size();i++){
-            if(visited[i]!=oth.visited[i]){
-                return false;
-            }
-        }
-    return true;
     };
 
 };

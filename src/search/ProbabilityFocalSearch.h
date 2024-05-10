@@ -10,8 +10,9 @@
  60/40 focal search
 */
 
+template<class G>
 struct cmp{
-    bool operator() (const Node &a,const Node&b) const{
+    bool operator() (const Node<G> &a,const Node<G>&b) const{
         if(a.hFocal!=b.hFocal)
          return a.hFocal < b.hFocal;
     if(a.g!=b.g)
@@ -20,22 +21,27 @@ struct cmp{
     }
 };
 
-class ProbabilityFocalSearch : public BasicFocalSearch
+template<class G>
+class ProbabilityFocalSearch 
 {
 public:
-    std::set<Node,cmp> focalSet;
-
+    double C;
+    std::set<Node<G>> open;
+    std::map<G, int> visited;
+    std::priority_queue<Node<G>, std::vector<Node<G>>, CompareH<G>> focal;
+    std::map<G, Node<G>> link_open;
+    std::set<Node<G>,cmp<G>> focalSet;
     template <class T, class open_funct, class focal_funct>
-    inline int ProbabilitySearch(GameBoard &start, open_funct open_value, focal_funct focal_value, T heuristic,int &num_expansion,
-                           double epsilon = (double)1.1, double pickRate = (double)0.6)
+    inline int ProbabilitySearch(G &start, open_funct open_value, focal_funct focal_value, T heuristic,int &num_expansion,
+                           double epsilon = (double)1.1, double w =(double) 1.0 ,double pickRate = (double)0.6)
     {
-        const auto nodeValue = [&](double g, GameBoard &board)
+        const auto nodeValue = [&](double g, G &board)
         {
             double h = board.GetHeuristic(heuristic);
-            return Node(open_value(g, h), g, h, focal_value(g, h), board);
+            return Node<G>(open_value(g, h), g, h, focal_value(g, h,board.getDistanceToGo(),C,w), board);
         };
 
-        const auto assignValue =[&](double &f, double &g, double &h,double &hFocal,GameBoard &board,Node node )
+        const auto assignValue =[&](double &f, double &g, double &h,double &hFocal,G &board,Node<G> node )
         {
            f=node.f;
            g=node.g;
@@ -44,42 +50,42 @@ public:
            board=node.board;
         };
         visited.clear();
-        GameBoard startState=start;
+        G startState=start;
         bool foundDestination = false;
         double minDistance = (double) INT_MAX;
 
         open.insert({open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
-                     focal_value(0, start.GetHeuristic(heuristic)), start});
+                     focal_value(0, start.GetHeuristic(heuristic),start.getDistanceToGo(),C,w), start});
 
         // map link_open to find state and value in open set when pop state from focal
-        Node tmp = Node(open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
-                        focal_value(0, start.GetHeuristic(heuristic)), start);
+        Node<G> tmp = Node<G>(open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
+                        focal_value(0, start.GetHeuristic(heuristic),start.getDistanceToGo(),C,w), start);
 
         focalSet.insert(nodeValue(0, start));
         link_open.emplace(start, tmp);
         visited[start] = 0;
         int dem=0;
 
-        while (1)
+        while (!open.empty())
         {
             assert(!open.empty());
             int pick = generate_random_number(0, 100);
             num_expansion = visited.size();
 
             double f,g,h,hFocal;
-            GameBoard board;
+            G board;
             double f_min=open.begin()->f;
             //std::cout<<f_min<<'\n';
             //Pop from focal
             if (pick <= pickRate*100 && !focalSet.empty())
             {
-                Node a=*focalSet.begin();
+                Node<G> a=*focalSet.begin();
                 assignValue(f,g,h,hFocal,board,a);
                 if (board.GetHeuristic(heuristic) == 0)
                     return static_cast<int>(g);
 
                 focalSet.erase(focalSet.begin());
-                open.erase(Node(f, g, h, hFocal, board));
+                open.erase(Node<G>(f, g, h, hFocal, board));
 
                 if (hFocal == 0)
                     return static_cast<int>(g);
@@ -88,14 +94,14 @@ public:
             else
             {
                 //std::cout<<focalSet.size()<<'\n';
-                Node a=*open.begin();
+                Node<G> a=*open.begin();
                 assignValue(f,g,h,hFocal,board,a);
 
                 if (board.GetHeuristic(heuristic) == 0)
                     return static_cast<int>(g);
              
                 open.erase(open.begin());
-                focalSet.erase(Node(f, g, h, hFocal, board));
+                focalSet.erase(Node<G>(f, g, h, hFocal, board));
              
 
                 if (hFocal == 0)
@@ -106,22 +112,22 @@ public:
              //std::cout<<'\n';
              //std::cout<<num_expansion<<'\n';
              
-            for (GameBoard &next_board : GetNeighbour(board))
+            for (G &next_board : GetNeighbour(board))
             {
                // std::cout<<g<<'\n';
-                if (visited.find(next_board) == visited.end() or visited[next_board] > g + 1)
+                if (visited.find(next_board) == visited.end() or visited[next_board] > g + cost_move(board,next_board))
                 {
                    // next_board.printState();
-                    visited[next_board] = g + 1;
+                    visited[next_board] = g + cost_move(board,next_board);
                     int h_new = next_board.GetHeuristic(heuristic);
                     /*
                      * delete old_value of new state in open
                      */
-                    if (h_new == 0) {
-                        foundDestination = true;
-                        minDistance = std::min(minDistance, g + 1);
-                        return static_cast<int> (g + 1);
-                    }
+                    // if (h_new == 0) {
+                    //     foundDestination = true;
+                    //     minDistance = std::min(minDistance, g + 1);
+                    //     return static_cast<int> (g + 1);
+                    // }
                     if (link_open.find(next_board) != link_open.end())
                     {
                         auto old_open = link_open.find(next_board);
@@ -131,13 +137,13 @@ public:
                      * insert new node into open
                      */
 
-                    auto check=open.insert(nodeValue(g + 1, next_board));
+                    auto check=open.insert(nodeValue(g + cost_move(board,next_board), next_board));
 
                     link_open.emplace(next_board,
-                                      nodeValue(g + 1, next_board));
-                    if (open_value(g + 1, h_new) < epsilon * f_min)
+                                      nodeValue(g + cost_move(board,next_board), next_board));
+                    if (open_value(g + cost_move(board,next_board), h_new) < epsilon * f_min)
                     {
-                        focalSet.insert(nodeValue(g + 1, next_board));
+                        focalSet.insert(nodeValue(g + cost_move(board,next_board), next_board));
                     }
                 }
             }
@@ -152,7 +158,7 @@ public:
                 /*
                  * update focal: insert new node from open to focal with f <= epsilon * fmin
                  */
-                for(auto it=open.lower_bound(Node(f_min*epsilon,(double)0,(double)0,(double)0,board));it!=open.end();++it)
+                for(auto it=open.lower_bound(Node<G>(f_min*epsilon,(double)0,(double)0,(double)0,board));it!=open.end();++it)
                 {
                     //Node node=*it;
                     auto board = it->board;

@@ -4,8 +4,8 @@
 #include "src/search/focal_search.h"
 // #include "src/search/BoundedFocalSearch.h"
 // #include "src/search/RWFocalSearch.h"
-// #include "src/search/PotentialFocalSearch.h"
-// #include "src/search/ProbabilityFocalSearch.h"
+//#include "src/search/PotentialFocalSearch.h"
+#include "src/search/ProbabilityFocalSearch.h"
 // #include "src/search/DistanceToGoFocalSearch.h"
 #include <iostream>
 #include <vector>
@@ -73,57 +73,57 @@ namespace benchmark {
                  //expansion.push_back(num_expansion);
             }
 
-//             {
-//                 if(checkLog){
-//                     version.push_back("FocalSearch");
-//                 }
+            {
+                // if(checkLog){
+                //     version.push_back("FocalSearch");
+                // }
                 
-//                 BasicFocalSearch fs;
-//                 int num_expansion = 0;
-//               //  fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
-//                 int res = fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
+                BasicFocalSearch<TspBoard> fs;
+                int num_expansion = 0;
+              //  fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
+                int res = fs.FocalSearch(tsp, open_funct, focal_funct, MST, num_expansion);
 
-//                 std::cout << "BasicFocalSearch\n" << res << '\n';
+                std::cout << "BasicFocalSearch\n" << res << '\n';
 
-//                 std::cout << "BasicFocalSearch with num_expansion is " << num_expansion << '\n';
-//                 result.push_back(res);
-//                 expansion.push_back(num_expansion);
+                std::cout << "BasicFocalSearch with num_expansion is " << num_expansion << '\n';
+                //result.push_back(res);
+                //expansion.push_back(num_expansion);
 
-//             }
-// //             {
-// //                 BoundedFocalSearch fs;
-// // //                std::cout << "BoundedFocalSearch\n" << fs.FocalSearch(v, open_funct, focal_funct, ManhattanDistance);
-// //             }
-// //            {
-// //                int num_expansion = 0;
-// //                PotentialFocalSearch fs;
-// //                std::cout << "PotentialFocalSearch\n" << fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion) << '\n';
-// //                std::cout << "PotentialFocalSearch with num_expansion is " << num_expansion << '\n';
-// //            }
-// //            {
-// //                int num_expansion = 0;
-// //                RWFocalSearch fs;
-// //                std::cout << "RWFocalSearch\n" << fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion) << '\n';
-// //                std::cout << "RWFocalSearch with num_expansion is " << num_expansion << '\n';
-// //            }
+            }
 //             {
-//                 if(checkLog){
-//                     version.push_back("ProbFocalSearch");
+//                 BoundedFocalSearch fs;
+// //                std::cout << "BoundedFocalSearch\n" << fs.FocalSearch(v, open_funct, focal_funct, ManhattanDistance);
+//             }
+//            {
+//                int num_expansion = 0;
+//                PotentialFocalSearch fs;
+//                std::cout << "PotentialFocalSearch\n" << fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion) << '\n';
+//                std::cout << "PotentialFocalSearch with num_expansion is " << num_expansion << '\n';
+//            }
+//            {
+//                int num_expansion = 0;
+//                RWFocalSearch fs;
+//                std::cout << "RWFocalSearch\n" << fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion) << '\n';
+//                std::cout << "RWFocalSearch with num_expansion is " << num_expansion << '\n';
+//            }
+            {
+                // if(checkLog){
+                //     version.push_back("ProbFocalSearch");
                     
-//                 }
+                // }
                 
-//                 ProbabilityFocalSearch fs;
-//                 int num_expansion = 0;
-//                 int res = fs.ProbabilitySearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
+                ProbabilityFocalSearch<TspBoard> fs;
+                int num_expansion = 0;
+                int res = fs.ProbabilitySearch(tsp, open_funct, focal_funct, MST, num_expansion);
 
-//                  std::cout << "ProbabilityFocalSearch\n" << res << '\n';
+                 std::cout << "ProbabilityFocalSearch\n" << res << '\n';
 
-//                   std::cout << "ProbabilityFocalSearch with num_expansion is " << num_expansion << '\n';
+                  std::cout << "ProbabilityFocalSearch with num_expansion is " << num_expansion << '\n';
 
-//                 result.push_back(res);
-//                 expansion.push_back(num_expansion);
-//                 //   b=num_expansion;
-//             }
+             //   result.push_back(res);
+             //   expansion.push_back(num_expansion);
+                //   b=num_expansion;
+            }
 
             // {
             //     if(checkLog){
