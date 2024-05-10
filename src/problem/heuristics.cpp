@@ -4,6 +4,7 @@
 
 #include <complex>
 #include <iostream>
+#include <climits>
 #include "heuristics.h"
 #include <algorithm>
 #include <queue>
