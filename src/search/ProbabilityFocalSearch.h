@@ -28,12 +28,11 @@ public:
     double C;
     std::set<Node<G>> open;
     std::map<G, int> visited;
-    std::priority_queue<Node<G>, std::vector<Node<G>>, CompareH<G>> focal;
     std::map<G, Node<G>> link_open;
     std::set<Node<G>,cmp<G>> focalSet;
     template <class T, class open_funct, class focal_funct>
     inline int ProbabilitySearch(G &start, open_funct open_value, focal_funct focal_value, T heuristic,int &num_expansion,
-                           double epsilon = (double)1.1, double w =(double) 1.0 ,double pickRate = (double)0.6)
+                           double epsilon = (double)1.1, double w =(double) 1.0 ,double pickRate = (double)1.0)
     {
         const auto nodeValue = [&](double g, G &board)
         {
