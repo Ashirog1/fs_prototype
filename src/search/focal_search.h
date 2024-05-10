@@ -85,6 +85,7 @@ public:
             num_expansion = visited.size();
             auto fmin = open.begin();
             auto [f, g, h, hFocal, board] = *fmin;
+   
            // std::cout<<"state"<<'\n';
            // board.printState();
            // std::cout<<'\n';
@@ -170,6 +171,10 @@ public:
             double f_min = open.begin()->f;
 
             auto [f, g, h, hFocal, board] = focal.top();
+          //  if(focal.size()==0) std::cout<<"0set"<<'\n';
+
+           // board.printState();
+           // std::cout<<'\n';
 
             focal.pop();
 
@@ -187,7 +192,7 @@ public:
 
 
             for (G &next_board: GetNeighbour(board)) {
-                if (visited.find(next_board) == visited.end() or visited[next_board] > g + cost_move(board,next_board)) {
+                if (visited.find(next_board) == visited.end() || visited[next_board] > g + cost_move(board,next_board)) {
                     visited[next_board] = g + cost_move(board,next_board);
                     int h_new = next_board.GetHeuristic(heuristic);
                     // if (h_new == 0) {
