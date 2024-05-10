@@ -95,12 +95,20 @@ class TspBoard {
     };
 };
 
-TspBoard generator(int n) {
+TspBoard generator_TSP(int n, int grid) {
     std::vector<std::vector<double>> dist(n, std::vector<double>(n, 0));
+
+    const auto euclid = [&](std::pair<int, int> u, std::pair<int, int> v) {
+        return (int)sqrt((u.first - v.first) * (u.first - v.first) + (u.second - v.second) * (u.second - v.second));
+    };
+    std::vector<std::pair<int, int>> points(n);
     for (int i = 0; i < n; ++i) {
-        for (int j = i + 1; j < n; ++j) {
-            dist[i][j] = random_in_range(1, 20);
-            dist[j][i] = dist[i][j];
+        points[i].first = random_in_range(-grid, grid);
+        points[i].second = random_in_range(-grid, grid);
+    }
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            dist[i][j] = euclid(points[i], points[j]);
         }
     }
     for (int k = 0; k < n; ++k) {
