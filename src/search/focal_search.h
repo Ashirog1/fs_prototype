@@ -193,8 +193,8 @@ public:
             if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(g);
             open.erase(Node<G>(f, g, h, hFocal, board));
 
-          //  board.printState();
-          //  std::cout<<'\n';
+            // board.printState();
+            // std::cout<<'\n';
           //  std::cout<<num_expansion<<'\n';
 
             // if (hFocal == 0)
