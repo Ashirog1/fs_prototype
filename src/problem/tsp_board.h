@@ -11,6 +11,7 @@
 #include <map>
 #include <set>
 #include <vector>
+#include <math.h>
 // #include "game_board.h"
 
 class TspBoard {

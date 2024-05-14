@@ -44,10 +44,10 @@ public:
     bool operator == (const GameBoard &oth) const{
         for(int i=0;i<current.size();i++){
             if(current[i]!=oth.current[i]){
-                return true;
+                return false;
             }
         }
-    return false;
+    return true;
     };
 
     friend double cost_move(GameBoard &tspBoard1,GameBoard &tspBoard2){

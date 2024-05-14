@@ -16,7 +16,10 @@ template <class G> struct cmp {
             return a.hFocal < b.hFocal;
         if (a.g != b.g)
             return a.g < b.g;
+        if(a.h!=b.h)
         return a.h < b.h;
+        return a.board < b.board;
+
     }
 };
 
@@ -28,8 +31,8 @@ template <class G> class ProbabilityFocalSearch {
     std::map<G, Node<G>> link_open;
     std::set<Node<G>, cmp<G>> focalSet;
     template <class T, class open_funct, class focal_funct>
-    inline double ProbabilitySearch(G &start, open_funct open_value, focal_funct focal_value, T heuristic,int &num_expansion,
-                           double epsilon = (double)1.1, double w =(double) 1.0 ,double pickRate = (double)0.6)
+    inline int ProbabilitySearch(G &start, open_funct open_value, focal_funct focal_value, T heuristic,int &num_expansion,
+                           double epsilon = (double)1.1, double w =(double) 1.0 ,double pickRate = (double)1.01)
     {
         const auto nodeValue = [&](double g, G &board)
         {
@@ -62,7 +65,7 @@ template <class G> class ProbabilityFocalSearch {
         int dem = 0;
 
         while (!open.empty()) {
-            assert(!open.empty());
+           // assert(!open.empty());
             int pick = generate_random_number(0, 100);
             num_expansion = visited.size();
 
@@ -95,6 +98,7 @@ template <class G> class ProbabilityFocalSearch {
             }
             // Pop from open
             else {
+                std::cout<<"false"<<'\n';
                 // std::cout<<focalSet.size()<<'\n';
                 Node<G> a = *open.begin();
                 assignValue(f, g, h, hFocal, board, a);
@@ -113,9 +117,21 @@ template <class G> class ProbabilityFocalSearch {
                 if (hFocal == 0)
                     return static_cast<double>(g);
             }
+          
+            //board.printState();
+            // std::cout<<'\n';
+           // std::cout<<h<<'\n';
+           // std::cout<<board<<'\n';
+             if(board==GameBoard(4,{1,2,7,3,5,6,4,8,9,10,11,12,13,0,14,15})){
+                GameBoard newBoard=GameBoard(4,{1,2,7,3,5,6,4,8,9,10,11,12,13,0,14,15});
+                for(auto v:focalSet){
+                    v.board.printState();
+                    std::cout<<'\n'<<v.h<<'\n';
+                }
 
-            // board.printState();
-             //std::cout<<'\n';
+            }
+            if(visited[board]!=g) continue;
+             
              //std::cout<<num_expansion<<'\n';
              
             for (G &next_board : GetNeighbour(board))
@@ -124,6 +140,7 @@ template <class G> class ProbabilityFocalSearch {
                 if (visited.find(next_board) == visited.end() || visited[next_board] > g + cost_move(board,next_board))
                 {
                    // next_board.printState();
+                    
                     visited[next_board] = g + cost_move(board,next_board);
                     double h_new = next_board.GetHeuristic(heuristic);
                     /*
@@ -149,12 +166,15 @@ template <class G> class ProbabilityFocalSearch {
                     int a1=focalSet.size();
                     if (open_value(g + cost_move(board,next_board), h_new) < epsilon * f_min)
                     {
+                        int a=focalSet.size();
                         focalSet.insert(nodeValue(g + cost_move(board,next_board), next_board));
+                        int b=focalSet.size();
+                        if(b!=a+1) std::cout<<a<<" "<<b<<'\n';
                     }
                     int b1=focalSet.size();
-                    if(a1==0&&b1==0){
-                       // std::cout<<open_value(g + cost_move(board,next_board), h_new)<<" "<<f_min<<" "<<epsilon<<" "<<epsilon*f_min<<'\n';
-                    }
+                    // if(a1==0&&b1==0){
+                    //     std::cout<<"false"<<'\n';
+                    // }
 
                 }
             }
@@ -164,12 +184,12 @@ template <class G> class ProbabilityFocalSearch {
 
             auto f_head = open.begin()->f;
             
-            if (!open.empty() && f_min <= f_head)
+            if (!open.empty() && f_min <f_head)
             {
                 /*
                  * update focal: insert new node from open to focal with f <= epsilon * fmin
                  */
-                for(auto it=open.lower_bound(Node<G>(f_min,(double)-1,(double)-1,(double)-1,board));it!=open.end();++it)
+                for(auto it=open.lower_bound(Node<G>(f_min*epsilon,(double)-1,(double)-1,(double)-1,board));it!=open.end();++it)
                 {
                     //Node node=*it;
                     auto board = it->board;
@@ -184,7 +204,7 @@ template <class G> class ProbabilityFocalSearch {
                 }
             }
             if(focalSet.size()==0){
-                        std::cout<<" "<<f_min<<" "<<f_head<<'\n';
+                        std::cout<<" "<<f_min<<" "<<f_head<<" false "<<'\n';
             }
          
         }

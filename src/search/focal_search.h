@@ -65,8 +65,10 @@ struct CompareH {
          return a.hFocal > b.hFocal;
          if(a.g!=b.g)
          return a.g>b.g;
+         if(a.h!=b.h)
          return a.h>b.h;
-    };
+         return b.board<a.board;
+    }
 };
 
 template<class G>
@@ -91,6 +93,7 @@ public:
            // std::cout<<'\n';
            // std::cout<<visited[board]<<" "<<g<<" "<<h<<'\n';
             open.erase(fmin);
+
 
             if (visited[board] != g) continue;
             if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(f);
@@ -152,7 +155,7 @@ public:
         bool foundDestination = false;
         double minDistance = (double) INT_MAX;
 
-        visited.clear();
+        visited.clear();    
 
         G startState = start;
 
@@ -173,12 +176,19 @@ public:
             auto [f, g, h, hFocal, board] = focal.top();
           //  if(focal.size()==0) std::cout<<"0set"<<'\n';
 
-           // board.printState();
-           // std::cout<<'\n';
+         //   board.printState();
+          //  std::cout<<'\n';
 
             focal.pop();
+          //  board.printState();
+            // std::cout<<h<<'\n';
+           // std::cout<<board<<'\n';
+            if (visited[board] != g) continue;  
+            if(board==GameBoard(4,{1,2,7,3,5,6,4,8,9,10,11,12,13,0,14,15})){
+                GameBoard newBoard=GameBoard(4,{1,2,7,3,5,6,4,8,9,10,11,12,13,0,14,15});
+               // std::cout<<"check "<<visited[newBoard]<<'\n';
 
-            if (visited[board] != g) continue;
+            }
 
             if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(g);
             open.erase(Node<G>(f, g, h, hFocal, board));

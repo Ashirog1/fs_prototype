@@ -12,35 +12,29 @@
 #include <string>
 #include <vector>
 
-namespace global_testing {
-void test() {
-    std::vector<std::vector<int>> v = {{0, 2, 4, 8}, {1, 5, 3, 12}, {6, 7, 10, 15}, {9, 13, 14, 11}};
-    GameBoard gb(v);
-}
+namespace global_testing
+{
+    void test()
+    {
+        std::vector<std::vector<int>> v = {{0, 2, 4, 8}, {1, 5, 3, 12}, {6, 7, 10, 15}, {9, 13, 14, 11}};
+        GameBoard gb(v);
+    }
 }; // namespace global_testing
 
-namespace benchmark {
-void NPuzzleDemo() {
-    /*
-     * about benchmark expansion node
-     * how about compare visited???
-     */
-
-    // int test = 100000;
-    // std::vector<int> result;
-    // std::vector<int> expansion;
-    // std::vector<std::string> version;
-    // std::vector<std::vector<int>> compareResult(100, std::vector<int>(100));
-    // std::vector<std::vector<int>> compareExpansion(100, std::vector<int>(100));
-
-namespace benchmark {
-    void NPuzzleDemo() {
+namespace benchmark
+{
+    void NPuzzleDemo()
+    {
+        /*
+         * about benchmark expansion node
+         * how about compare visited???
+         */
         /*
          * about benchmark expansion node
          * how about compare visited???
          */
 
-        int test = 100000;
+        int test = 10;
         std::vector<int> result;
         std::vector<int> expansion;
         std::vector<std::string> version;
@@ -55,292 +49,217 @@ namespace benchmark {
 
         bool checkLog = true;
 
-        for (int i = 0; i <= 5000; ++i) {
+        for (int i = 0; i <=0; ++i)
+        {
+            //std::cout<<i<<'\n'<<'\n';
             /// 3 puzzle 10 swap
-            GameBoard gb = generator(4, 50);
-             //  TspBoard tsp(3,{{0.0,2.0,3.0},{2.0,0.0,1.0},{3.0,1.0,0.0}});
-          //  result.clear();
-           // expansion.clear();
-             //std::cout << i << '\n';
-             {
-                 if (checkLog)
-                 {
-                     version.push_back("Astar");
-                 }
-                 int num_expansion = 0;
+         //   GameBoard gb = generator(4, 20);
+            GameBoard gb=GameBoard(4,{1,2 ,7, 3, 5, 6, 8, 0, 13, 12, 4, 15, 10, 9, 14, 11
+});
+            //  TspBoard tsp(3,{{0.0,2.0,3.0},{2.0,0.0,1.0},{3.0,1.0,0.0}});
+             result.clear();
+             expansion.clear();
+            // std::cout << i << '\n';
+            {
+                if (checkLog)
+                {
+                    version.push_back("Astar");
+                }
+                int num_expansion = 0;
 
-                 BasicAStar<GameBoard> fs;
+                BasicAStar<GameBoard> fs;
 
-                 // fs.AStarSearch(gb, ManhattanDistance, num_expansion);
+                // fs.AStarSearch(gb, ManhattanDistance, num_expansion);
 
-                 int res = fs.AStarSearch(gb, ManhattanDistance, num_expansion);
+                int res = fs.AStarSearch(gb, ManhattanDistance, num_expansion);
 
-                 std::cout << "AStarSearch\n" << res << '\n';
+               // std::cout << "AStarSearch\n"
+                 //         << res << '\n';
 
-                 std::cout << "AStarSearch with num_expansion is " << num_expansion << '\n';
-                 //result.push_back(res);
-                 //expansion.push_back(num_expansion);
+               // std::cout << "AStarSearch with num_expansion is " << num_expansion << '\n';
+                 result.push_back(res);
+                 expansion.push_back(num_expansion);
             }
 
             {
-                if(checkLog){
+                if (checkLog)
+                {
                     version.push_back("FocalSearch");
                 }
-                
+
                 BasicFocalSearch<GameBoard> fs;
                 int num_expansion = 0;
-              //  fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
+                //  fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
                 int res = fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
+                std::cout << "FocalSearch\n"
+                         << res << '\n';
 
-    for (int i = 0; i <= 0; ++i) {
-        /// 3 puzzle 10 swap
-        GameBoard gb = generator(4, 50);
-        //  TspBoard tsp(3,{{0.0,2.0,3.0},{2.0,0.0,1.0},{3.0,1.0,0.0}});
-        //  result.clear();
-        // expansion.clear();
-        // std::cout << i << '\n';
-        {
-            //  if (checkLog)
-            //  {
-            //      version.push_back("Astar");
-            //  }
-            int num_expansion = 0;
-
-                std::cout << "BasicFocalSearch with num_expansion is " << num_expansion << '\n';
-                result.push_back(res);
-                expansion.push_back(num_expansion);
-
+                 std::cout << "FocalSearch with num_expansion is " << num_expansion << '\n';
+                 result.push_back(res);
+                 expansion.push_back(num_expansion);
             }
-//             {
-//                 BoundedFocalSearch fs;
-// //                std::cout << "BoundedFocalSearch\n" << fs.FocalSearch(v, open_funct, focal_funct, ManhattanDistance);
-//             }
-//            {
-//                int num_expansion = 0;
-//                PotentialFocalSearch fs;
-//                std::cout << "PotentialFocalSearch\n" << fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion) << '\n';
-//                std::cout << "PotentialFocalSearch with num_expansion is " << num_expansion << '\n';
-//            }
-//            {
-//                int num_expansion = 0;
-//                RWFocalSearch fs;
-//                std::cout << "RWFocalSearch\n" << fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion) << '\n';
-//                std::cout << "RWFocalSearch with num_expansion is " << num_expansion << '\n';
-//            }
+
             {
-                if(checkLog){
+                if (checkLog)
+                {
                     version.push_back("ProbFocalSearch");
-                    
                 }
-                
+
                 ProbabilityFocalSearch<GameBoard> fs;
                 int num_expansion = 0;
                 int res = fs.ProbabilitySearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
 
-                 std::cout << "ProbabilityFocalSearch\n" << res << '\n';
+                std::cout << "ProbabilityFocalSearch\n"
+                          << res << '\n';
 
-                  std::cout << "ProbabilityFocalSearch with num_expansion is " << num_expansion << '\n';
+                std::cout << "ProbabilityFocalSearch with num_expansion is " << num_expansion << '\n';
 
-               result.push_back(res);
-               expansion.push_back(num_expansion);
-                //   b=num_expansion;
+                result.push_back(res);
+                expansion.push_back(num_expansion);
             }
 
             // {
-            //     if(checkLog){
-            //         version.push_back("ProbFocalSearch");
-                    
+            //     if (checkLog)
+            //     {
+            //         version.push_back("ProbFocalSearch 70/30");
             //     }
-                
+
             //     ProbabilityFocalSearch<GameBoard> fs;
             //     int num_expansion = 0;
-            //     int res = fs.ProbabilitySearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
+            //     int res = fs.ProbabilitySearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion, 1.1, 1.0, 0.7);
 
-            //      std::cout << "ProbabilityFocalSearch\n" << res << '\n';
+            //     std::cout << "ProbabilityFocalSearch\n"
+            //               << res << '\n';
 
-            //       std::cout << "ProbabilityFocalSearch with num_expansion is " << num_expansion << '\n';
+            //     std::cout << "ProbabilityFocalSearch 70/30 with num_expansion is " << num_expansion << '\n';
 
-            //    result.push_back(res);
-            //    expansion.push_back(num_expansion);
+            //     result.push_back(res);
+            //     expansion.push_back(num_expansion);
             //     //   b=num_expansion;
             // }
 
-            {
-                if(checkLog){
-                    version.push_back("ProbFocalSearch 70/30");
-                    
-                }
-                
-                ProbabilityFocalSearch<GameBoard> fs;
-                int num_expansion = 0;
-                int res = fs.ProbabilitySearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion,1.1,1.0,0.7);
-
-                 std::cout << "ProbabilityFocalSearch\n" << res << '\n';
-
-                  std::cout << "ProbabilityFocalSearch 70/30 with num_expansion is " << num_expansion << '\n';
-
-               result.push_back(res);
-               expansion.push_back(num_expansion);
-                //   b=num_expansion;
-            }
-
-            {
-                if(checkLog){
-                    version.push_back("ProbFocalSearch version 4 60/40");
-                    
-                }
-                
-                ProbabilityFocalSearch<GameBoard> fs;
-                int num_expansion = 0;
-                int res = fs.ProbabilitySearch(gb, open_funct, focal_potential, ManhattanDistance, num_expansion,1.1,1.0,0.6);
-
-                 std::cout << "ProbabilityFocalSearch\n" << res << '\n';
-
-                  std::cout << "ProbabilityFocalSearch with potential func with num_expansion is " << num_expansion << '\n';
-
-               result.push_back(res);
-               expansion.push_back(num_expansion);
-                //   b=num_expansion;
-            }
-
-            {
-                if(checkLog){
-                    version.push_back("ProbFocalSearch version 4 70/30");
-                    
-                }
-                
-                ProbabilityFocalSearch<GameBoard> fs;
-                int num_expansion = 0;
-                int res = fs.ProbabilitySearch(gb, open_funct, focal_potential, ManhattanDistance, num_expansion,1.1,1.0,0.7);
-
-                 std::cout << "ProbabilityFocalSearch\n" << res << '\n';
-
-                  std::cout << "ProbabilityFocalSearch with potential func with num_expansion is " << num_expansion << '\n';
-
-               result.push_back(res);
-               expansion.push_back(num_expansion);
-                //   b=num_expansion;
-            }
-
-
-
             // {
-            //     if(checkLog){
-            //         version.push_back("DistanceToGoFocalSearch");
-                    
+            //     if (checkLog)
+            //     {
+            //         version.push_back("ProbFocalSearch version 4 60/40");
             //     }
-                
-            //     DistanceToGoFocalSearch fs;
+
+            //     ProbabilityFocalSearch<GameBoard> fs;
             //     int num_expansion = 0;
-            //     int res = fs.DistanceToGoSearch(gb, open_funct, distance_to_go_funct, ManhattanDistance, num_expansion);
+            //     int res = fs.ProbabilitySearch(gb, open_funct, focal_potential, ManhattanDistance, num_expansion, 1.1, 1.0, 0.6);
 
-            std::cout << "BasicFocalSearch\n" << res << '\n';
+            //     std::cout << "ProbabilityFocalSearch\n"
+            //               << res << '\n';
 
-            std::cout << "BasicFocalSearch with num_expansion is " << num_expansion << '\n';
-            // result.push_back(res);
-            // expansion.push_back(num_expansion);
-        }
-        //             {
-        //                 BoundedFocalSearch fs;
-        // //                std::cout << "BoundedFocalSearch\n" << fs.FocalSearch(v, open_funct, focal_funct,
-        // ManhattanDistance);
-        //             }
-        //            {
-        //                int num_expansion = 0;
-        //                PotentialFocalSearch fs;
-        //                std::cout << "PotentialFocalSearch\n" << fs.FocalSearch(gb, open_funct, focal_funct,
-        //                ManhattanDistance, num_expansion) << '\n'; std::cout << "PotentialFocalSearch with
-        //                num_expansion is " << num_expansion << '\n';
-        //            }
-        //            {
-        //                int num_expansion = 0;
-        //                RWFocalSearch fs;
-        //                std::cout << "RWFocalSearch\n" << fs.FocalSearch(gb, open_funct, focal_funct,
-        //                ManhattanDistance, num_expansion) << '\n'; std::cout << "RWFocalSearch with num_expansion is "
-        //                << num_expansion << '\n';
-        //            }
-        {
-            // if(checkLog){
-            //     version.push_back("ProbFocalSearch");
+            //     std::cout << "ProbabilityFocalSearch with potential func with num_expansion is " << num_expansion << '\n';
 
+            //     result.push_back(res);
+            //     expansion.push_back(num_expansion);
+            //     //   b=num_expansion;
             // }
 
-             if(checkLog){
-                 logFile << "state,";
-                 for(auto v:version){
-                     logFile << v << " result,";
-                     logFile << v << " expansion,";
-                 }
-                 logFile << '\n';
-                 checkLog = false;
-             }
+            // {
+            //     if (checkLog)
+            //     {
+            //         version.push_back("ProbFocalSearch version 4 70/30");
+            //     }
 
-             logFile << gb << ",";
-             for (int j = 0; j < result.size();j++)
-             {
-                 logFile << result[j] << "," << expansion[j] << ",";
-             }
-             logFile << "\n";
+            //     ProbabilityFocalSearch<GameBoard> fs;
+            //     int num_expansion = 0;
+            //     int res = fs.ProbabilitySearch(gb, open_funct, focal_potential, ManhattanDistance, num_expansion, 1.1, 1.0, 0.7);
 
-             for (int j = 0; j < result.size();j++){
-                 for (int k = 0; k < result.size();k++){
-                     if(expansion[j]<expansion[k]){
-                         compareExpansion[j][k]++;
-                     }
+            //     std::cout << "ProbabilityFocalSearch\n"
+            //               << res << '\n';
 
-                     if(result[j]<=result[k]){
-                         compareResult[j][k]++;
-                     }
-                 }
+            //     std::cout << "ProbabilityFocalSearch with potential func with num_expansion is " << num_expansion << '\n';
+
+            //     result.push_back(res);
+            //     expansion.push_back(num_expansion);
+            //     //   b=num_expansion;
+            // }
+
+            if (checkLog)
+            {
+                logFile << "state,";
+                for (auto v : version)
+                {
+                    logFile << v << " result,";
+                    logFile << v << " expansion,";
+                }
+                logFile << '\n';
+                checkLog = false;
             }
-         }
-         logFile.close();
-         resultFile << "\n Expansion: % when this search have less expansion(run faster) than other search  (not include the case when both have the same speed) \n";
-         resultFile << ",";
-         for(auto v:version){
-             resultFile << v << ",";
-         }
-         resultFile << '\n';
-         for (int j = 0; j < result.size();j++){
-             resultFile << version[j] << ",";
-             for (int k = 0; k < result.size();k++){
-                 resultFile << (double) compareExpansion[j][k]/(test+1) << ",";
-             }
-             resultFile << '\n';
-         }
-         resultFile << "\n Result \n";
-         resultFile << ",";
-         for(auto v:version){
-             resultFile << v << ",";
-         }
-         resultFile << '\n';
-         for (int j = 0; j < result.size();j++){
-             resultFile << version[j] << ",";
-             for (int k = 0; k < result.size();k++){
-                 resultFile << (double) compareResult[j][k]/(test+1) << ",";
-             }
-             resultFile << '\n';
-         }
-             resultFile.close();
-    }
-    resultFile << '\n';
-    for (int j = 0; j < result.size(); j++) {
-        resultFile << version[j] << ",";
-        for (int k = 0; k < result.size(); k++) {
-            resultFile << (double)compareResult[j][k] / (test + 1) << ",";
+
+            logFile << gb << ",";
+            for (int j = 0; j < result.size(); j++)
+            {
+                logFile << result[j] << "," << expansion[j] << ",";
+            }
+            logFile << "\n";
+
+            for (int j = 0; j < result.size(); j++)
+            {
+                for (int k = 0; k < result.size(); k++)
+                {
+                    if (expansion[j] < expansion[k])
+                    {
+                        if((j==1&&k==2)||(j==2&&k==1))
+                           std::cout<<expansion[j]<<" "<<expansion[k]<<" "<<gb<<'\n';
+                        compareExpansion[j][k]++;
+                    }
+
+                    if (result[j] <= result[k])
+                    {
+                        compareResult[j][k]++;
+                    }
+                }
+            }
+        }
+        logFile.close();
+        resultFile << "\n Expansion: % when this search have less expansion(run faster) than other search  (not include the case when both have the same speed) \n";
+        resultFile << ",";
+        std::cout<<compareExpansion[1][2]<<" "<<compareExpansion[2][1]<<'\n';
+        for (auto v : version)
+        {
+            resultFile << v << ",";
         }
         resultFile << '\n';
-    }
-    resultFile.close();
-}
+        for (int j = 0; j < result.size(); j++)
+        {
+            resultFile << version[j] << ",";
 
+            for (int k = 0; k < result.size(); k++)
+            {
+                resultFile << (double)compareExpansion[j][k] / (test + 1) << ",";
+            }
+            resultFile << '\n';
+        }
+        resultFile << "\n Result \n";
+        resultFile << ",";
+        for (auto v : version)
+        {
+            resultFile << v << ",";
+        }
+        resultFile << '\n';
+        for (int j = 0; j < result.size(); j++)
+        {
+            resultFile << version[j] << ",";
+            for (int k = 0; k < result.size(); k++)
+            {
+                resultFile << (double)compareResult[j][k] / (test + 1) << ",";
+            }
+            resultFile << '\n';
+        }
+        resultFile.close();
+    }
 }
 
 ; // namespace benchmark
 
-int main() {
+int main()
+{
     //    global_testing::test();
     // benchmark::NPuzzleDemo();
-    benchmark::TSPDemo();
+    benchmark::NPuzzleDemo();
     return 0;
 }

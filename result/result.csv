@@ -1,0 +1,13 @@
+Parameter: epsilon=1.1; prob rate =0.6; weight distance_to_go = 1.1; max distance from goal less than 50 move; game board size 4x4, 100k test 
+
+ Expansion: % when this search have less expansion(run faster) than other search  (not include the case when both have the same speed) 
+,Astar,FocalSearch,ProbFocalSearch,
+Astar,0,0,0,
+FocalSearch,0.0909091,0,0.0909091,
+ProbFocalSearch,0.0909091,0,0,
+
+ Result 
+,Astar,FocalSearch,ProbFocalSearch,
+Astar,0.0909091,0.0909091,0.0909091,
+FocalSearch,0,0.0909091,0,
+ProbFocalSearch,0.0909091,0.0909091,0.0909091,
