@@ -34,7 +34,7 @@ namespace benchmark
          * how about compare visited???
          */
 
-        int test = 10000;
+        int test = 1000;
         std::vector<int> result;
         std::vector<int> expansion;
         std::vector<std::string> version;
@@ -53,7 +53,7 @@ namespace benchmark
         {
             std::cout<<i<<'\n'<<'\n';
             /// 3 puzzle 10 swap
-            GameBoard gb = generator(4, 100);
+            GameBoard gb = generator(4, 150);
 //             GameBoard gb=GameBoard(4,{1,2 ,7, 3, 5, 6, 8, 0, 13, 12, 4, 15, 10, 9, 14, 11
 // });
             //  TspBoard tsp(3,{{0.0,2.0,3.0},{2.0,0.0,1.0},{3.0,1.0,0.0}});
@@ -203,8 +203,7 @@ namespace benchmark
                 {
                     if (expansion[j] < expansion[k])
                     {
-                        if((j==1&&k==2)||(j==2&&k==1))
-                           std::cout<<expansion[j]<<" "<<expansion[k]<<" "<<gb<<'\n';
+                       
                         compareExpansion[j][k]++;
                     }
 
@@ -218,7 +217,6 @@ namespace benchmark
         logFile.close();
         resultFile << "\n Expansion: % when this search have less expansion(run faster) than other search  (not include the case when both have the same speed) \n";
         resultFile << ",";
-        std::cout<<compareExpansion[1][2]<<" "<<compareExpansion[2][1]<<'\n';
         for (auto v : version)
         {
             resultFile << v << ",";
