@@ -4,8 +4,11 @@
 
 #include <complex>
 #include <iostream>
+#include <climits>
 #include "heuristics.h"
 #include <algorithm>
+#include <queue>
+#include <utility>
 
 double HammingDistance(int size, const std::vector<int> &board) {
     int hammingDistance = 0;
@@ -92,15 +95,60 @@ double LinearConflictDistance(int size, const std::vector<int> &board) {
 
 }
 
+double MST(int size,const std::vector<int> visited, const std::set<int> unvisited, const std::vector<std::vector<double>> dis ){
+    if(visited.size()==size+1) return 0;
+    if(unvisited.size()==0) return dis[visited[size-1]][visited[0]];
+    double total=0;
+    std::priority_queue<std::pair<double, int>, std::vector<std::pair<double,int>>, std::greater<std::pair<double,int>>> prim;
+    std::vector<double> d(size,INT_MAX);
+    std::set<int> remain=unvisited;
+    if(visited.size()){
+        double min_current=INT_MAX;
+        double min_depot=INT_MAX;
+        for(auto v:unvisited){
+            min_current=std::min(min_current,dis[visited[visited.size()-1]][v]);
+            min_depot=std::min(min_depot, dis[visited[0]][v]);
+        }
+        total=total+min_current+min_depot;     
+    }
+
+    d[*remain.begin()]=0;
+    prim.push(std::make_pair(0,*remain.begin()));
+
+    while(prim.size()){
+       // std::cout<<"check"<<'\n';
+        if(remain.empty()) break;
+        auto top=prim.top();
+        prim.pop();
+        if(top.first!=d[top.second]){
+            continue;
+        }
+        total+=d[top.second];
+        d[top.second]=INT_MIN;
+        remain.erase(top.second);
+        for(auto v:remain){
+            if(d[v]>dis[top.second][v]){
+               d[v]=dis[top.second][v];
+               prim.push(std::make_pair(d[v],v));
+            }
+        }
+    }
+    return total;
+}
+
 double open_funct(double g, double h) {
     return g + h;
 }
 
-double focal_funct(double g, double h) {
+double focal_funct(double g, double h,double dis_to_go,double C,double w) {
     return h;
 }
 
 double distance_to_go_funct(double g,double h, double weight,double initial){
     return g+std::max((double)1,weight*h/initial);
+}
+
+double focal_potential(double g, double h,double dis_to_go,double C,double w){
+    return h/g;
 }
 

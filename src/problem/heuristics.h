@@ -16,13 +16,15 @@ double ManhattanDistance(int size, const std::vector<int> &board);
 
 double LinearConflictDistance(int size, const std::vector<int> &board);
 
-double MST(int size,const std::vector<int> visited, const std::set<int> unvisited, const std::vector<std::vector<int>> dis );
+double MST(int size,const std::vector<int> visited, const std::set<int> unvisited, const std::vector<std::vector<double>> dis );
 
 double open_funct(double g, double h);
 
-double focal_funct(double g, double h);
+double focal_funct(double g, double h,double dis_to_go,double C,double w);
 
 double distance_to_go_funct(double g,double h, double weight,double initial);
+
+double focal_potential(double g, double h,double dis_to_go,double C,double w);
 
 
 #endif //FS_PROTOTYPE_HEURISTICS_H

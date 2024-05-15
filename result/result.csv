@@ -1,13 +1,19 @@
-Parameter: epsilon=1.1; prob rate =0.6; weight distance_to_go = 1.1; max distance from goal less than 100 move; game board size 4x4, 100k test 
+Parameter: epsilon=1.1; prob rate =0.6; weight distance_to_go = 1.1; max distance from goal less than 50 move; game board size 4x4, 100k test 
 
  Expansion: % when this search have less expansion(run faster) than other search  (not include the case when both have the same speed) 
-,Astar,FocalSearch,ProbFocalSearch,
-Astar,0,0.0587294,0.119019,
-FocalSearch,0.755922,0,0.660413,
-ProbFocalSearch,0.513825,0.167808,0,
+,Astar,FocalSearch,ProbFocalSearch,ProbFocalSearch 70/30,ProbFocalSearch version 4 60/40,ProbFocalSearch version 4 70/30,
+Astar,0,0.011988,0.0729271,0.0629371,0.0729271,0.0649351,
+FocalSearch,0.987013,0,0.267732,0.241758,0.267732,0.233766,
+ProbFocalSearch,0.922078,0.73027,0,0.756244,0.848152,0.808192,
+ProbFocalSearch 70/30,0.934066,0.757243,0.23976,0,0.363636,0.859141,
+ProbFocalSearch version 4 60/40,0.924076,0.731269,0.147852,0.633367,0,0.824176,
+ProbFocalSearch version 4 70/30,0.931069,0.765235,0.187812,0.136863,0.170829,0,
 
  Result 
-,Astar,FocalSearch,ProbFocalSearch,
-Astar,1,1,1,
-FocalSearch,0.945381,1,0.948401,
-ProbFocalSearch,0.95973,0.96275,1,
+,Astar,FocalSearch,ProbFocalSearch,ProbFocalSearch 70/30,ProbFocalSearch version 4 60/40,ProbFocalSearch version 4 70/30,
+Astar,1,1,1,1,1,1,
+FocalSearch,0.951049,1,0.996004,0.998002,0.997003,0.998002,
+ProbFocalSearch,0.789211,0.833167,1,0.964036,0.979021,0.96004,
+ProbFocalSearch 70/30,0.812188,0.858142,0.991009,1,0.986014,0.984016,
+ProbFocalSearch version 4 60/40,0.787213,0.83017,0.976024,0.956044,1,0.967033,
+ProbFocalSearch version 4 70/30,0.81019,0.856144,0.982018,0.979021,0.992008,1,
