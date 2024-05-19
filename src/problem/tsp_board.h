@@ -5,6 +5,7 @@
 // #ifndef FS_PROTOTYPE_GAME_BOARD_H
 // #define FS_PROTOTYPE_GAME_BOARD_H
 
+#include "../search/utils.h"
 #include "Problem.h"
 #include <algorithm>
 #include <iostream>
@@ -74,7 +75,7 @@ class TspBoard {
                                    [tspBoard2.visited[tspBoard2.visited.size() - 1]];
     }
 
-    double getDistanceToGo() { return n - visited.size(); }
+    double getDistanceToGo() { return (double) (n - visited.size()); }
 
     template <class T> inline double GetHeuristic(T heuristic) { return heuristic(n, visited, unvisited, dis_matrix); };
 
@@ -94,6 +95,17 @@ class TspBoard {
         }
         return false;
     };
+     friend std::ostream& operator<<(std::ostream& os, const TspBoard &tspBoard){
+         os << tspBoard.n << " ";
+         for(auto v:tspBoard.dis_matrix){
+            for(auto i:v){
+                os << i << " ";
+            }
+         }
+             return os;
+
+     };
+
 };
 
 TspBoard generator_TSP(int n, int grid) {
@@ -104,8 +116,8 @@ TspBoard generator_TSP(int n, int grid) {
     };
     std::vector<std::pair<int, int>> points(n);
     for (int i = 0; i < n; ++i) {
-        points[i].first = random_in_range(-grid, grid);
-        points[i].second = random_in_range(-grid, grid);
+        points[i].first = generate_random_number(-grid, grid);
+        points[i].second = generate_random_number(-grid, grid);
     }
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {

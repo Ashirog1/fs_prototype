@@ -144,9 +144,10 @@ double focal_funct(double g, double h,double dis_to_go,double C,double w) {
     return h;
 }
 
-double distance_to_go_funct(double g,double h, double weight,double initial){
-    return g+std::max((double)1,weight*h/initial);
+double distance_to_go_funct(double g,double h, double dis_to_go,double C,double w ){
+    return g + std::max((double) 1, w * dis_to_go) * h;
 }
+
 
 double focal_potential(double g, double h,double dis_to_go,double C,double w){
     return h/g;

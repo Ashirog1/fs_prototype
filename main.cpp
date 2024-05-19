@@ -53,7 +53,7 @@ namespace benchmark
         {
             std::cout<<i<<'\n'<<'\n';
             /// 3 puzzle 10 swap
-            GameBoard gb = generator(4, 150);
+            TspBoard tsp = generator_TSP(15, 100);
 //             GameBoard gb=GameBoard(4,{1,2 ,7, 3, 5, 6, 8, 0, 13, 12, 4, 15, 10, 9, 14, 11
 // });
             //  TspBoard tsp(3,{{0.0,2.0,3.0},{2.0,0.0,1.0},{3.0,1.0,0.0}});
@@ -67,11 +67,11 @@ namespace benchmark
                 }
                 int num_expansion = 0;
 
-                BasicAStar<GameBoard> fs;
+                BasicAStar<TspBoard> fs;
 
                 // fs.AStarSearch(gb, ManhattanDistance, num_expansion);
 
-                int res = fs.AStarSearch(gb, ManhattanDistance, num_expansion);
+                int res = fs.AStarSearch(tsp, MST, num_expansion);
 
                std::cout << "AStarSearch\n"
                          << res << '\n';
@@ -87,10 +87,10 @@ namespace benchmark
                     version.push_back("FocalSearch");
                 }
 
-                BasicFocalSearch<GameBoard> fs;
+                BasicFocalSearch<TspBoard> fs;
                 int num_expansion = 0;
                 //  fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
-                int res = fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
+                int res = fs.FocalSearch(tsp, open_funct, focal_funct, MST, num_expansion);
                 std::cout << "FocalSearch\n"
                          << res << '\n';
 
@@ -105,9 +105,9 @@ namespace benchmark
                     version.push_back("ProbFocalSearch");
                 }
 
-                ProbabilityFocalSearch<GameBoard> fs;
+                ProbabilityFocalSearch<TspBoard> fs;
                 int num_expansion = 0;
-                int res = fs.ProbabilitySearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
+                int res = fs.ProbabilitySearch(tsp, open_funct, focal_funct, MST, num_expansion);
 
                 std::cout << "ProbabilityFocalSearch\n"
                           << res << '\n';
@@ -124,9 +124,9 @@ namespace benchmark
                     version.push_back("ProbFocalSearch 70/30");
                 }
 
-                ProbabilityFocalSearch<GameBoard> fs;
+                ProbabilityFocalSearch<TspBoard> fs;
                 int num_expansion = 0;
-                int res = fs.ProbabilitySearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion, 1.1, 1.0, 0.7);
+                int res = fs.ProbabilitySearch(tsp, open_funct, focal_funct, MST, num_expansion, 1.1, 1.0, 0.7);
 
                 std::cout << "ProbabilityFocalSearch\n"
                           << res << '\n';
@@ -141,17 +141,57 @@ namespace benchmark
             {
                 if (checkLog)
                 {
-                    version.push_back("ProbFocalSearch version 4 60/40");
+                    version.push_back("ProbFocalSearch version 2 60/40");
                 }
 
-                ProbabilityFocalSearch<GameBoard> fs;
+                ProbabilityFocalSearch<TspBoard> fs;
                 int num_expansion = 0;
-                int res = fs.ProbabilitySearch(gb, open_funct, focal_potential, ManhattanDistance, num_expansion, 1.1, 1.0, 0.6);
+                int res = fs.ProbabilitySearch(tsp, open_funct, distance_to_go_funct, MST, num_expansion, 1.1, 1.1, 0.6);
 
                 std::cout << "ProbabilityFocalSearch\n"
                           << res << '\n';
 
-                std::cout << "ProbabilityFocalSearch with potential func with num_expansion is " << num_expansion << '\n';
+                std::cout << "ProbabilityFocalSearch 60/40 with dis_to_go func with num_expansion is " << num_expansion << '\n';
+
+                result.push_back(res);
+                expansion.push_back(num_expansion);
+                //   b=num_expansion;
+            }
+
+            {
+                if (checkLog)
+                {
+                    version.push_back("ProbFocalSearch version 4 70/40");
+                }
+
+                ProbabilityFocalSearch<TspBoard> fs;
+                int num_expansion = 0;
+                int res = fs.ProbabilitySearch(tsp, open_funct, distance_to_go_funct, MST, num_expansion, 1.1, 1.1, 0.7);
+
+                std::cout << "ProbabilityFocalSearch\n"
+                          << res << '\n';
+
+                std::cout << "ProbabilityFocalSearch 70/30 with dis_to_go func with num_expansion is " << num_expansion << '\n';
+
+                result.push_back(res);
+                expansion.push_back(num_expansion);
+                //   b=num_expansion;
+            }
+
+            {
+                if (checkLog)
+                {
+                    version.push_back("ProbFocalSearch version 4 60/40");
+                }
+
+                ProbabilityFocalSearch<TspBoard> fs;
+                int num_expansion = 0;
+                int res = fs.ProbabilitySearch(tsp, open_funct, focal_potential, MST, num_expansion, 1.1, 1.0, 0.6);
+
+                std::cout << "ProbabilityFocalSearch\n"
+                          << res << '\n';
+
+                std::cout << "ProbabilityFocalSearch 60/40 with potential func with num_expansion is " << num_expansion << '\n';
 
                 result.push_back(res);
                 expansion.push_back(num_expansion);
@@ -164,19 +204,21 @@ namespace benchmark
                     version.push_back("ProbFocalSearch version 4 70/30");
                 }
 
-                ProbabilityFocalSearch<GameBoard> fs;
+                ProbabilityFocalSearch<TspBoard> fs;
                 int num_expansion = 0;
-                int res = fs.ProbabilitySearch(gb, open_funct, focal_potential, ManhattanDistance, num_expansion, 1.1, 1.0, 0.7);
+                int res = fs.ProbabilitySearch(tsp, open_funct, focal_potential, MST, num_expansion, 1.1, 1.0, 0.7);
 
                 std::cout << "ProbabilityFocalSearch\n"
                           << res << '\n';
 
-                std::cout << "ProbabilityFocalSearch with potential func with num_expansion is " << num_expansion << '\n';
+                std::cout << "ProbabilityFocalSearch 70/30 with potential func with num_expansion is " << num_expansion << '\n';
 
                 result.push_back(res);
                 expansion.push_back(num_expansion);
                 //   b=num_expansion;
             }
+
+            
 
             if (checkLog)
             {
@@ -190,7 +232,7 @@ namespace benchmark
                 checkLog = false;
             }
 
-            logFile << gb << ",";
+            logFile << tsp << ",";
             for (int j = 0; j < result.size(); j++)
             {
                 logFile << result[j] << "," << expansion[j] << ",";

@@ -22,7 +22,7 @@ double open_funct(double g, double h);
 
 double focal_funct(double g, double h,double dis_to_go,double C,double w);
 
-double distance_to_go_funct(double g,double h, double weight,double initial);
+double distance_to_go_funct(double g,double h, double dis_to_go,double C,double w );
 
 double focal_potential(double g, double h,double dis_to_go,double C,double w);
 

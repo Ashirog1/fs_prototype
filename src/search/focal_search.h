@@ -184,11 +184,11 @@ public:
             // std::cout<<h<<'\n';
            // std::cout<<board<<'\n';
             if (visited[board] != g) continue;  
-            if(board==GameBoard(4,{1,2,7,3,5,6,4,8,9,10,11,12,13,0,14,15})){
-                GameBoard newBoard=GameBoard(4,{1,2,7,3,5,6,4,8,9,10,11,12,13,0,14,15});
-               // std::cout<<"check "<<visited[newBoard]<<'\n';
+            // if(board==GameBoard(4,{1,2,7,3,5,6,4,8,9,10,11,12,13,0,14,15})){
+            //     GameBoard newBoard=GameBoard(4,{1,2,7,3,5,6,4,8,9,10,11,12,13,0,14,15});
+            //    // std::cout<<"check "<<visited[newBoard]<<'\n';
 
-            }
+            // }
 
             if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(g);
             open.erase(Node<G>(f, g, h, hFocal, board));
