@@ -52,14 +52,10 @@ namespace benchmark
         for (int i = 0; i <=test; ++i)
         {
             std::cout<<i<<'\n'<<'\n';
-            /// 3 puzzle 10 swap
+            //First parameter for size of board, second paramater for number of steps moving from initial state
             GameBoard gb = generator(4, 150);
-//             GameBoard gb=GameBoard(4,{1,2 ,7, 3, 5, 6, 8, 0, 13, 12, 4, 15, 10, 9, 14, 11
-// });
-            //  TspBoard tsp(3,{{0.0,2.0,3.0},{2.0,0.0,1.0},{3.0,1.0,0.0}});
              result.clear();
              expansion.clear();
-            // std::cout << i << '\n';
             {
                 if (checkLog)
                 {
@@ -69,7 +65,6 @@ namespace benchmark
 
                 BasicAStar<GameBoard> fs;
 
-                // fs.AStarSearch(gb, ManhattanDistance, num_expansion);
 
                 int res = fs.AStarSearch(gb, ManhattanDistance, num_expansion);
 
@@ -89,7 +84,6 @@ namespace benchmark
 
                 BasicFocalSearch<GameBoard> fs;
                 int num_expansion = 0;
-                //  fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
                 int res = fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
                 std::cout << "FocalSearch\n"
                          << res << '\n';
@@ -135,7 +129,6 @@ namespace benchmark
 
                 result.push_back(res);
                 expansion.push_back(num_expansion);
-                //   b=num_expansion;
             }
 
             {
@@ -155,7 +148,6 @@ namespace benchmark
 
                 result.push_back(res);
                 expansion.push_back(num_expansion);
-                //   b=num_expansion;
             }
 
             {
@@ -175,7 +167,6 @@ namespace benchmark
 
                 result.push_back(res);
                 expansion.push_back(num_expansion);
-                //   b=num_expansion;
             }
 
             if (checkLog)
