@@ -53,7 +53,7 @@ namespace benchmark
         {
             std::cout<<i<<'\n'<<'\n';
             //First parameter for size of board, second paramater for number of steps moving from initial state
-            GameBoard gb = generator(4, 150);
+            GameBoard gb = generator(5, 150);
              result.clear();
              expansion.clear();
             {
