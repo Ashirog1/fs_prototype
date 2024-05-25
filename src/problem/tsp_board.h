@@ -34,7 +34,6 @@ class TspBoard {
         n = _n;
         visited.clear();
         check_visited.resize(n, 0);
-       // dis_matrix = distance;
         for (int i = 0; i < n; i++)
             unvisited.insert(i);
     };

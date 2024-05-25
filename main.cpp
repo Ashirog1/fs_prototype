@@ -52,13 +52,12 @@ namespace benchmark
         for (int i = 0; i <=test; ++i)
         {
             std::cout<<i<<'\n'<<'\n';
-            /// 3 puzzle 10 swap
+            //Change first parameter for number of nodes
             std::vector<std::vector<double>> dist_matrix=generator_TSP(30,100);
             TspBoard tsp = TspBoard(dist_matrix.size());
             
              result.clear();
              expansion.clear();
-            // std::cout << i << '\n';
             // {
             //     if (checkLog)
             //     {
@@ -88,7 +87,6 @@ namespace benchmark
 
                 BasicFocalSearch<TspBoard> fs;
                 int num_expansion = 0;
-                //  fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
                 int res = fs.FocalSearch(tsp, open_funct, focal_funct, MST, num_expansion,dist_matrix);
                 std::cout << "FocalSearch\n"
                          << res << '\n';
@@ -154,7 +152,6 @@ namespace benchmark
 
                 result.push_back(res);
                 expansion.push_back(num_expansion);
-                //   b=num_expansion;
             }
 
             {
@@ -174,7 +171,6 @@ namespace benchmark
 
                 result.push_back(res);
                 expansion.push_back(num_expansion);
-                //   b=num_expansion;
             }
 
             {
@@ -194,7 +190,6 @@ namespace benchmark
 
                 result.push_back(res);
                 expansion.push_back(num_expansion);
-                //   b=num_expansion;
             }
 
             {
@@ -214,7 +209,6 @@ namespace benchmark
 
                 result.push_back(res);
                 expansion.push_back(num_expansion);
-                //   b=num_expansion;
             }
 
             
