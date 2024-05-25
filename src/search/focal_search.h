@@ -79,8 +79,8 @@ class BasicAStar {
   //  std::map<G, Node<G>> link_open;
 public:
      template<class T>
-    inline int AStarSearch(G start, T heuristic, int &num_expansion) {
-        open.insert({start.GetHeuristic(heuristic), (double)0, start.GetHeuristic(heuristic), (double)0, start});
+    inline int AStarSearch(G start, T heuristic, int &num_expansion,std::vector<std::vector<double>> & dist_matrix) {
+        open.insert({start.GetHeuristic(heuristic,dist_matrix), (double)0, start.GetHeuristic(heuristic,dist_matrix), (double)0, start});
        // std::cout<<start.GetHeuristic(heuristic)<<'\n';
         visited[start] = 0;
         while ( open.size()) {
@@ -96,17 +96,17 @@ public:
 
 
             if (visited[board] != g) continue;
-            if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(f);
+            if (board.GetHeuristic(heuristic,dist_matrix) == 0) return static_cast<int>(f);
 
             for (G &next_board: GetNeighbour(board)) {
-                if (visited.find(next_board) == visited.end() || visited[next_board] > g+cost_move(board,next_board)) {
-                    visited[next_board] = g + cost_move(board,next_board);
+                if (visited.find(next_board) == visited.end() || visited[next_board] > g+cost_move(board,next_board,dist_matrix)) {
+                    visited[next_board] = g + cost_move(board,next_board,dist_matrix);
                     //visited[next_board]=1;
-                    double h_new = next_board.GetHeuristic(heuristic);
+                    double h_new = next_board.GetHeuristic(heuristic,dist_matrix);
                     // if (h_new == 0) {
                     //     return g + cost;
                     // }
-                    open.insert({g + cost_move(board,next_board) + h_new, g + cost_move(board,next_board), static_cast<double>(h_new), 0, next_board});
+                    open.insert({g + cost_move(board,next_board,dist_matrix) + h_new, g + cost_move(board,next_board,dist_matrix), static_cast<double>(h_new), 0, next_board});
                 }
             }
 
@@ -140,7 +140,7 @@ public:
     template<class T, class open_funct, class focal_funct>
     inline int FocalSearch
             (G &start, open_funct open_value, focal_funct focal_value, T heuristic,
-             int &num_expansion,
+             int &num_expansion,std::vector<std::vector<double>> &dist_matrix,
              double epsilon = (double) 1.1,double w = (double) 1.0
             ) {
         /*
@@ -148,7 +148,7 @@ public:
          * maybe this function take h as parameter as well?
          */
         const auto nodeValue = [&](double g, G &board) {
-            double h = board.GetHeuristic(heuristic);
+            double h = board.GetHeuristic(heuristic,dist_matrix);
             return Node(open_value(g, h), g, h, focal_value(g, h,board.getDistanceToGo(),C,w), board);
         };
 
@@ -190,7 +190,7 @@ public:
 
             // }
 
-            if (board.GetHeuristic(heuristic) == 0) return static_cast<int>(g);
+            if (board.GetHeuristic(heuristic,dist_matrix) == 0) return static_cast<int>(g);
             open.erase(Node<G>(f, g, h, hFocal, board));
 
             // board.printState();
@@ -202,9 +202,9 @@ public:
 
 
             for (G &next_board: GetNeighbour(board)) {
-                if (visited.find(next_board) == visited.end() || visited[next_board] > g + cost_move(board,next_board)) {
-                    visited[next_board] = g + cost_move(board,next_board);
-                    int h_new = next_board.GetHeuristic(heuristic);
+                if (visited.find(next_board) == visited.end() || visited[next_board] > g + cost_move(board,next_board,dist_matrix)) {
+                    visited[next_board] = g + cost_move(board,next_board,dist_matrix);
+                    int h_new = next_board.GetHeuristic(heuristic,dist_matrix);
                     // if (h_new == 0) {
                     //     foundDestination = true;
                     //     minDistance = std::min(minDistance, g + );
@@ -220,11 +220,11 @@ public:
                     /*
                      * insert new node into open
                      */
-                    Node<G> nextNode = nodeValue(g + cost_move(board,next_board), next_board);
+                    Node<G> nextNode = nodeValue(g + cost_move(board,next_board,dist_matrix), next_board);
                     open.insert(nextNode);
                     link_open.emplace(next_board,
                                       nextNode);
-                    if (open_value(g + cost_move(board,next_board), h_new) <= epsilon * f_min) {
+                    if (open_value(g + cost_move(board,next_board,dist_matrix), h_new) <= epsilon * f_min) {
                         focal.push(nextNode);
                     }
                 }

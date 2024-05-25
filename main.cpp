@@ -34,7 +34,7 @@ namespace benchmark
          * how about compare visited???
          */
 
-        int test = 1000;
+        int test = 500;
         std::vector<int> result;
         std::vector<int> expansion;
         std::vector<std::string> version;
@@ -53,33 +53,32 @@ namespace benchmark
         {
             std::cout<<i<<'\n'<<'\n';
             /// 3 puzzle 10 swap
-            TspBoard tsp = generator_TSP(15, 100);
-//             GameBoard gb=GameBoard(4,{1,2 ,7, 3, 5, 6, 8, 0, 13, 12, 4, 15, 10, 9, 14, 11
-// });
-            //  TspBoard tsp(3,{{0.0,2.0,3.0},{2.0,0.0,1.0},{3.0,1.0,0.0}});
+            std::vector<std::vector<double>> dist_matrix=generator_TSP(30,100);
+            TspBoard tsp = TspBoard(dist_matrix.size());
+            
              result.clear();
              expansion.clear();
             // std::cout << i << '\n';
-            {
-                if (checkLog)
-                {
-                    version.push_back("Astar");
-                }
-                int num_expansion = 0;
+            // {
+            //     if (checkLog)
+            //     {
+            //         version.push_back("Astar");
+            //     }
+            //     int num_expansion = 0;
 
-                BasicAStar<TspBoard> fs;
+            //     BasicAStar<TspBoard> fs;
 
-                // fs.AStarSearch(gb, ManhattanDistance, num_expansion);
+            //     // fs.AStarSearch(gb, ManhattanDistance, num_expansion);
 
-                int res = fs.AStarSearch(tsp, MST, num_expansion);
+            //     int res = fs.AStarSearch(tsp, MST, num_expansion, dist_matrix);
 
-               std::cout << "AStarSearch\n"
-                         << res << '\n';
+            //    std::cout << "AStarSearch\n"
+            //              << res << '\n';
 
-               std::cout << "AStarSearch with num_expansion is " << num_expansion << '\n';
-                 result.push_back(res);
-                 expansion.push_back(num_expansion);
-            }
+            //    std::cout << "AStarSearch with num_expansion is " << num_expansion << '\n';
+            //      result.push_back(res);
+            //      expansion.push_back(num_expansion);
+            // }
 
             {
                 if (checkLog)
@@ -90,7 +89,7 @@ namespace benchmark
                 BasicFocalSearch<TspBoard> fs;
                 int num_expansion = 0;
                 //  fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
-                int res = fs.FocalSearch(tsp, open_funct, focal_funct, MST, num_expansion);
+                int res = fs.FocalSearch(tsp, open_funct, focal_funct, MST, num_expansion,dist_matrix);
                 std::cout << "FocalSearch\n"
                          << res << '\n';
 
@@ -107,7 +106,7 @@ namespace benchmark
 
                 ProbabilityFocalSearch<TspBoard> fs;
                 int num_expansion = 0;
-                int res = fs.ProbabilitySearch(tsp, open_funct, focal_funct, MST, num_expansion);
+                int res = fs.ProbabilitySearch(tsp, open_funct, focal_funct, MST, num_expansion,dist_matrix);
 
                 std::cout << "ProbabilityFocalSearch\n"
                           << res << '\n';
@@ -126,7 +125,7 @@ namespace benchmark
 
                 ProbabilityFocalSearch<TspBoard> fs;
                 int num_expansion = 0;
-                int res = fs.ProbabilitySearch(tsp, open_funct, focal_funct, MST, num_expansion, 1.1, 1.0, 0.7);
+                int res = fs.ProbabilitySearch(tsp, open_funct, focal_funct, MST, num_expansion,dist_matrix, 1.1, 1.0, 0.7);
 
                 std::cout << "ProbabilityFocalSearch\n"
                           << res << '\n';
@@ -146,7 +145,7 @@ namespace benchmark
 
                 ProbabilityFocalSearch<TspBoard> fs;
                 int num_expansion = 0;
-                int res = fs.ProbabilitySearch(tsp, open_funct, distance_to_go_funct, MST, num_expansion, 1.1, 1.1, 0.6);
+                int res = fs.ProbabilitySearch(tsp, open_funct, distance_to_go_funct, MST, num_expansion, dist_matrix,1.1, 1.1, 0.6);
 
                 std::cout << "ProbabilityFocalSearch\n"
                           << res << '\n';
@@ -166,7 +165,7 @@ namespace benchmark
 
                 ProbabilityFocalSearch<TspBoard> fs;
                 int num_expansion = 0;
-                int res = fs.ProbabilitySearch(tsp, open_funct, distance_to_go_funct, MST, num_expansion, 1.1, 1.1, 0.7);
+                int res = fs.ProbabilitySearch(tsp, open_funct, distance_to_go_funct, MST, num_expansion,dist_matrix, 1.1, 1.1, 0.7);
 
                 std::cout << "ProbabilityFocalSearch\n"
                           << res << '\n';
@@ -186,7 +185,7 @@ namespace benchmark
 
                 ProbabilityFocalSearch<TspBoard> fs;
                 int num_expansion = 0;
-                int res = fs.ProbabilitySearch(tsp, open_funct, focal_potential, MST, num_expansion, 1.1, 1.0, 0.6);
+                int res = fs.ProbabilitySearch(tsp, open_funct, focal_potential, MST, num_expansion,dist_matrix, 1.1, 1.0, 0.6);
 
                 std::cout << "ProbabilityFocalSearch\n"
                           << res << '\n';
@@ -206,7 +205,7 @@ namespace benchmark
 
                 ProbabilityFocalSearch<TspBoard> fs;
                 int num_expansion = 0;
-                int res = fs.ProbabilitySearch(tsp, open_funct, focal_potential, MST, num_expansion, 1.1, 1.0, 0.7);
+                int res = fs.ProbabilitySearch(tsp, open_funct, focal_potential, MST, num_expansion,dist_matrix, 1.1, 1.0, 0.7);
 
                 std::cout << "ProbabilityFocalSearch\n"
                           << res << '\n';

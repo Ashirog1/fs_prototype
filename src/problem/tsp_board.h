@@ -13,33 +13,28 @@
 #include <set>
 #include <vector>
 #include <math.h>
-// #include "game_board.h"
 
 class TspBoard {
     /*
      * GameBoard problem
      */
   private:
-    // using state = std::vector<int>;
     int n;
 
     std::vector<int> visited;
     std::vector<int> check_visited;
     std::set<int> unvisited;
-    std::vector<std::vector<double>> dis_matrix;
-    /*
-     * helper heuristics
-     */
+   
 
   public:
     TspBoard(){
 
     };
-    TspBoard(int _n, std::vector<std::vector<double>> distance) {
+    TspBoard(int _n) {
         n = _n;
         visited.clear();
         check_visited.resize(n, 0);
-        dis_matrix = distance;
+       // dis_matrix = distance;
         for (int i = 0; i < n; i++)
             unvisited.insert(i);
     };
@@ -60,24 +55,19 @@ class TspBoard {
                 adj.push_back(newBoard);
             }
         }
-        // std::cout<<"neighbour"<<'\n';
-        //  for(auto v:adj){
-        //     v.printState();
-        //     std::cout<<'\n';
-        //  }
         return adj;
     }
 
-    friend double cost_move(TspBoard &tspBoard1, TspBoard &tspBoard2) {
+    friend double cost_move(TspBoard &tspBoard1, TspBoard &tspBoard2, std::vector<std::vector<double>> &dis_matrix) {
         if (tspBoard1.visited.size() == 0)
             return 0;
-        return tspBoard1.dis_matrix[tspBoard1.visited[tspBoard1.visited.size() - 1]]
+        return dis_matrix[tspBoard1.visited[tspBoard1.visited.size() - 1]]
                                    [tspBoard2.visited[tspBoard2.visited.size() - 1]];
     }
 
     double getDistanceToGo() { return (double) (n - visited.size()); }
 
-    template <class T> inline double GetHeuristic(T heuristic) { return heuristic(n, visited, unvisited, dis_matrix); };
+    template <class T> inline double GetHeuristic(T heuristic,std::vector<std::vector<double>> &dis_matrix) { return heuristic(n, visited, unvisited, dis_matrix); };
 
     void printState() {
         for (auto v : visited)
@@ -97,18 +87,13 @@ class TspBoard {
     };
      friend std::ostream& operator<<(std::ostream& os, const TspBoard &tspBoard){
          os << tspBoard.n << " ";
-         for(auto v:tspBoard.dis_matrix){
-            for(auto i:v){
-                os << i << " ";
-            }
-         }
-             return os;
+         return os;
 
      };
 
 };
 
-TspBoard generator_TSP(int n, int grid) {
+std::vector<std::vector<double>> generator_TSP(int n, int grid) {
     std::vector<std::vector<double>> dist(n, std::vector<double>(n, 0));
 
     const auto euclid = [&](std::pair<int, int> u, std::pair<int, int> v) {
@@ -131,8 +116,7 @@ TspBoard generator_TSP(int n, int grid) {
             }
         }
     }
-    TspBoard board(n, dist);
-    return board;
+    return dist;
 }
 
 // #endif //FS_PROTOTYPE_GAME_BOARD_H

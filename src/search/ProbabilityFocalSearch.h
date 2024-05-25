@@ -31,12 +31,12 @@ template <class G> class ProbabilityFocalSearch {
     std::map<G, Node<G>> link_open;
     std::set<Node<G>, cmp<G>> focalSet;
     template <class T, class open_funct, class focal_funct>
-    inline int ProbabilitySearch(G &start, open_funct open_value, focal_funct focal_value, T heuristic,int &num_expansion,
+    inline int ProbabilitySearch(G &start, open_funct open_value, focal_funct focal_value, T heuristic,int &num_expansion,std::vector<std::vector<double>> &dist_matrix,
                            double epsilon = (double)1.1, double w =(double) 1.0 ,double pickRate = (double)0.6)
     {
         const auto nodeValue = [&](double g, G &board)
         {
-            double h = board.GetHeuristic(heuristic);
+            double h = board.GetHeuristic(heuristic,dist_matrix);
             return Node<G>(open_value(g, h), g, h, focal_value(g, h, board.getDistanceToGo(), C, w), board);
         };
 
@@ -52,12 +52,12 @@ template <class G> class ProbabilityFocalSearch {
         bool foundDestination = false;
         double minDistance = (double)INT_MAX;
 
-        open.insert({open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
-                     focal_value(0, start.GetHeuristic(heuristic), start.getDistanceToGo(), C, w), start});
+        open.insert({open_value(0, start.GetHeuristic(heuristic,dist_matrix)), 0, start.GetHeuristic(heuristic,dist_matrix),
+                     focal_value(0, start.GetHeuristic(heuristic,dist_matrix), start.getDistanceToGo(), C, w), start});
 
         // map link_open to find state and value in open set when pop state from focal
-        Node<G> tmp = Node<G>(open_value(0, start.GetHeuristic(heuristic)), 0, start.GetHeuristic(heuristic),
-                              focal_value(0, start.GetHeuristic(heuristic), start.getDistanceToGo(), C, w), start);
+        Node<G> tmp = Node<G>(open_value(0, start.GetHeuristic(heuristic,dist_matrix)), 0, start.GetHeuristic(heuristic,dist_matrix),
+                              focal_value(0, start.GetHeuristic(heuristic,dist_matrix), start.getDistanceToGo(), C, w), start);
 
         focalSet.insert(nodeValue(0, start));
         link_open.emplace(start, tmp);
@@ -85,7 +85,7 @@ template <class G> class ProbabilityFocalSearch {
                 assignValue(f,g,h,hFocal,board,a);
             //    board.printState();
               //  std::cout<<'\n';
-                if (board.GetHeuristic(heuristic) == 0)
+                if (board.GetHeuristic(heuristic,dist_matrix) == 0)
                     return static_cast<int>(g);
                 int a1=focalSet.size();
                 focalSet.erase(focalSet.begin());
@@ -103,7 +103,7 @@ template <class G> class ProbabilityFocalSearch {
                 Node<G> a = *open.begin();
                 assignValue(f, g, h, hFocal, board, a);
 
-                if (board.GetHeuristic(heuristic) == 0)
+                if (board.GetHeuristic(heuristic,dist_matrix) == 0)
                     return static_cast<double>(g);
              
                 open.erase(open.begin());
@@ -130,12 +130,12 @@ template <class G> class ProbabilityFocalSearch {
             for (G &next_board : GetNeighbour(board))
             {
                // std::cout<<g<<'\n';
-                if (visited.find(next_board) == visited.end() || visited[next_board] > g + cost_move(board,next_board))
+                if (visited.find(next_board) == visited.end() || visited[next_board] > g + cost_move(board,next_board,dist_matrix))
                 {
                    // next_board.printState();
                     
-                    visited[next_board] = g + cost_move(board,next_board);
-                    double h_new = next_board.GetHeuristic(heuristic);
+                    visited[next_board] = g + cost_move(board,next_board,dist_matrix);
+                    double h_new = next_board.GetHeuristic(heuristic,dist_matrix);
                    
                     /*
                      * delete old_value of new state in open
@@ -153,17 +153,17 @@ template <class G> class ProbabilityFocalSearch {
                      * insert new node into open
                      */
 
-                    auto check = open.insert(nodeValue(g + cost_move(board, next_board), next_board));
+                    auto check = open.insert(nodeValue(g + cost_move(board, next_board,dist_matrix), next_board));
 
                     link_open.emplace(next_board,
-                                      nodeValue(g + cost_move(board,next_board), next_board));
+                                      nodeValue(g + cost_move(board,next_board,dist_matrix), next_board));
                     int a1=focalSet.size();
                     
-                    if (open_value(g + cost_move(board,next_board), h_new) <=epsilon * f_min)
+                    if (open_value(g + cost_move(board,next_board,dist_matrix), h_new) <=epsilon * f_min)
                     {
                         
                         int a=focalSet.size();
-                        focalSet.insert(nodeValue(g + cost_move(board,next_board), next_board));
+                        focalSet.insert(nodeValue(g + cost_move(board,next_board,dist_matrix), next_board));
                         int b=focalSet.size();
                         if(b!=a+1) std::cout<<a<<" "<<b<<'\n';
                     }
