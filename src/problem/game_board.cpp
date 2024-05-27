@@ -86,7 +86,6 @@ GameBoard::GameBoard() {
 }
 
 std::ostream &operator<<(std::ostream &os, const GameBoard &gameBoard) {
-    os << "Board size width: " << gameBoard.w <<" ";
     for (int i = 0; i < gameBoard.h; ++i) {
         for (int j = 0; j < gameBoard.w; ++j) {
             os << gameBoard.current[i * gameBoard.w + j] << ' ';

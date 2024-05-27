@@ -1,0 +1,19 @@
+Parameter: epsilon=1.1; max distance from goal less than 100 move; game board size 5x5, 1k test 
+
+ Expansion: % when this search have less expansion(run faster) than other search  (not include the case when both have the same speed) 
+,Astar,FocalSearch,ProbabilityFocalSearch 60/40,ProbabilityFocalSearch 70/30,ProbabilityFocalSearch potential func 60/40,ProbabilityFocalSearch potential func 70/30,
+Astar,0,0,0,0,0,0,
+FocalSearch,0.001998,0,0.000999001,0.000999001,0.000999001,0.000999001,
+ProbabilityFocalSearch 60/40,0.001998,0.000999001,0,0.001998,0.001998,0.001998,
+ProbabilityFocalSearch 70/30,0.001998,0.000999001,0,0,0.000999001,0.001998,
+ProbabilityFocalSearch potential func 60/40,0.001998,0.000999001,0,0.000999001,0,0.001998,
+ProbabilityFocalSearch potential func 70/30,0.001998,0.000999001,0,0,0,0,
+
+ Result 
+,Astar,FocalSearch,ProbabilityFocalSearch 60/40,ProbabilityFocalSearch 70/30,ProbabilityFocalSearch potential func 60/40,ProbabilityFocalSearch potential func 70/30,
+Astar,0.001998,0.001998,0.001998,0.001998,0.001998,0.001998,
+FocalSearch,0.001998,0.001998,0.001998,0.001998,0.001998,0.001998,
+ProbabilityFocalSearch 60/40,0.001998,0.001998,0.001998,0.001998,0.001998,0.001998,
+ProbabilityFocalSearch 70/30,0.001998,0.001998,0.001998,0.001998,0.001998,0.001998,
+ProbabilityFocalSearch potential func 60/40,0.001998,0.001998,0.001998,0.001998,0.001998,0.001998,
+ProbabilityFocalSearch potential func 70/30,0.001998,0.001998,0.001998,0.001998,0.001998,0.001998,

@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include<filesystem>
 
 namespace global_testing
 {
@@ -64,7 +65,37 @@ namespace benchmark
        
     }
 
-    void NPuzzleDemo()
+    void genInput(int size,int moves){
+        for (int i = 1;i<=5;i++){
+            std::string fileName= "npuzzle_" + std::to_string(size)+"_"+std::to_string(moves)+"_"+std::to_string(i) ;
+            std::string folderName = "../input/"+fileName;
+            std::filesystem::create_directories(folderName);
+            std::filesystem::create_directories("../output"+fileName);
+            std::cout << folderName << '\n';
+            std::ofstream inputFile;
+            inputFile.open(folderName + "/"+fileName+".csv");
+            for (int j = 1; j <= 1000;j++){
+                 GameBoard gb = generator(size, moves);
+                 inputFile << gb << "\n";
+             }
+             inputFile.close();
+        }
+    }
+
+    int listFolders(const std::string& path) {
+        int folder = 0;
+        for (const auto &entry : std::filesystem::directory_iterator(path))
+        {
+            if (std::filesystem::is_directory(entry))
+            {
+                folder = std::max(folder, std::stoi(entry.path().filename()));
+            }
+    }
+    return folder + 1;
+}
+
+
+    void NPuzzleDemo(int size)
     {
         /*
          * about benchmark expansion node
@@ -84,19 +115,49 @@ namespace benchmark
 
         std::ofstream resultFile;
         std::ofstream logFile;
-        resultFile.open("../result/result.csv");
-        logFile.open("../result/log.csv");
+
+
+        std::string fileName = "npuzzle_5_200_1";
+        std::string folderInput = "../input/" + fileName + "/" + fileName + ".csv";
+        std::string folderOutput = "../result/" + fileName;
+
+        
+
+        int folderContainer = listFolders(folderOutput);
+        std::string newFolder = folderOutput + "/" + std::to_string(folderContainer);
+        std::filesystem::create_directories(newFolder);
+
+        std::cout << newFolder;
+
+        resultFile.open(newFolder+"/result.csv");
+        logFile.open(newFolder+"/log.csv");
         resultFile << "Parameter: epsilon=1.1; max distance from goal less than 100 move; game board size 5x5, 1k test \n";
+
+        std::ifstream inputFile;
+        inputFile.open(folderInput);
+       
 
         bool checkLog = true;
 
-        for (int i = 0; i <=test; ++i)
+        for (int i = 1; i <=2; ++i)
         {
              std::cout<<i<<'\n'<<'\n';
             //First parameter for size of board, second paramater for number of steps moving from initial state
-             GameBoard gb = generator(4, 50);
+             std::string input;
+             getline(inputFile, input);
+             std::string word;
+             std::stringstream s(input);
+             std::vector<int> game;
+             
+             while(getline(s,word,' ')){
+                 game.push_back(std::stoi(word));
+                 
+             }
+             GameBoard gb=GameBoard(size,game);
              result.clear();
              expansion.clear();
+
+
              runExperiment(gb, "Astar", checkLog, result, expansion, version,open_funct,focal_funct,ManhattanDistance);
              runExperiment(gb, "FocalSearch", checkLog, result, expansion, version, open_funct, focal_funct, ManhattanDistance);
              runExperiment(gb, "ProbabilityFocalSearch 60/40", checkLog, result, expansion, version, open_funct, focal_funct, ManhattanDistance,0.6);
@@ -184,6 +245,8 @@ int main()
 {
     //    global_testing::test();
     // benchmark::NPuzzleDemo();
-    benchmark::NPuzzleDemo();
+    
+   benchmark::genInput(5,200);
+   benchmark::NPuzzleDemo(5);
     return 0;
 }
