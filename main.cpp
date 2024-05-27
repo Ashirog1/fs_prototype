@@ -70,7 +70,7 @@ namespace benchmark
             std::string fileName= "npuzzle_" + std::to_string(size)+"_"+std::to_string(moves)+"_"+std::to_string(i) ;
             std::string folderName = "../input/"+fileName;
             std::filesystem::create_directories(folderName);
-            std::filesystem::create_directories("../output"+fileName);
+            std::filesystem::create_directories("../result/"+fileName);
             std::cout << folderName << '\n';
             std::ofstream inputFile;
             inputFile.open(folderName + "/"+fileName+".csv");
@@ -127,7 +127,7 @@ namespace benchmark
         std::string newFolder = folderOutput + "/" + std::to_string(folderContainer);
         std::filesystem::create_directories(newFolder);
 
-        std::cout << newFolder;
+       // std::cout << newFolder;
 
         resultFile.open(newFolder+"/result.csv");
         logFile.open(newFolder+"/log.csv");
@@ -246,7 +246,7 @@ int main()
     //    global_testing::test();
     // benchmark::NPuzzleDemo();
     
-   benchmark::genInput(5,200);
+  // benchmark::genInput(5,200);
    benchmark::NPuzzleDemo(5);
     return 0;
 }
