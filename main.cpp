@@ -255,7 +255,7 @@ int main()
 {
     //    global_testing::test();
     // benchmark::NPuzzleDemo();
-   // benchmark::genInput(30, 100);
-     benchmark::TspDemo(30);
+    benchmark::genInput(30, 100);
+     //benchmark::TspDemo(30);
     return 0;
 }
