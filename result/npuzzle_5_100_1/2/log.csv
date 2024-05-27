@@ -1,3 +1,0 @@
-state,Astar result,Astar expansion,FocalSearch result,FocalSearch expansion,ProbabilityFocalSearch 60/40 result,ProbabilityFocalSearch 60/40 expansion,ProbabilityFocalSearch 70/30 result,ProbabilityFocalSearch 70/30 expansion,ProbabilityFocalSearch potential func 60/40 result,ProbabilityFocalSearch potential func 60/40 expansion,ProbabilityFocalSearch potential func 70/30 result,ProbabilityFocalSearch potential func 70/30 expansion,
-1 2 14 4 8 6 7 3 15 5 11 12 9 17 10 16 22 13 0 20 21 18 23 19 24 ,28,3436,28,812,28,1366,28,1375,28,1418,28,1567,
-6 2 9 4 15 7 1 3 8 5 16 11 13 10 19 12 17 24 14 20 21 22 18 23 0 ,36,31187,36,7831,36,3305,36,3837,36,3682,36,4095,
