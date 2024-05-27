@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include<filesystem>
 
 namespace global_testing
 {
@@ -64,8 +65,42 @@ namespace benchmark
        
     }
 
+    void genInput(int size,int moves){
+        for (int i = 1;i<=5;i++){
+            std::string fileName= "tsp_" + std::to_string(size)+"_"+std::to_string(moves)+"_"+std::to_string(i) ;
+            std::string folderName = "../input/"+fileName;
+            std::filesystem::create_directories(folderName);
+            std::filesystem::create_directories("../result/"+fileName);
+            std::cout << folderName << '\n';
+            std::ofstream inputFile;
+            inputFile.open(folderName + "/"+fileName+".csv");
+            for (int j = 1; j <= 1000;j++){
+                std::vector<std::vector<double>> tsp = generator_TSP(30, 100);
+                for(auto v:tsp){
+                    for(auto u:v){
+                        inputFile << u << " ";
+                    }
+                }
+                inputFile << "\n";
+                }
+                inputFile.close();
 
-    void NPuzzleDemo()
+             }
+        }
+    int listFolders(const std::string& path) {
+        int folder = 0;
+        for (const auto &entry : std::filesystem::directory_iterator(path))
+        {
+            if (std::filesystem::is_directory(entry))
+            {
+                folder = std::max(folder, std::stoi(entry.path().filename()));
+            }
+    }
+    return folder + 1;
+}
+
+
+    void TspDemo(int size)
     {
         /*
          * about benchmark expansion node
@@ -85,18 +120,49 @@ namespace benchmark
 
         std::ofstream resultFile;
         std::ofstream logFile;
+
+        std::string fileName = "tsp_30_100_1";
+        std::string folderInput = "../input/" + fileName + "/" + fileName + ".csv";
+        std::string folderOutput = "../result/" + fileName;
+
+        int folderContainer = listFolders(folderOutput);
+        std::string newFolder = folderOutput + "/" + std::to_string(folderContainer);
+        std::filesystem::create_directories(newFolder);
+
+
         resultFile.open("../result/result.csv");
         logFile.open("../result/log.csv");
         resultFile << "Parameter: epsilon=1.1; 30 nodes; grid size (-100,100)*(-100,100),1k test \n";
 
+        std::ifstream inputFile;
+        inputFile.open(folderInput);
+
+
         bool checkLog = true;
 
-        for (int i = 0; i <=test; ++i)
+        for (int i = 1; i <=test; ++i)
         {
             std::cout<<i<<'\n'<<'\n';
             //Change first parameter for number of nodes
-            std::vector<std::vector<double>> dist_matrix=generator_TSP(10,100);
-            TspBoard tsp = TspBoard(dist_matrix.size());
+            std::string input;
+            getline(inputFile, input);
+            int cnt = 0;
+            std::string word;
+            std::stringstream s(input);
+            std::vector<std::vector<double>> game;
+            std::vector<double> row;
+
+            while(getline(s,word,' ')){
+                row.push_back(std::stoi(word));
+                cnt++;
+                if(cnt==size){
+                    cnt = 0;
+                    game.push_back(row);
+                    row.clear();
+                }
+           }
+            std::vector<std::vector<double>> dist_matrix=game;
+            TspBoard tsp = TspBoard(size);
             result.clear();
             expansion.clear();
 
@@ -189,6 +255,7 @@ int main()
 {
     //    global_testing::test();
     // benchmark::NPuzzleDemo();
-    benchmark::NPuzzleDemo();
+    //benchmark::genInput(15, 100);
+     benchmark::TspDemo(30);
     return 0;
 }
