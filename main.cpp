@@ -246,7 +246,7 @@ int main()
     //    global_testing::test();
     // benchmark::NPuzzleDemo();
     
-   benchmark::genInput(5,200);
-  // benchmark::NPuzzleDemo(5);
+   //benchmark::genInput(5,200);
+   benchmark::NPuzzleDemo(5);
     return 0;
 }
