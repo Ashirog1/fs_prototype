@@ -71,6 +71,8 @@ namespace benchmark
             std::string folderName = "../input/"+fileName;
             std::filesystem::create_directories(folderName);
             std::filesystem::create_directories("../result/"+fileName);
+            std::ofstream outputFile;
+            outputFile.open("../result/"+fileName+"/log.csv");
             std::cout << folderName << '\n';
             std::ofstream inputFile;
             inputFile.open(folderName + "/"+fileName+".csv");
@@ -246,7 +248,7 @@ int main()
     //    global_testing::test();
     // benchmark::NPuzzleDemo();
     
-   benchmark::genInput(5,200);
-  // benchmark::NPuzzleDemo(5);
+  // benchmark::genInput(5,200);
+    benchmark::NPuzzleDemo(5);
     return 0;
 }
