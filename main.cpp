@@ -101,8 +101,8 @@ namespace benchmark
              runExperiment(gb, "FocalSearch", checkLog, result, expansion, version, open_funct, focal_funct, ManhattanDistance);
              runExperiment(gb, "ProbabilityFocalSearch 60/40", checkLog, result, expansion, version, open_funct, focal_funct, ManhattanDistance,0.6);
              runExperiment(gb, "ProbabilityFocalSearch 70/30", checkLog, result, expansion, version, open_funct, focal_funct, ManhattanDistance,0.7);
-             runExperiment(gb, "ProbabilityFocalSearch potential func 60/40", checkLog, result, expansion, version, open_funct, focal_funct, ManhattanDistance, 0.6);
-             runExperiment(gb, "ProbabilityFocalSearch potential func 70/30", checkLog, result, expansion, version, open_funct, focal_funct, ManhattanDistance, 0.7);
+             runExperiment(gb, "ProbabilityFocalSearch potential func 60/40", checkLog, result, expansion, version, open_funct, focal_potential, ManhattanDistance, 0.6);
+             runExperiment(gb, "ProbabilityFocalSearch potential func 70/30", checkLog, result, expansion, version, open_funct, focal_potential, ManhattanDistance, 0.7);
 
             if (checkLog)
             {
