@@ -23,6 +23,48 @@ namespace global_testing
 
 namespace benchmark
 {
+    template<class T,class open,class focal>
+    void runExperiment(TspBoard &gb,std::string type, bool &checkLog, std::vector<int> &result, std::vector<int> &expansion,std::vector<std::string> &version ,
+    open open_value , focal focal_value,T heuristic,std::vector<std::vector<double>> &dist_matrix, double pickRate=(double) 0.6
+    )
+    {
+       if(checkLog){
+            version.push_back(type);
+       }
+       int num_expansion = 0;
+       int res;
+       if(type=="Astar"){
+                 BasicAStar<TspBoard> fs;
+                 res = fs.AStarSearch(gb, heuristic, num_expansion,dist_matrix);
+                 std::cout << "AStarSearch\n"
+                         << res << '\n';
+                 std::cout << "AStarSearch with num_expansion is " << num_expansion << '\n';
+                 
+        
+       } else if(type=="FocalSearch"){
+                BasicFocalSearch<TspBoard> fs;
+                res = fs.FocalSearch(gb, open_value, focal_value, heuristic, num_expansion,dist_matrix);
+                std::cout << "FocalSearch\n"
+                         << res << '\n';
+
+                 std::cout << "FocalSearch with num_expansion is " << num_expansion << '\n';
+
+       }else{
+                ProbabilityFocalSearch<TspBoard> fs;
+                res = fs.ProbabilitySearch(gb, open_value, focal_value, heuristic, num_expansion,dist_matrix,1.1,1.0,pickRate);
+
+                std::cout << type<<'\n'
+                          << res << '\n';
+
+                std::cout << type<<" with num_expansion is " << num_expansion << '\n';
+        
+       }
+        result.push_back(res);
+        expansion.push_back(num_expansion);
+       
+    }
+
+
     void NPuzzleDemo()
     {
         /*
@@ -34,7 +76,7 @@ namespace benchmark
          * how about compare visited???
          */
 
-        int test = 500;
+        int test = 1000;
         std::vector<int> result;
         std::vector<int> expansion;
         std::vector<std::string> version;
@@ -45,7 +87,7 @@ namespace benchmark
         std::ofstream logFile;
         resultFile.open("../result/result.csv");
         logFile.open("../result/log.csv");
-        resultFile << "Parameter: epsilon=1.1; prob rate =0.6; weight distance_to_go = 1.1; max distance from goal less than 50 move; game board size 4x4, 100k test \n";
+        resultFile << "Parameter: epsilon=1.1; 30 nodes; grid size (-100,100)*(-100,100),1k test \n";
 
         bool checkLog = true;
 
@@ -53,165 +95,19 @@ namespace benchmark
         {
             std::cout<<i<<'\n'<<'\n';
             //Change first parameter for number of nodes
-            std::vector<std::vector<double>> dist_matrix=generator_TSP(30,100);
+            std::vector<std::vector<double>> dist_matrix=generator_TSP(10,100);
             TspBoard tsp = TspBoard(dist_matrix.size());
-            
-             result.clear();
-             expansion.clear();
-            // {
-            //     if (checkLog)
-            //     {
-            //         version.push_back("Astar");
-            //     }
-            //     int num_expansion = 0;
+            result.clear();
+            expansion.clear();
 
-            //     BasicAStar<TspBoard> fs;
-
-            //     // fs.AStarSearch(gb, ManhattanDistance, num_expansion);
-
-            //     int res = fs.AStarSearch(tsp, MST, num_expansion, dist_matrix);
-
-            //    std::cout << "AStarSearch\n"
-            //              << res << '\n';
-
-            //    std::cout << "AStarSearch with num_expansion is " << num_expansion << '\n';
-            //      result.push_back(res);
-            //      expansion.push_back(num_expansion);
-            // }
-
-            {
-                if (checkLog)
-                {
-                    version.push_back("FocalSearch");
-                }
-
-                BasicFocalSearch<TspBoard> fs;
-                int num_expansion = 0;
-                int res = fs.FocalSearch(tsp, open_funct, focal_funct, MST, num_expansion,dist_matrix);
-                std::cout << "FocalSearch\n"
-                         << res << '\n';
-
-                 std::cout << "FocalSearch with num_expansion is " << num_expansion << '\n';
-                 result.push_back(res);
-                 expansion.push_back(num_expansion);
-            }
-
-            {
-                if (checkLog)
-                {
-                    version.push_back("ProbFocalSearch");
-                }
-
-                ProbabilityFocalSearch<TspBoard> fs;
-                int num_expansion = 0;
-                int res = fs.ProbabilitySearch(tsp, open_funct, focal_funct, MST, num_expansion,dist_matrix);
-
-                std::cout << "ProbabilityFocalSearch\n"
-                          << res << '\n';
-
-                std::cout << "ProbabilityFocalSearch with num_expansion is " << num_expansion << '\n';
-
-                result.push_back(res);
-                expansion.push_back(num_expansion);
-            }
-
-            {
-                if (checkLog)
-                {
-                    version.push_back("ProbFocalSearch 70/30");
-                }
-
-                ProbabilityFocalSearch<TspBoard> fs;
-                int num_expansion = 0;
-                int res = fs.ProbabilitySearch(tsp, open_funct, focal_funct, MST, num_expansion,dist_matrix, 1.1, 1.0, 0.7);
-
-                std::cout << "ProbabilityFocalSearch\n"
-                          << res << '\n';
-
-                std::cout << "ProbabilityFocalSearch 70/30 with num_expansion is " << num_expansion << '\n';
-
-                result.push_back(res);
-                expansion.push_back(num_expansion);
-                //   b=num_expansion;
-            }
-
-            {
-                if (checkLog)
-                {
-                    version.push_back("ProbFocalSearch version 2 60/40");
-                }
-
-                ProbabilityFocalSearch<TspBoard> fs;
-                int num_expansion = 0;
-                int res = fs.ProbabilitySearch(tsp, open_funct, distance_to_go_funct, MST, num_expansion, dist_matrix,1.1, 1.1, 0.6);
-
-                std::cout << "ProbabilityFocalSearch\n"
-                          << res << '\n';
-
-                std::cout << "ProbabilityFocalSearch 60/40 with dis_to_go func with num_expansion is " << num_expansion << '\n';
-
-                result.push_back(res);
-                expansion.push_back(num_expansion);
-            }
-
-            {
-                if (checkLog)
-                {
-                    version.push_back("ProbFocalSearch version 4 70/40");
-                }
-
-                ProbabilityFocalSearch<TspBoard> fs;
-                int num_expansion = 0;
-                int res = fs.ProbabilitySearch(tsp, open_funct, distance_to_go_funct, MST, num_expansion,dist_matrix, 1.1, 1.1, 0.7);
-
-                std::cout << "ProbabilityFocalSearch\n"
-                          << res << '\n';
-
-                std::cout << "ProbabilityFocalSearch 70/30 with dis_to_go func with num_expansion is " << num_expansion << '\n';
-
-                result.push_back(res);
-                expansion.push_back(num_expansion);
-            }
-
-            {
-                if (checkLog)
-                {
-                    version.push_back("ProbFocalSearch version 4 60/40");
-                }
-
-                ProbabilityFocalSearch<TspBoard> fs;
-                int num_expansion = 0;
-                int res = fs.ProbabilitySearch(tsp, open_funct, focal_potential, MST, num_expansion,dist_matrix, 1.1, 1.0, 0.6);
-
-                std::cout << "ProbabilityFocalSearch\n"
-                          << res << '\n';
-
-                std::cout << "ProbabilityFocalSearch 60/40 with potential func with num_expansion is " << num_expansion << '\n';
-
-                result.push_back(res);
-                expansion.push_back(num_expansion);
-            }
-
-            {
-                if (checkLog)
-                {
-                    version.push_back("ProbFocalSearch version 4 70/30");
-                }
-
-                ProbabilityFocalSearch<TspBoard> fs;
-                int num_expansion = 0;
-                int res = fs.ProbabilitySearch(tsp, open_funct, focal_potential, MST, num_expansion,dist_matrix, 1.1, 1.0, 0.7);
-
-                std::cout << "ProbabilityFocalSearch\n"
-                          << res << '\n';
-
-                std::cout << "ProbabilityFocalSearch 70/30 with potential func with num_expansion is " << num_expansion << '\n';
-
-                result.push_back(res);
-                expansion.push_back(num_expansion);
-            }
-
-            
+            //runExperiment(tsp, "Astar", checkLog, result, expansion, version,open_funct,focal_funct,MST,dist_matrix);
+            runExperiment(tsp, "FocalSearch", checkLog, result, expansion, version, open_funct, focal_funct, MST,dist_matrix);
+            runExperiment(tsp, "ProbabilityFocalSearch 60/40", checkLog, result, expansion, version, open_funct, focal_funct, MST,dist_matrix,0.6);
+            runExperiment(tsp, "ProbabilityFocalSearch 70/30", checkLog, result, expansion, version, open_funct, focal_funct, MST,dist_matrix,0.7);
+            runExperiment(tsp, "ProbabilityFocalSearch dist_to_go 60/40", checkLog, result, expansion, version, open_funct, distance_to_go_funct, MST,dist_matrix,0.6);
+            runExperiment(tsp, "ProbabilityFocalSearch dist_to_go 70/30", checkLog, result, expansion, version, open_funct, distance_to_go_funct, MST,dist_matrix,0.7);
+            runExperiment(tsp, "ProbabilityFocalSearch potential func 60/40", checkLog, result, expansion, version, open_funct, focal_potential, MST,dist_matrix, 0.6);
+            runExperiment(tsp, "ProbabilityFocalSearch potential func 70/30", checkLog, result, expansion, version, open_funct, focal_potential, MST,dist_matrix, 0.7);    
 
             if (checkLog)
             {
