@@ -23,6 +23,47 @@ namespace global_testing
 
 namespace benchmark
 {
+    template<class T,class open,class focal>
+    void runExperiment(GameBoard &gb,std::string type, bool &checkLog, std::vector<int> &result, std::vector<int> &expansion,std::vector<std::string> &version ,
+    open open_value , focal focal_value,T heuristic,double pickRate=(double) 0.6
+    )
+    {
+       if(checkLog){
+            version.push_back(type);
+       }
+       int num_expansion = 0;
+       int res;
+       if(type=="Astar"){
+                 BasicAStar<GameBoard> fs;
+                 res = fs.AStarSearch(gb, heuristic, num_expansion);
+                 std::cout << "AStarSearch\n"
+                         << res << '\n';
+                 std::cout << "AStarSearch with num_expansion is " << num_expansion << '\n';
+                 
+        
+       } else if(type=="FocalSearch"){
+                BasicFocalSearch<GameBoard> fs;
+                res = fs.FocalSearch(gb, open_value, focal_value, heuristic, num_expansion);
+                std::cout << "FocalSearch\n"
+                         << res << '\n';
+
+                 std::cout << "FocalSearch with num_expansion is " << num_expansion << '\n';
+
+       }else{
+                ProbabilityFocalSearch<GameBoard> fs;
+                res = fs.ProbabilitySearch(gb, open_value, focal_value, heuristic, num_expansion,1.1,1.0,pickRate);
+
+                std::cout << type<<'\n'
+                          << res << '\n';
+
+                std::cout << type<<" with num_expansion is " << num_expansion << '\n';
+        
+       }
+        result.push_back(res);
+        expansion.push_back(num_expansion);
+       
+    }
+
     void NPuzzleDemo()
     {
         /*
@@ -45,129 +86,23 @@ namespace benchmark
         std::ofstream logFile;
         resultFile.open("../result/result.csv");
         logFile.open("../result/log.csv");
-        resultFile << "Parameter: epsilon=1.1; prob rate =0.6; weight distance_to_go = 1.1; max distance from goal less than 50 move; game board size 4x4, 100k test \n";
+        resultFile << "Parameter: epsilon=1.1; max distance from goal less than 100 move; game board size 5x5, 1k test \n";
 
         bool checkLog = true;
 
         for (int i = 0; i <=test; ++i)
         {
-            std::cout<<i<<'\n'<<'\n';
+             std::cout<<i<<'\n'<<'\n';
             //First parameter for size of board, second paramater for number of steps moving from initial state
-            GameBoard gb = generator(5, 150);
+             GameBoard gb = generator(4, 50);
              result.clear();
              expansion.clear();
-            {
-                if (checkLog)
-                {
-                    version.push_back("Astar");
-                }
-                int num_expansion = 0;
-
-                BasicAStar<GameBoard> fs;
-
-
-                int res = fs.AStarSearch(gb, ManhattanDistance, num_expansion);
-
-               std::cout << "AStarSearch\n"
-                         << res << '\n';
-
-               std::cout << "AStarSearch with num_expansion is " << num_expansion << '\n';
-                 result.push_back(res);
-                 expansion.push_back(num_expansion);
-            }
-
-            {
-                if (checkLog)
-                {
-                    version.push_back("FocalSearch");
-                }
-
-                BasicFocalSearch<GameBoard> fs;
-                int num_expansion = 0;
-                int res = fs.FocalSearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
-                std::cout << "FocalSearch\n"
-                         << res << '\n';
-
-                 std::cout << "FocalSearch with num_expansion is " << num_expansion << '\n';
-                 result.push_back(res);
-                 expansion.push_back(num_expansion);
-            }
-
-            {
-                if (checkLog)
-                {
-                    version.push_back("ProbFocalSearch");
-                }
-
-                ProbabilityFocalSearch<GameBoard> fs;
-                int num_expansion = 0;
-                int res = fs.ProbabilitySearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion);
-
-                std::cout << "ProbabilityFocalSearch\n"
-                          << res << '\n';
-
-                std::cout << "ProbabilityFocalSearch with num_expansion is " << num_expansion << '\n';
-
-                result.push_back(res);
-                expansion.push_back(num_expansion);
-            }
-
-            {
-                if (checkLog)
-                {
-                    version.push_back("ProbFocalSearch 70/30");
-                }
-
-                ProbabilityFocalSearch<GameBoard> fs;
-                int num_expansion = 0;
-                int res = fs.ProbabilitySearch(gb, open_funct, focal_funct, ManhattanDistance, num_expansion, 1.1, 1.0, 0.7);
-
-                std::cout << "ProbabilityFocalSearch\n"
-                          << res << '\n';
-
-                std::cout << "ProbabilityFocalSearch 70/30 with num_expansion is " << num_expansion << '\n';
-
-                result.push_back(res);
-                expansion.push_back(num_expansion);
-            }
-
-            {
-                if (checkLog)
-                {
-                    version.push_back("ProbFocalSearch version 4 60/40");
-                }
-
-                ProbabilityFocalSearch<GameBoard> fs;
-                int num_expansion = 0;
-                int res = fs.ProbabilitySearch(gb, open_funct, focal_potential, ManhattanDistance, num_expansion, 1.1, 1.0, 0.6);
-
-                std::cout << "ProbabilityFocalSearch\n"
-                          << res << '\n';
-
-                std::cout << "ProbabilityFocalSearch with potential func with num_expansion is " << num_expansion << '\n';
-
-                result.push_back(res);
-                expansion.push_back(num_expansion);
-            }
-
-            {
-                if (checkLog)
-                {
-                    version.push_back("ProbFocalSearch version 4 70/30");
-                }
-
-                ProbabilityFocalSearch<GameBoard> fs;
-                int num_expansion = 0;
-                int res = fs.ProbabilitySearch(gb, open_funct, focal_potential, ManhattanDistance, num_expansion, 1.1, 1.0, 0.7);
-
-                std::cout << "ProbabilityFocalSearch\n"
-                          << res << '\n';
-
-                std::cout << "ProbabilityFocalSearch with potential func with num_expansion is " << num_expansion << '\n';
-
-                result.push_back(res);
-                expansion.push_back(num_expansion);
-            }
+             runExperiment(gb, "Astar", checkLog, result, expansion, version,open_funct,focal_funct,ManhattanDistance);
+             runExperiment(gb, "FocalSearch", checkLog, result, expansion, version, open_funct, focal_funct, ManhattanDistance);
+             runExperiment(gb, "ProbabilityFocalSearch 60/40", checkLog, result, expansion, version, open_funct, focal_funct, ManhattanDistance,0.6);
+             runExperiment(gb, "ProbabilityFocalSearch 70/30", checkLog, result, expansion, version, open_funct, focal_funct, ManhattanDistance,0.7);
+             runExperiment(gb, "ProbabilityFocalSearch potential func 60/40", checkLog, result, expansion, version, open_funct, focal_funct, ManhattanDistance, 0.6);
+             runExperiment(gb, "ProbabilityFocalSearch potential func 70/30", checkLog, result, expansion, version, open_funct, focal_funct, ManhattanDistance, 0.7);
 
             if (checkLog)
             {
