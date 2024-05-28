@@ -68,6 +68,10 @@ template <class G> class ProbabilityFocalSearch {
            // assert(!open.empty());
             int pick = generate_random_number(0, 100);
             num_expansion = visited.size();
+             if(num_expansion >= 40000000){
+                num_expansion = -1;
+                return -1;
+            }
 
             double f, g, h, hFocal;
             G board;
