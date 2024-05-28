@@ -92,6 +92,10 @@ public:
         while (open.size())
         {
             num_expansion = visited.size();
+            if(num_expansion >= 40000000){
+                num_expansion = -1;
+                return -1;
+            }
             auto fmin = open.begin();
             auto [f, g, h, hFocal, board] = *fmin;
 
@@ -172,6 +176,10 @@ public:
         {
             assert(!open.empty());
             num_expansion = visited.size();
+            if(num_expansion >= 40000000){
+                num_expansion = -1;
+                return -1;
+            }
             double f_min = open.begin()->f;
 
             auto [f, g, h, hFocal, board] = focal.top();
