@@ -81,17 +81,16 @@ public:
      template<class T>
     inline int AStarSearch(G start, T heuristic, int &num_expansion,std::vector<std::vector<double>> & dist_matrix) {
         open.insert({start.GetHeuristic(heuristic,dist_matrix), (double)0, start.GetHeuristic(heuristic,dist_matrix), (double)0, start});
-       // std::cout<<start.GetHeuristic(heuristic)<<'\n';
         visited[start] = 0;
         while ( open.size()) {
             num_expansion = visited.size();
+             if(num_expansion >= 40000000){
+                num_expansion = -1;
+                return -1;
+            }
             auto fmin = open.begin();
             auto [f, g, h, hFocal, board] = *fmin;
    
-           // std::cout<<"state"<<'\n';
-           // board.printState();
-           // std::cout<<'\n';
-           // std::cout<<visited[board]<<" "<<g<<" "<<h<<'\n';
             open.erase(fmin);
 
 
@@ -101,11 +100,8 @@ public:
             for (G &next_board: GetNeighbour(board)) {
                 if (visited.find(next_board) == visited.end() || visited[next_board] > g+cost_move(board,next_board,dist_matrix)) {
                     visited[next_board] = g + cost_move(board,next_board,dist_matrix);
-                    //visited[next_board]=1;
                     double h_new = next_board.GetHeuristic(heuristic,dist_matrix);
-                    // if (h_new == 0) {
-                    //     return g + cost;
-                    // }
+                   
                     open.insert({g + cost_move(board,next_board,dist_matrix) + h_new, g + cost_move(board,next_board,dist_matrix), static_cast<double>(h_new), 0, next_board});
                 }
             }
@@ -170,46 +166,29 @@ public:
         while (!open.empty()) {
             assert(!open.empty());
             num_expansion = visited.size();
-//            std::cout << open.size() << '\n';
+             if(num_expansion >= 40000000){
+                num_expansion = -1;
+                return -1;
+            }
             double f_min = open.begin()->f;
 
             auto [f, g, h, hFocal, board] = focal.top();
-          //  if(focal.size()==0) std::cout<<"0set"<<'\n';
-
-         //   board.printState();
-          //  std::cout<<'\n';
 
             focal.pop();
-          //  board.printState();
-            // std::cout<<h<<'\n';
-           // std::cout<<board<<'\n';
             if (visited[board] != g) continue;  
-            // if(board==GameBoard(4,{1,2,7,3,5,6,4,8,9,10,11,12,13,0,14,15})){
-            //     GameBoard newBoard=GameBoard(4,{1,2,7,3,5,6,4,8,9,10,11,12,13,0,14,15});
-            //    // std::cout<<"check "<<visited[newBoard]<<'\n';
-
-            // }
+           
 
             if (board.GetHeuristic(heuristic,dist_matrix) == 0) return static_cast<int>(g);
             open.erase(Node<G>(f, g, h, hFocal, board));
 
-            // board.printState();
-            // std::cout<<'\n';
-          //  std::cout<<num_expansion<<'\n';
-
-            // if (hFocal == 0)
-            //     return static_cast<int>(g);
+       
 
 
             for (G &next_board: GetNeighbour(board)) {
                 if (visited.find(next_board) == visited.end() || visited[next_board] > g + cost_move(board,next_board,dist_matrix)) {
                     visited[next_board] = g + cost_move(board,next_board,dist_matrix);
                     int h_new = next_board.GetHeuristic(heuristic,dist_matrix);
-                    // if (h_new == 0) {
-                    //     foundDestination = true;
-                    //     minDistance = std::min(minDistance, g + );
-                    //     return static_cast<int> (g + 1);
-                    // }
+                   
                     /*
                      * delete old_value of new state in open
                      */
@@ -238,15 +217,7 @@ public:
             double f_head = fmin->f;
 
             
-                    // for (auto state = open.begin(); state != open.end(); ++state) {
-                    //     auto board = state->board;
-                    //     if (state->f > epsilon * f_min)
-                    //         break;
-                    //     else {
-                    //         Node focalNode = nodeValue(state->g, board);
-                    //         focal.push(focalNode);
-                    //     }
-                    // }
+                  
 
             if (!open.empty() && f_min < f_head) {  
                 /*
