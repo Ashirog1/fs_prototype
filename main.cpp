@@ -72,6 +72,10 @@ namespace benchmark
             std::filesystem::create_directories(folderName);
             std::filesystem::create_directories("../result/"+fileName);
             std::cout << folderName << '\n';
+            std::ofstream outputFile;
+
+            outputFile.open("../result/"+fileName+"/log.csv");
+
             std::ofstream inputFile;
             inputFile.open(folderName + "/"+fileName+".csv");
             for (int j = 1; j <= 1000;j++){
