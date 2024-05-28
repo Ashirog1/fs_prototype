@@ -141,7 +141,7 @@ namespace benchmark
 
         bool checkLog = true;
 
-        for (int i = 1; i <=2; ++i)
+        for (int i = 1; i <=test; ++i)
         {
              std::cout<<i<<'\n'<<'\n';
             //First parameter for size of board, second paramater for number of steps moving from initial state
@@ -160,7 +160,7 @@ namespace benchmark
              expansion.clear();
 
 
-             runExperiment(gb, "Astar", checkLog, result, expansion, version,open_funct,focal_funct,ManhattanDistance);
+            // runExperiment(gb, "Astar", checkLog, result, expansion, version,open_funct,focal_funct,ManhattanDistance);
              runExperiment(gb, "FocalSearch", checkLog, result, expansion, version, open_funct, focal_funct, ManhattanDistance);
              runExperiment(gb, "ProbabilityFocalSearch 60/40", checkLog, result, expansion, version, open_funct, focal_funct, ManhattanDistance,0.6);
              runExperiment(gb, "ProbabilityFocalSearch 70/30", checkLog, result, expansion, version, open_funct, focal_funct, ManhattanDistance,0.7);
