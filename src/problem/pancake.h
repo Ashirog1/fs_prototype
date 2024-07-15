@@ -19,13 +19,9 @@ class PancakeBoard {
 
     PancakeBoard() {}
 
-    PancakeBoard(int _n) {
-        n = _n;
-        stack.resize(n);
-        for (int i = 0; i < n; i++) {
-            stack[i] = i + 1;  // Pancakes are labeled from 1 to n
-        }
-        std::random_shuffle(stack.begin(), stack.end());  // Random initial state
+    PancakeBoard(std::vector<int> _v) {
+        n = _v.size();
+        stack = _v;
     }
 
     friend std::vector<PancakeBoard> GetNeighbour(PancakeBoard &pancakeBoard) {
@@ -73,14 +69,29 @@ class PancakeBoard {
     }
 };
 
-double simpleHeuristic(const std::vector<int> &stack) {
+double simpleHeuristic(PancakeBoard v) {
     int misplaced = 0;
+    auto stack = v.stack;
     for (int i = 0; i < stack.size() - 1; i++) {
         if (std::abs(stack[i] - stack[i + 1]) != 1) {
             misplaced++;
         }
     }
     return misplaced;
+}
+
+
+
+
+PancakeBoard generator(int n) {
+    std::vector<int> stack(n);
+    stack.resize(n);
+    for (int i = 0; i < n; i++) {
+        stack[i] = i + 1;  // Pancakes are labeled from 1 to n
+    }
+    std::random_shuffle(stack.begin(), stack.end());  // Random initial state
+
+    return PancakeBoard(stack);
 }
 
 #endif //FS_PROTOTYPE_PANCAKE_BOARD_H
