@@ -61,7 +61,6 @@ class PancakeBoard {
     }
 
     friend std::ostream& operator<<(std::ostream& os, const PancakeBoard &pancakeBoard){
-        os << pancakeBoard.n << " ";
         for (auto v : pancakeBoard.stack) {
             os << v << " ";
         }

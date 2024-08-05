@@ -68,7 +68,8 @@ namespace benchmark
 
     void genInput(int size,int moves){
         for (int i = 1;i<=5;i++){
-            std::string fileName= "npuzzle_" + std::to_string(size)+"_"+std::to_string(moves)+"_"+std::to_string(i) ;
+            int n = size + i * 10;
+            std::string fileName= "pancake_" + std::to_string(n)+"_"+std::to_string(moves)+"_"+std::to_string(i) ;
             std::string folderName = "../input/"+fileName;
             std::filesystem::create_directories(folderName);
             std::filesystem::create_directories("../result/"+fileName);
@@ -77,8 +78,8 @@ namespace benchmark
             std::cout << folderName << '\n';
             std::ofstream inputFile;
             inputFile.open(folderName + "/"+fileName+".csv");
-            for (int j = 1; j <= 1000;j++){
-                 GameBoard gb = generator(size, moves);
+            for (int j = 1; j <= 100;j++){
+                 PancakeBoard gb = generator(n);
                  inputFile << gb << "\n";
              }
              inputFile.close();
@@ -246,7 +247,11 @@ int main()
     //    global_testing::test();
     // benchmark::NPuzzleDemo();
     
-//   benchmark::genInput(5,200);
+    benchmark::genInput(10, 20);
     benchmark::NPuzzleDemo(20);
+    benchmark::NPuzzleDemo(30);
+    benchmark::NPuzzleDemo(40);
+    benchmark::NPuzzleDemo(50);
+    benchmark::NPuzzleDemo(60);
     return 0;
 }
