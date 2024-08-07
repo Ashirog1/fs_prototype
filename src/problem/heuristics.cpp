@@ -102,6 +102,7 @@ double LinearConflictDistance(int size, const std::vector<int> &board) {
 
 double MST(int size,const std::vector<int>&visited, const std::set<int>&unvisited, const std::vector<std::vector<double>>&dis, const std::vector<int>&clusterId, const std::set<int>& unvisitedCluster) {
     if(visited.size()==size+1) return 0;
+    if (unvisitedCluster.size() == 0) return 0;
     if(unvisited.size()==0) return dis[visited[size-1]][visited[0]];
     double total=0;
     std::priority_queue<std::pair<double, int>, std::vector<std::pair<double,int>>, std::greater<std::pair<double,int>>> prim;
