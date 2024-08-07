@@ -99,7 +99,8 @@ double LinearConflictDistance(int size, const std::vector<int> &board) {
 //     return 0;
 // }
 
-double MST(int size,const std::vector<int> visited, const std::set<int> unvisited, const std::vector<std::vector<double>> dis, std::vector<int> clusterId){
+
+double MST(int size,const std::vector<int>&visited, const std::set<int>&unvisited, const std::vector<std::vector<double>>&dis, const std::vector<int>&clusterId, const std::set<int>& unvisitedCluster) {
     if(visited.size()==size+1) return 0;
     if(unvisited.size()==0) return dis[visited[size-1]][visited[0]];
     double total=0;
@@ -107,6 +108,9 @@ double MST(int size,const std::vector<int> visited, const std::set<int> unvisite
     std::vector<int> remCluster(size, 0);
     std::vector<double> d(size,INT_MAX);
     std::set<int> remain=unvisited;
+    for (auto v : visited) {
+        remCluster[clusterId[v]] = true;
+    }
     if(visited.size()){
         double min_current=INT_MAX;
         double min_depot=INT_MAX;
