@@ -73,7 +73,7 @@ class GTspBoard {
 
     template <class T>
     inline double GetHeuristic(T heuristic, std::vector<std::vector<double>> &dis_matrix) {
-        return heuristic(n, visited, unvisited, dis_matrix);
+        return heuristic(n, visited, unvisited, dis_matrix, clusterId);
     };
 
     void printState() {

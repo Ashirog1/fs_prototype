@@ -95,11 +95,16 @@ double LinearConflictDistance(int size, const std::vector<int> &board) {
 
 }
 
-double MST(int size,const std::vector<int> visited, const std::set<int> unvisited, const std::vector<std::vector<double>> dis ){
+// double MST(int size,const std::vector<int> visited, const std::set<int> unvisited, const std::vector<std::vector<double>> dis){
+//     return 0;
+// }
+
+double MST(int size,const std::vector<int> visited, const std::set<int> unvisited, const std::vector<std::vector<double>> dis, std::vector<int> clusterId){
     if(visited.size()==size+1) return 0;
     if(unvisited.size()==0) return dis[visited[size-1]][visited[0]];
     double total=0;
     std::priority_queue<std::pair<double, int>, std::vector<std::pair<double,int>>, std::greater<std::pair<double,int>>> prim;
+    std::vector<int> remCluster(size, 0);
     std::vector<double> d(size,INT_MAX);
     std::set<int> remain=unvisited;
     if(visited.size()){
@@ -120,10 +125,12 @@ double MST(int size,const std::vector<int> visited, const std::set<int> unvisite
         if(remain.empty()) break;
         auto top=prim.top();
         prim.pop();
+        if (remCluster[clusterId[top.second]]) continue;
         if(top.first!=d[top.second]){
             continue;
         }
         total+=d[top.second];
+        remCluster[clusterId[top.second]] = true;
         d[top.second]=INT_MIN;
         remain.erase(top.second);
         for(auto v:remain){
