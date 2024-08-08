@@ -21,11 +21,9 @@ class GTspBoard {
   private:
     int n;
     std::vector<int> clusterId;
-    std::vector<int> visited;
     std::vector<int> visitedCluster;
-    std::vector<int> check_visited;
-    std::set<int> unvisited;
     std::set<int> unvisitedCluster;
+    int currentNode;
 
   public:
     GTspBoard() {};
@@ -33,29 +31,20 @@ class GTspBoard {
     GTspBoard(int _n, const std::vector<int> &_clusterId) {
         n = _n;
         clusterId = _clusterId;
-        visited.clear();
-        check_visited.resize(n, 0);
+        currentNode = 0;
         for (int i = 0; i < n; i++) {
-            unvisited.insert(i);
             unvisitedCluster.insert(clusterId[i]);
         }
     };
 
     friend std::vector<GTspBoard> GetNeighbour(GTspBoard &gtspBoard) {
         std::vector<GTspBoard> adj;
-        if (gtspBoard.unvisitedCluster.size() == 0) {
-            GTspBoard newBoard = gtspBoard;
-            newBoard.visited.push_back(newBoard.visited[0]);
-            adj.push_back(newBoard);
-        }
         for (int i = 0; i < gtspBoard.n; i++) {
-            if (gtspBoard.check_visited[i] == 0 && gtspBoard.unvisitedCluster.count(gtspBoard.clusterId[i])) {
+            if (gtspBoard.unvisitedCluster.count(gtspBoard.clusterId[i])) {
                 GTspBoard newBoard = gtspBoard;
-                newBoard.visited.push_back(i);
                 newBoard.visitedCluster.push_back(newBoard.clusterId[i]);
-                newBoard.check_visited[i] = 1;
-                newBoard.unvisited.erase(i);
                 newBoard.unvisitedCluster.erase(newBoard.clusterId[i]);
+                newBoard.currentNode = i;
                 adj.push_back(newBoard);
             }
         }
@@ -63,31 +52,31 @@ class GTspBoard {
     }
 
     friend double cost_move(GTspBoard &gtspBoard1, GTspBoard &gtspBoard2, std::vector<std::vector<double>> &dis_matrix) {
-        if (gtspBoard1.visited.size() == 0)
+        if (gtspBoard1.unvisitedCluster.size() == 0)
             return 0;
-        return dis_matrix[gtspBoard1.visited[gtspBoard1.visited.size() - 1]]
-                          [gtspBoard2.visited[gtspBoard2.visited.size() - 1]];
+        return dis_matrix[gtspBoard1.currentNode]
+                          [gtspBoard2.currentNode];
     }
 
     double getDistanceToGo() { return (double)(unvisitedCluster.size()); }
 
     template <class T>
     inline double GetHeuristic(T heuristic, std::vector<std::vector<double>> &dis_matrix) {
-        return heuristic(n, visited, unvisited, dis_matrix, clusterId, unvisitedCluster);
+        return heuristic(n,dis_matrix, clusterId, unvisitedCluster);
     };
 
     void printState() {
-        for (auto v : visited)
-            std::cout << v << " ";
+        // for (auto v : visited)
+        //     std::cout << v << " ";
     };
 
     bool operator<(const GTspBoard &oth) const {
-        if (visited.size() != oth.visited.size())
-            return visited.size() < oth.visited.size();
-        for (int i = 0; i < visited.size(); i++) {
-            if (visited[i] < oth.visited[i]) {
+        if (visitedCluster.size() != oth.visitedCluster.size())
+            return visitedCluster.size() < oth.visitedCluster.size();
+        for (int i = 0; i < visitedCluster.size(); i++) {
+            if (visitedCluster[i] < oth.visitedCluster[i]) {
                 return true;
-            } else if (visited[i] > oth.visited[i])
+            } else if (visitedCluster[i] > oth.visitedCluster[i])
                 return false;
         }
         return false;
@@ -105,7 +94,7 @@ class GTspBoard {
 
 std::pair<std::vector<std::vector<double>>, std::vector<int>> generator_GTSP(int n, int grid) {
     // Number of clusters
-    int numClusters = std::max(1, n / 3);
+    int numClusters = std::max(n, 3);
     std::vector<std::vector<double>> dist(n, std::vector<double>(n, 0));
     std::vector<int> clusterId(n, 0);
 

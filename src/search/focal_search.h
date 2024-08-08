@@ -170,6 +170,9 @@ public:
                 num_expansion = -1;
                 return -1;
             }
+            if (num_expansion >= 1024 * 35) {
+                std::cout << num_expansion << '\n';
+            }
             double f_min = open.begin()->f;
 
             auto [f, g, h, hFocal, board] = focal.top();

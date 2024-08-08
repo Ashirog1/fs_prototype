@@ -16,9 +16,8 @@ double ManhattanDistance(int size, const std::vector<int> &board);
 
 double LinearConflictDistance(int size, const std::vector<int> &board);
 
-// double MST(int size,const std::vector<int> visited, const std::set<int> unvisited, const std::vector<std::vector<double>> dis );
 
-double MST(int size,const std::vector<int>&visited, const std::set<int>&unvisited, const std::vector<std::vector<double>>&dis, const std::vector<int>&clusterId, const std::set<int>& unvisitedCluster);
+double MST(int size, const std::vector<std::vector<double>>&dis, const std::vector<int>&clusterId, const std::set<int>& unvisitedCluster);
 
 double open_funct(double g, double h);
 
