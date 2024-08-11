@@ -87,7 +87,7 @@ class GTspBoard {
 
 std::pair<std::vector<std::vector<double>>, std::vector<int>> generator_GTSP(int n, int grid) {
     // Number of clusters
-    int numClusters = std::max(n, 3);
+    int numClusters = std::min(n, 10);
     std::vector<std::vector<double>> dist(n, std::vector<double>(n, 0));
     std::vector<int> clusterId(n, 0);
 
