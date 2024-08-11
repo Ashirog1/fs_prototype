@@ -21,7 +21,6 @@ class GTspBoard {
   private:
     int n;
     std::vector<int> clusterId;
-    std::vector<int> visitedCluster;
     std::set<int> unvisitedCluster;
     int currentNode;
 
@@ -42,7 +41,6 @@ class GTspBoard {
         for (int i = 0; i < gtspBoard.n; i++) {
             if (gtspBoard.unvisitedCluster.count(gtspBoard.clusterId[i])) {
                 GTspBoard newBoard = gtspBoard;
-                newBoard.visitedCluster.push_back(newBoard.clusterId[i]);
                 newBoard.unvisitedCluster.erase(newBoard.clusterId[i]);
                 newBoard.currentNode = i;
                 adj.push_back(newBoard);
@@ -71,15 +69,10 @@ class GTspBoard {
     };
 
     bool operator<(const GTspBoard &oth) const {
-        if (visitedCluster.size() != oth.visitedCluster.size())
-            return visitedCluster.size() < oth.visitedCluster.size();
-        for (int i = 0; i < visitedCluster.size(); i++) {
-            if (visitedCluster[i] < oth.visitedCluster[i]) {
-                return true;
-            } else if (visitedCluster[i] > oth.visitedCluster[i])
-                return false;
+        if (unvisitedCluster != oth.unvisitedCluster) {
+            return std::lexicographical_compare(unvisitedCluster.begin(), unvisitedCluster.end(), oth.unvisitedCluster.begin(), oth.unvisitedCluster.end());
         }
-        return false;
+        return currentNode < oth.currentNode;
     };
 
     friend std::ostream& operator<<(std::ostream& os, const GTspBoard &gtspBoard){
