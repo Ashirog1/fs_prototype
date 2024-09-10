@@ -18,7 +18,8 @@ double LinearConflictDistance(int size, const std::vector<int> &board);
 
 double MST(int size, const std::vector<std::vector<double>> &dis,
            const std::vector<int> &clusterId,
-           const std::set<int> &unvisitedCluster);
+           const std::set<int> &unvisitedCluster,
+           int currentNode);
 
 double open_funct(double g, double h);
 

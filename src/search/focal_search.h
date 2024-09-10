@@ -191,8 +191,10 @@ class BasicFocalSearch {
 
       if (visited[board] != g) continue;
 
-      if (board.GetHeuristic(heuristic, dist_matrix) == 0)
+      if (board.GetHeuristic(heuristic, dist_matrix) == 0) {
+        std::cout << "found " << board;
         return static_cast<int>(g);
+      }
       open.erase(Node<G>(f, g, h, hFocal, board));
 
       for (G &next_board : GetNeighbour(board)) {

@@ -22,6 +22,7 @@ class GTspBoard {
     int n;
     std::vector<int> clusterId;
     std::set<int> unvisitedCluster;
+    std::vector<int> visited;
     int currentNode;
 
   public:
@@ -38,11 +39,21 @@ class GTspBoard {
 
     friend std::vector<GTspBoard> GetNeighbour(GTspBoard &gtspBoard) {
         std::vector<GTspBoard> adj;
-        for (int i = 0; i < gtspBoard.n; i++) {
+        for (int i = 1; i < gtspBoard.n; i++) {
             if (gtspBoard.unvisitedCluster.count(gtspBoard.clusterId[i])) {
                 GTspBoard newBoard = gtspBoard;
                 newBoard.unvisitedCluster.erase(newBoard.clusterId[i]);
                 newBoard.currentNode = i;
+                newBoard.visited.push_back(i);
+                adj.push_back(newBoard);
+            }
+        }
+        if (adj.empty()) {
+            if (gtspBoard.unvisitedCluster.count(gtspBoard.clusterId[0])) {
+                GTspBoard newBoard = gtspBoard;
+                newBoard.unvisitedCluster.erase(newBoard.clusterId[0]);
+                newBoard.currentNode = 0;
+                newBoard.visited.push_back(0);
                 adj.push_back(newBoard);
             }
         }
@@ -56,11 +67,15 @@ class GTspBoard {
                           [gtspBoard2.currentNode];
     }
 
-    double getDistanceToGo() { return (double)(unvisitedCluster.size()); }
+    double getDistanceToGo() { 
+        if (currentNode == 0) 
+            return (double)(unvisitedCluster.size()); 
+        return (double)unvisitedCluster.size() + 10;
+    }
 
     template <class T>
     inline double GetHeuristic(T heuristic, std::vector<std::vector<double>> &dis_matrix) {
-        return heuristic(n,dis_matrix, clusterId, unvisitedCluster);
+        return heuristic(n,dis_matrix, clusterId, unvisitedCluster, this->currentNode);
     };
 
     void printState() {
@@ -80,6 +95,8 @@ class GTspBoard {
         for (int i = 0; i < gtspBoard.n; ++i) {
             os << gtspBoard.clusterId[i] << " ";
         }
+        os << '\n';
+        for (auto v : gtspBoard.visited) os << v << " ";
         os << '\n';
         return os;
     };

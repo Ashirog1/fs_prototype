@@ -106,8 +106,9 @@ double LinearConflictDistance(int size, const std::vector<int> &board) {
 double MST(int size, const std::vector<std::vector<double>> &dis,
            const std::vector<int> &clusterId,
            //  const std::bitset<15> &unvisitedCluster) {
-           const std::set<int> &unvisitedCluster) {
-  if (unvisitedCluster.empty()) return 0;  // .none() checks if all bits are 0
+           const std::set<int> &unvisitedCluster,
+           int currentNode) {
+  if (unvisitedCluster.empty() && currentNode == 0) return 0;  // .none() checks if all bits are 0
   double total = 1;
   std::priority_queue<std::pair<double, int>,
                       std::vector<std::pair<double, int>>,
@@ -123,16 +124,18 @@ double MST(int size, const std::vector<std::vector<double>> &dis,
   for (auto v : unvisitedCluster) {
     visitedCluster[v] = true;
   }
-  for (int i = 0; i < size; ++i) {
+  for (int i = 1; i < size; ++i) {
     if (visitedCluster[clusterId[i]]) remain.insert(i);
   }
 
   if (unvisitedCluster.size()) {
-    double min_current = 0;
+    double min_current = INT_MAX;
     double min_depot = INT_MAX;
     for (int i = 1; i < size; ++i) {
-      if (visitedCluster[clusterId[i]])
+      if (visitedCluster[clusterId[i]]) {
         min_depot = std::min(min_depot, dis[0][i]);
+        min_current = std::min(min_current, dis[currentNode][i]);
+      }
     }
     total = total + min_current + min_depot;
   }
@@ -162,8 +165,10 @@ double MST(int size, const std::vector<std::vector<double>> &dis,
       }
     }
   }
-  return total;
+  return total / 2.0;
 }
+
+
 
 double open_funct(double g, double h) { return g + h; }
 

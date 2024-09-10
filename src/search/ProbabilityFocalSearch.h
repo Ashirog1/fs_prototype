@@ -32,7 +32,7 @@ template <class G> class ProbabilityFocalSearch {
     std::set<Node<G>, cmp<G>> focalSet;
     template <class T, class open_funct, class focal_funct>
     inline int ProbabilitySearch(G &start, open_funct open_value, focal_funct focal_value, T heuristic,int &num_expansion,std::vector<std::vector<double>> &dist_matrix,
-                           double epsilon = (double)1.1, double w =(double) 1.0 ,double pickRate = (double)0.6)
+                           double epsilon = (double)1.1, double w =(double) 1.1 ,double pickRate = (double)0.6)
     {
         const auto nodeValue = [&](double g, G &board)
         {
@@ -81,8 +81,10 @@ template <class G> class ProbabilityFocalSearch {
             {
                 Node<G> a=*focalSet.begin();
                 assignValue(f,g,h,hFocal,board,a);
-                if (board.GetHeuristic(heuristic,dist_matrix) == 0)
+                if (board.GetHeuristic(heuristic,dist_matrix) == 0) {
+                    std::cout << "found " << board;
                     return static_cast<int>(g);
+                }
                 int a1=focalSet.size();
                 focalSet.erase(focalSet.begin());
                 int b1=focalSet.size();
@@ -96,8 +98,10 @@ template <class G> class ProbabilityFocalSearch {
                 Node<G> a = *open.begin();
                 assignValue(f, g, h, hFocal, board, a);
 
-                if (board.GetHeuristic(heuristic,dist_matrix) == 0)
+                if (board.GetHeuristic(heuristic,dist_matrix) == 0) {
+                    std::cout << "found " << board;
                     return static_cast<double>(g);
+                }
              
                 open.erase(open.begin());
                 int a1=focalSet.size();
@@ -149,8 +153,6 @@ template <class G> class ProbabilityFocalSearch {
                         if(b!=a+1) std::cout<<a<<" "<<b<<'\n';
                     }
                     int b1=focalSet.size();
-                  
-
                 }
             }
             if (foundDestination) {
