@@ -1,0 +1,5 @@
+if(EXISTS "/home/orlab/Documents/MinhVD/PFS/tsp/hello_test[1]_tests.cmake")
+  include("/home/orlab/Documents/MinhVD/PFS/tsp/hello_test[1]_tests.cmake")
+else()
+  add_test(hello_test_NOT_BUILT hello_test_NOT_BUILT)
+endif()

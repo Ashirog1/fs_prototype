@@ -1,111 +1,110 @@
 //
 // Created by only_u on 12/21/23.
 //
-
+// may cai writing thi co the no bi conflict nhau -> treo may neu ma no ghi cug 1 file
+// cai kia em cho moi lan chay thi tao folder moi , kieu co folder 14 thi no tao folder 15 roi moi log vao
 #ifndef FS_PROTOTYPE_FOCAL_SEARCH_H
 #define FS_PROTOTYPE_FOCAL_SEARCH_H
 
-#include "../problem/game_board.h"
-#include "../problem/heuristics.h"
+#include <algorithm>
+#include <cassert>
 #include <climits>
 #include <map>
 #include <queue>
-#include <utility>
-#include <cassert>
 #include <set>
-#include<algorithm>
+#include <utility>
 
-template<class G>
+#include "../problem/game_board.h"
+#include "../problem/heuristics.h"
+
+template <class G>
 class Node {
-public:
+   public:
     double f, g, h;
     double hFocal;
     G board;
 
-    Node(double _f, double _g, double _h, double _hFocal, G _board){
-         f = _f;
-         g = _g;
-         h = _h;
-         board = _board;
-         hFocal = _hFocal;
+    Node(double _f, double _g, double _h, double _hFocal, G _board) {
+        f = _f;
+        g = _g;
+        h = _h;
+        board = _board;
+        hFocal = _hFocal;
     };
 
-    bool operator < (const Node<G> &oth) const{
+    bool operator<(const Node<G> &oth) const {
         if (f != oth.f)
-        return f < oth.f;
+            return f < oth.f;
         if (g != oth.g)
-        return g < oth.g;
+            return g < oth.g;
         if (hFocal != oth.hFocal)
-        return hFocal < oth.hFocal;
+            return hFocal < oth.hFocal;
         return board < oth.board;
     };
 };
 
 /// focal comparator
 
-
-//For open list
-template<class G>
+// For open list
+template <class G>
 struct CompareG {
-    bool operator()(const Node<G> &a, const Node<G> &b){
-         if(a.f!=b.f)
-         return a.f > b.f;
-         if(a.g!=b.g)
-         return a.g>b.g;
-         return a.h>b.h;
+    bool operator()(const Node<G> &a, const Node<G> &b) {
+        if (a.f != b.f)
+            return a.f > b.f;
+        if (a.g != b.g)
+            return a.g > b.g;
+        return a.h > b.h;
     }
 };
 
-
-//For focal list
-template<class G>
+// For focal list
+template <class G>
 struct CompareH {
-    bool operator()(const Node<G> &a, const Node<G> &b){
-         if(a.hFocal!=b.hFocal)
-         return a.hFocal > b.hFocal;
-         if(a.g!=b.g)
-         return a.g>b.g;
-         if(a.h!=b.h)
-         return a.h>b.h;
-         return b.board<a.board;
+    bool operator()(const Node<G> &a, const Node<G> &b) {
+        if (a.hFocal != b.hFocal)
+            return a.hFocal > b.hFocal;
+        if (a.g != b.g)
+            return a.g > b.g;
+        if (a.h != b.h)
+            return a.h > b.h;
+        return b.board < a.board;
     }
 };
 
-template<class G>
+template <class G>
 class BasicAStar {
     std::map<G, double> visited;
-    //std::priority_queue<Node> open;
+    // std::priority_queue<Node> open;
     std::set<Node<G>> open;
-  //  std::map<G, Node<G>> link_open;
-public:
-     template<class T>
-    inline int AStarSearch(G start, T heuristic, int &num_expansion,std::vector<std::vector<double>> & dist_matrix) {
-        open.insert({start.GetHeuristic(heuristic,dist_matrix), (double)0, start.GetHeuristic(heuristic,dist_matrix), (double)0, start});
+    //  std::map<G, Node<G>> link_open;
+   public:
+    template <class T>
+    inline int AStarSearch(G start, T heuristic, int &num_expansion, int &num_iteration, std::vector<std::vector<double>> &dist_matrix) {
+        open.insert({start.GetHeuristic(heuristic, dist_matrix), (double)0, start.GetHeuristic(heuristic, dist_matrix), (double)0, start});
         visited[start] = 0;
-        while ( open.size()) {
+        while (open.size()) {
             num_expansion = visited.size();
-             if(num_expansion >= 40000000){
+            num_iteration++;
+            if (num_expansion >= 20000000) {
                 num_expansion = -1;
                 return -1;
             }
             auto fmin = open.begin();
             auto [f, g, h, hFocal, board] = *fmin;
-   
+
             open.erase(fmin);
 
-
             if (visited[board] != g) continue;
-            if (board.GetHeuristic(heuristic,dist_matrix) == 0) return static_cast<int>(f);
+            if (board.GetHeuristic(heuristic, dist_matrix) == 0) return static_cast<int>(f);
 
-            for (G &next_board: GetNeighbour(board)) {
-                if (visited.find(next_board) == visited.end() || visited[next_board] > g+cost_move(board,next_board,dist_matrix)) {
-                    visited[next_board] = g + cost_move(board,next_board,dist_matrix);
-                    double h_new = next_board.GetHeuristic(heuristic,dist_matrix);
-                   
-                    open.insert({g + cost_move(board,next_board,dist_matrix) + h_new, g + cost_move(board,next_board,dist_matrix), static_cast<double>(h_new), 0, next_board});
+            for (G &next_board : GetNeighbour(board)) {
+                if (visited.find(next_board) == visited.end() || visited[next_board] > g + cost_move(board, next_board, dist_matrix)) {
+                    visited[next_board] = g + cost_move(board, next_board, dist_matrix);
+                    double h_new = next_board.GetHeuristic(heuristic, dist_matrix);
+
+                    open.insert({g + cost_move(board, next_board, dist_matrix) + h_new, g + cost_move(board, next_board, dist_matrix), static_cast<double>(h_new), 0, next_board});
                 }
             }
-
         }
         return static_cast<int>(-1);
     }
@@ -114,44 +113,42 @@ public:
 /*
  * BasicFocalSearch (a* epsilon) algorithm
  */
-template<class G>
+template <class G>
 class BasicFocalSearch {
-
-protected:
-//std::priority_queue<Node> open;
+   protected:
+    // std::priority_queue<Node> open;
     std::set<Node<G>> open;
-// @brief visited:
+    // @brief visited:
     std::map<G, int> visited;
     std::priority_queue<Node<G>, std::vector<Node<G>>, CompareH<G>> focal;
     std::map<G, Node<G>> link_open;
     double C;
-public:
-    BasicFocalSearch(){
+
+   public:
+    BasicFocalSearch() {
         visited.clear();
         open.clear();
         link_open.clear();
         while (!focal.empty()) focal.pop();
     };
 
-    template<class T, class open_funct, class focal_funct>
-    inline int FocalSearch
-            (G &start, open_funct open_value, focal_funct focal_value, T heuristic,
-             int &num_expansion,std::vector<std::vector<double>> &dist_matrix,
-             double epsilon = (double) 1.1,double w = (double) 1.0
-            ) {
+    template <class T, class open_funct, class focal_funct>
+    inline int FocalSearch(G &start, open_funct open_value, focal_funct focal_value, T heuristic,
+                           int &num_expansion, int &num_iteration, std::vector<std::vector<double>> &dist_matrix,
+                           double epsilon = (double)1.1, double w = (double)1.0) {
         /*
          * given g and gameboard, return current state
          * maybe this function take h as parameter as well?
          */
         const auto nodeValue = [&](double g, G &board) {
-            double h = board.GetHeuristic(heuristic,dist_matrix);
-            return Node(open_value(g, h), g, h, focal_value(g, h,board.getDistanceToGo(),C,w), board);
+            double h = board.GetHeuristic(heuristic, dist_matrix);
+            return Node(open_value(g, h), g, h, focal_value(g, h, board.getDistanceToGo(), C, w), board);
         };
 
         bool foundDestination = false;
-        double minDistance = (double) INT_MAX;
+        double minDistance = (double)INT_MAX;
 
-        visited.clear();    
+        visited.clear();
 
         G startState = start;
 
@@ -166,7 +163,8 @@ public:
         while (!open.empty()) {
             assert(!open.empty());
             num_expansion = visited.size();
-             if(num_expansion >= 40000000){
+            num_iteration++;
+            if (num_expansion >= 20000000) {
                 num_expansion = -1;
                 return -1;
             }
@@ -175,20 +173,16 @@ public:
             auto [f, g, h, hFocal, board] = focal.top();
 
             focal.pop();
-            if (visited[board] != g) continue;  
-           
+            if (visited[board] != g) continue;
 
-            if (board.GetHeuristic(heuristic,dist_matrix) == 0) return static_cast<int>(g);
+            if (board.GetHeuristic(heuristic, dist_matrix) == 0) return static_cast<int>(g);
             open.erase(Node<G>(f, g, h, hFocal, board));
 
-       
+            for (G &next_board : GetNeighbour(board)) {
+                if (visited.find(next_board) == visited.end() || visited[next_board] > g + cost_move(board, next_board, dist_matrix)) {
+                    visited[next_board] = g + cost_move(board, next_board, dist_matrix);
+                    int h_new = next_board.GetHeuristic(heuristic, dist_matrix);
 
-
-            for (G &next_board: GetNeighbour(board)) {
-                if (visited.find(next_board) == visited.end() || visited[next_board] > g + cost_move(board,next_board,dist_matrix)) {
-                    visited[next_board] = g + cost_move(board,next_board,dist_matrix);
-                    int h_new = next_board.GetHeuristic(heuristic,dist_matrix);
-                   
                     /*
                      * delete old_value of new state in open
                      */
@@ -199,39 +193,35 @@ public:
                     /*
                      * insert new node into open
                      */
-                    Node<G> nextNode = nodeValue(g + cost_move(board,next_board,dist_matrix), next_board);
+                    Node<G> nextNode = nodeValue(g + cost_move(board, next_board, dist_matrix), next_board);
                     open.insert(nextNode);
                     link_open.emplace(next_board,
                                       nextNode);
-                    if (open_value(g + cost_move(board,next_board,dist_matrix), h_new) <= epsilon * f_min) {
+                    if (open_value(g + cost_move(board, next_board, dist_matrix), h_new) <= epsilon * f_min) {
                         focal.push(nextNode);
                     }
                 }
             }
 
             if (foundDestination) {
-                return static_cast<int> (minDistance);
+                return static_cast<int>(minDistance);
             }
 
             auto fmin = open.begin();
             double f_head = fmin->f;
 
-            
-                  
-
-            if (!open.empty() && f_min < f_head) {  
+            if (!open.empty() && f_min < f_head) {
                 /*
                  * only first extraction will run this block
                  * update focal with node have f <= fmin * epsilon
                  */
-                
 
                 /*
                  * update focal: insert new node from open to focal with epsilon * fmin <= f <= epsilon * f_head
                  */
-                Node<G> middleNode = Node<G>(f_min * epsilon, (double) -1, (double) -1, (double) -1, board);
+                Node<G> middleNode = Node<G>(f_min * epsilon, (double)-1, (double)-1, (double)-1, board);
                 for (auto state = open.lower_bound(middleNode); state != open.end(); ++state) {
-                    //Node node=*it;
+                    // Node node=*it;
                     auto board = state->board;
                     if (state->f > epsilon * f_head)
                         break;
@@ -246,5 +236,4 @@ public:
     }
 };
 
-
-#endif //FS_PROTOTYPE_FOCAL_SEARCH_H
+#endif  // FS_PROTOTYPE_FOCAL_SEARCH_H
